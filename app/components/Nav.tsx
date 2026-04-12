@@ -86,7 +86,7 @@ export default function Nav() {
       : href;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50" onMouseLeave={closeMega}>
+    <nav className="fixed top-0 left-0 right-0 z-50">
 
       {/* ── Nav bar background ─────────────────────── */}
       <div
@@ -100,13 +100,16 @@ export default function Nav() {
 
       {/* ── Mega panel background + edge line ──────── */}
       <div
-        className="absolute inset-x-0 top-[60px] bg-white pointer-events-none"
+        className="absolute inset-x-0 top-[60px] bg-white"
         style={{
           transition: "opacity 200ms ease",
           height: 160,
           opacity: megaOpen ? 1 : 0,
           borderBottom: "1px solid rgba(0,0,0,0.1)",
+          pointerEvents: megaOpen ? "auto" : "none",
         }}
+        onMouseEnter={() => setMegaOpen(true)}
+        onMouseLeave={closeMega}
       />
 
       {/* ── Desktop: Logo + Right controls ─────────── */}
@@ -152,19 +155,16 @@ export default function Nav() {
       </div>
 
       {/* ── Desktop: Unified nav columns ────────────── */}
-      {/* Each column holds the nav link (inside 60px bar) + sub-items below.  */}
-      {/* Same flex item = nav link and its sub-items always perfectly aligned. */}
       <div className="absolute inset-x-0 top-0 hidden md:flex justify-center gap-20 z-20 pointer-events-none">
         {links.map((link, i) => {
           const isActive = hoveredIndex === i && megaOpen;
           return (
             <div
               key={link.href}
-              className="flex flex-col min-w-max pointer-events-auto"
-              onMouseEnter={() => { setMegaOpen(true); setHoveredIndex(i); }}
+              className="flex flex-col min-w-max"
             >
               {/* Nav link inside the 60px bar */}
-              <div className="h-[60px] flex items-center">
+              <div className="h-[60px] flex items-center pointer-events-auto">
                 <a
                   href={h(link.sub[0].href)}
                   style={{ fontFamily: "var(--font-playfair)", transition: "color 200ms ease" }}
@@ -175,6 +175,7 @@ export default function Nav() {
                       ? "text-white hover:text-white/70"
                       : "text-black hover:text-black/60"
                   }`}
+                  onMouseEnter={() => { setMegaOpen(true); setHoveredIndex(i); }}
                 >
                   {lang === "ko" ? link.ko : link.en}
                 </a>
@@ -182,13 +183,15 @@ export default function Nav() {
 
               {/* Sub-items — fade + slide in, same speed as panel */}
               <div
-                className="flex flex-col gap-3 pb-8"
+                className="flex flex-col gap-3 pb-8 pointer-events-auto"
                 style={{
                   transition: "opacity 200ms ease, transform 200ms ease",
                   opacity: megaOpen ? 1 : 0,
                   transform: megaOpen ? "translateY(0)" : "translateY(-8px)",
                   pointerEvents: megaOpen ? "auto" : "none",
                 }}
+                onMouseEnter={() => { setMegaOpen(true); setHoveredIndex(i); }}
+                onMouseLeave={closeMega}
               >
                 {link.sub.map((item) => (
                   <a

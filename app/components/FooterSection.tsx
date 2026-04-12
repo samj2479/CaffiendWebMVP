@@ -140,8 +140,8 @@ export default function FooterSection() {
             </p>
             <p className="font-sans text-cream/20 text-xs">
               {t(
-                "© 2022–2026 카피엔드. 2022년 12월, 사랑으로 문을 열었습니다.",
-                "© 2022–2026 Caffiend. Opened with love in December 2022."
+                "© 2022 카피엔드",
+                "© 2022 Caffiend"
               )}
             </p>
           </div>
