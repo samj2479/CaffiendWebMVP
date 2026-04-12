@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(taskkill /PID 32000 /F)",
+      "Bash(cmd /c \"taskkill /PID 32000 /F\")",
+      "Bash(cmd:*)",
+      "Bash(powershell:*)",
+      "WebFetch(domain:www.fluffyfluffy.com)",
+      "Bash(npx next:*)",
+      "Bash(npx shadcn@latest init --help)",
+      "Bash(npx shadcn@latest init -y -d)",
+      "Bash(npx shadcn@latest add card badge separator button -y)",
+      "Bash(taskkill:*)",
+      "Bash(claude:*)",
+      "Bash(git:*)",
+      "WebFetch(domain:www.coffeebay.com)",
+      "Bash(gh auth:*)"
+    ]
+  }
+}

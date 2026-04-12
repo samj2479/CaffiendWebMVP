@@ -1,0 +1,314 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ─── Custom palette tokens ─────────────────── */
+@theme {
+  --color-cream:     #FFFFFF;
+  --color-parchment: #F2F2F2;
+  --color-latte:     #E0E0E0;
+  --color-caramel:   #1A1A1A;
+  --color-sienna:    #555555;
+  --color-blush:     #888888;
+  --color-mocha:     #333333;
+  --color-espresso:  #0D0D0D;
+  --color-sage:      #666666;
+
+  --font-serif: var(--font-playfair);
+  --font-sans:  var(--font-lato);
+}
+
+/* ─── Scroll-snap sections ───────────────────── */
+section, footer#contact {
+  scroll-snap-align: start;
+}
+
+/* ─── Hide default scrollbar on scroll container ── */
+#scroll-container {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+#scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Shadcn token → café palette mapping ───── */
+@theme inline {
+  --font-heading: var(--font-playfair);
+  --font-sans:    var(--font-lato);
+
+  --color-background:         var(--background);
+  --color-foreground:         var(--foreground);
+  --color-card:               var(--card);
+  --color-card-foreground:    var(--card-foreground);
+  --color-popover:            var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary:            var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary:          var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted:              var(--muted);
+  --color-muted-foreground:   var(--muted-foreground);
+  --color-accent:             var(--accent);
+  --color-accent-foreground:  var(--accent-foreground);
+  --color-destructive:        var(--destructive);
+  --color-border:             var(--border);
+  --color-input:              var(--input);
+  --color-ring:               var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar:                    var(--sidebar);
+  --color-sidebar-foreground:         var(--sidebar-foreground);
+  --color-sidebar-primary:            var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent:             var(--sidebar-accent);
+  --color-sidebar-accent-foreground:  var(--sidebar-accent-foreground);
+  --color-sidebar-border:             var(--sidebar-border);
+  --color-sidebar-ring:               var(--sidebar-ring);
+
+  /* Radius scale */
+  --radius-sm:  calc(var(--radius) * 0.6);
+  --radius-md:  calc(var(--radius) * 0.8);
+  --radius-lg:  var(--radius);
+  --radius-xl:  calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ─── B&W CSS variables ──────────────────────── */
+:root {
+  --background:         oklch(1 0 0);
+  --foreground:         oklch(0.13 0 0);
+
+  --card:               oklch(1 0 0);
+  --card-foreground:    oklch(0.13 0 0);
+
+  --popover:            oklch(1 0 0);
+  --popover-foreground: oklch(0.13 0 0);
+
+  --primary:            oklch(0.13 0 0);
+  --primary-foreground: oklch(1 0 0);
+
+  --secondary:            oklch(0.95 0 0);
+  --secondary-foreground: oklch(0.20 0 0);
+
+  --muted:            oklch(0.88 0 0);
+  --muted-foreground: oklch(0.40 0 0);
+
+  --accent:            oklch(0.40 0 0);
+  --accent-foreground: oklch(1 0 0);
+
+  --destructive: oklch(0.577 0.245 27.325);
+
+  --border: oklch(0.88 0 0);
+  --input:  oklch(0.95 0 0);
+  --ring:   oklch(0.40 0 0);
+
+  --radius: 1rem;
+
+  --chart-1: oklch(0.13 0 0);
+  --chart-2: oklch(0.30 0 0);
+  --chart-3: oklch(0.50 0 0);
+  --chart-4: oklch(0.70 0 0);
+  --chart-5: oklch(0.88 0 0);
+
+  --sidebar:                    oklch(0.95 0 0);
+  --sidebar-foreground:         oklch(0.13 0 0);
+  --sidebar-primary:            oklch(0.13 0 0);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent:             oklch(0.40 0 0);
+  --sidebar-accent-foreground:  oklch(1 0 0);
+  --sidebar-border:             oklch(0.88 0 0);
+  --sidebar-ring:               oklch(0.40 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-lato), system-ui, sans-serif;
+  }
+}
+
+/* ─── Hero entrance animations ─────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes floatY {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes steamRise {
+  0%   { opacity: 0;   transform: translateY(0) scaleX(1); }
+  50%  { opacity: 0.6; transform: translateY(-20px) scaleX(1.2); }
+  100% { opacity: 0;   transform: translateY(-40px) scaleX(0.8); }
+}
+
+.hero-fade-1 { animation: fadeUp 0.9s ease-out 0.1s both; }
+.hero-fade-2 { animation: fadeUp 0.9s ease-out 0.35s both; }
+.hero-fade-3 { animation: fadeUp 0.9s ease-out 0.6s both; }
+.hero-fade-4 { animation: fadeUp 0.9s ease-out 0.85s both; }
+
+.float-anim  { animation: floatY 3.5s ease-in-out infinite; }
+
+.steam-1 { animation: steamRise 2.5s ease-in-out 0s   infinite; }
+.steam-2 { animation: steamRise 2.5s ease-in-out 0.5s infinite; }
+.steam-3 { animation: steamRise 2.5s ease-in-out 1s   infinite; }
+
+/* ─── Scroll-reveal system ──────────────────────── */
+.sr-init {
+  opacity: 0;
+  transition:
+    opacity   0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    transform 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.sr-fade-up    { transform: translateY(28px); }
+.sr-fade-left  { transform: translateX(-28px); }
+.sr-fade-right { transform: translateX(28px); }
+.sr-scale-in   { transform: scale(0.88); }
+.sr-fade-in    { transform: none; }
+
+.sr-init.sr-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ─── Marquee ───────────────────────────────────── */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+.marquee-item {
+  padding: 0 2.5rem;
+  white-space: nowrap;
+}
+
+/* ─── Sparkle particles ─────────────────────────── */
+@keyframes sparklePop {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  40%       { opacity: 0.9; }
+  50%       { opacity: 0.7; transform: scale(1) rotate(180deg); }
+}
+
+.sparkle-dot {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #555555;
+  pointer-events: none;
+  animation: sparklePop var(--sp-dur, 3s) ease-in-out var(--sp-delay, 0s) infinite;
+  opacity: 0;
+}
+
+/* ─── Hero image pulse glow ─────────────────────── */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 30px rgba(100,100,100,0.15), 0 20px 60px rgba(44,18,8,0.15); }
+  50%       { box-shadow: 0 0 60px rgba(100,100,100,0.30), 0 20px 60px rgba(44,18,8,0.25); }
+}
+
+.hero-image-glow { animation: pulseGlow 4s ease-in-out infinite; }
+
+/* ─── Shimmer on stat card ──────────────────────── */
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position:  200% 0; }
+}
+
+.shimmer-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255,255,255,0.18) 50%,
+    transparent 60%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3.5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ─── Timeline dot pulse ────────────────────────── */
+@keyframes timelinePing {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  70%  { transform: scale(1.8); opacity: 0;   }
+  100% { transform: scale(1);   opacity: 0;   }
+}
+
+.timeline-ping {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid #555555;
+  animation: timelinePing 2.4s ease-out infinite;
+}
+
+/* ─── Enhanced card hover ───────────────────────── */
+.menu-card-hover {
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.35s ease;
+}
+.menu-card-hover:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 24px 64px rgba(30,30,30,0.18);
+}
+
+/* ─── Photo mosaic hover ────────────────────────── */
+.photo-mosaic-img {
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.photo-mosaic-img:hover {
+  transform: scale(1.06);
+}
+
+/* ─── Mega-menu column fill animation ───────────── */
+@keyframes fillFromLeft {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+@keyframes fillFromRight {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+.mega-fill-from-left  { animation: fillFromLeft  0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+.mega-fill-from-right { animation: fillFromRight 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
+
+/* ─── Language toggle animation ─────────────────── */
+@keyframes langIn {
+  from { opacity: 0; transform: translateY(7px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+.lang-in { animation: langIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+/* ─── Section ornament reveal ────────────────────── */
+@keyframes expandFromCenter {
+  from { transform: scaleX(0); opacity: 0; }
+  to   { transform: scaleX(1); opacity: 1; }
+}
+.sr-expand { transform: scaleX(0); opacity: 0; }
+.sr-expand.sr-visible {
+  animation: expandFromCenter 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
