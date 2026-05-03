@@ -35,10 +35,10 @@ export default function BlankPage({
 
   const getFinalStyle = () => {
     if (position === "top-center") {
-      return { top: "140px", left: "50%", transform: "translateX(-50%)" };
+      return { top: "clamp(90px, 12vh, 140px)", left: "50%", transform: "translateX(-50%)" };
     }
     // top-left
-    return { top: "140px", left: "80px", transform: "translate(0, 0)" };
+    return { top: "clamp(90px, 12vh, 140px)", left: "clamp(1.25rem, 5vw, 80px)", transform: "translate(0, 0)" };
   };
 
   const finalStyle = getFinalStyle();
@@ -64,7 +64,7 @@ export default function BlankPage({
       </section>
 
       {children && (
-        <section className="bg-white py-20 px-6">
+        <section className="bg-white py-12 md:py-20 px-5 md:px-6">
           <div className="max-w-4xl mx-auto">
             {children}
           </div>

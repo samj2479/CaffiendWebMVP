@@ -65,7 +65,7 @@ export default function HeroSection() {
       />
 
       {/* Content */}
-      <div className="relative z-10 w-full pt-36 pb-16 px-6 md:px-12">
+      <div className="relative z-10 w-full pt-24 md:pt-36 pb-12 md:pb-16 px-6 md:px-12">
         <div className="max-w-7xl mx-auto">
 
           {/* Since 2022 — top left, above CAFFIEND */}
@@ -88,7 +88,7 @@ export default function HeroSection() {
               {/* 카피엔드 — below CAFFIEND, right-aligned but ends before D */}
               <p
                 className="font-serif font-bold text-cream tracking-[0.3em] text-right mt-2"
-                style={{ ...krFont, fontSize: "clamp(1rem, 2vw, 1.6rem)", paddingRight: "21%" }}
+                style={{ ...krFont, fontSize: "clamp(0.75rem, 2vw, 1.6rem)", paddingRight: "clamp(2%, 21%, 21%)" }}
               >
                 카피엔드
               </p>

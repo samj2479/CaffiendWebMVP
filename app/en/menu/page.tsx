@@ -79,7 +79,7 @@ export default function Page() {
   return (
     <main>
       {/* Header section with title and sorting */}
-      <section className="min-h-screen flex flex-col bg-white relative pt-[140px] px-6 pb-32">
+      <section className="min-h-screen flex flex-col bg-white relative pt-[100px] md:pt-[140px] px-4 sm:px-6 pb-20 md:pb-32">
         <div className="max-w-6xl mx-auto w-full">
           {/* Centered Title */}
           <h1
@@ -94,7 +94,7 @@ export default function Page() {
           </h1>
 
           {/* Category Toggle */}
-          <div className="flex justify-center mt-8 gap-2">
+          <div className="flex flex-wrap justify-center mt-8 gap-2">
             {categories.map((cat, i) => (
               <button
                 key={i}
@@ -147,14 +147,14 @@ export default function Page() {
             </div>
           </div>
 
-          {/* Menu items grid - 4 per row */}
-          <div className="mt-10 grid grid-cols-4 gap-6">
+          {/* Menu items grid - responsive */}
+          <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {menuItems.map((item, i) => (
               <div key={i} className="flex flex-col">
                 {/* Grey placeholder box */}
                 <div className="aspect-square bg-gray-200" />
                 {/* Item name */}
-                <p className="font-sans text-base text-black/80 mt-4 text-center">
+                <p className="font-sans text-sm md:text-base text-black/80 mt-3 text-center">
                   {lang === "ko" ? item.ko : item.en}
                 </p>
               </div>

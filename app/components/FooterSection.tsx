@@ -42,7 +42,7 @@ export default function FooterSection() {
 
   return (
     <footer id="contact" style={{ background: "#0A0A0A" }}>
-      <div className="max-w-6xl mx-auto px-6 pt-20 pb-12 grid grid-cols-2 md:grid-cols-4 gap-10">
+      <div className="max-w-6xl mx-auto px-6 pt-12 md:pt-20 pb-8 md:pb-12 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
 
         {/* Brand column */}
         <div className="col-span-2 md:col-span-1">

@@ -79,7 +79,7 @@ const timeline = [
 function StorySection() {
   const t = useT();
   return (
-    <section id="story" className="min-h-screen flex flex-col justify-center py-24 px-6 bg-white">
+    <section id="story" className="min-h-screen flex flex-col justify-center py-14 md:py-24 px-6 bg-white">
       <div className="max-w-6xl mx-auto">
         <div className="text-center">
           <h2
@@ -101,7 +101,7 @@ function StorySection() {
 function MenuSection() {
   const t = useT();
   return (
-    <section id="menu" className="min-h-screen flex flex-col justify-center py-24 px-6 bg-white">
+    <section id="menu" className="min-h-screen flex flex-col justify-center py-14 md:py-24 px-6 bg-white">
       <div className="max-w-6xl mx-auto">
         <div className="text-center">
           <h2
@@ -152,9 +152,9 @@ function ReviewsSection() {
   const t = useT();
   const { lang } = useLanguage();
   return (
-    <section id="reviews" className="min-h-screen flex flex-col justify-center py-24 px-6 bg-white">
+    <section id="reviews" className="min-h-screen flex flex-col justify-center py-14 md:py-24 px-6 bg-white">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 md:mb-16">
           <h2
             className="sr-init sr-fade-up font-serif font-bold text-caramel"
             style={{ fontSize: "clamp(2rem, 5vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 0.9 }}
@@ -163,10 +163,10 @@ function ReviewsSection() {
           </h2>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-4 md:gap-6">
           {reviews.map((review, i) => (
             <div key={i}
-              className="sr-init sr-fade-up bg-cream rounded-3xl p-8 border border-latte flex flex-col gap-5 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+              className="sr-init sr-fade-up bg-cream rounded-3xl p-5 md:p-8 border border-latte flex flex-col gap-4 md:gap-5 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
               style={{ transitionDelay: `${i * 120}ms` }}>
               <StarRating count={review.rating} />
               <p className="font-sans text-mocha/70 text-sm leading-relaxed flex-1">
@@ -205,7 +205,7 @@ function ReviewsSection() {
 function NoticeSection() {
   const t = useT();
   return (
-    <section id="notice" className="min-h-screen flex flex-col justify-center py-24 px-6 bg-white">
+    <section id="notice" className="min-h-screen flex flex-col justify-center py-14 md:py-24 px-6 bg-white">
       <div className="max-w-6xl mx-auto">
         <div className="text-center">
           <h2
@@ -229,15 +229,15 @@ function NoticeSection() {
 function ReserveSection() {
   const t = useT();
   return (
-    <section id="reserve" className="min-h-screen flex flex-col justify-center py-24 px-6 bg-white">
+    <section id="reserve" className="min-h-screen flex flex-col justify-center py-14 md:py-24 px-6 bg-white">
       <div className="max-w-4xl mx-auto text-center">
         <h2
-          className="sr-init sr-fade-up font-serif font-bold text-caramel mb-6"
+          className="sr-init sr-fade-up font-serif font-bold text-caramel mb-4 md:mb-6"
           style={{ fontSize: "clamp(2rem, 5vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 0.9 }}
         >
           {t("단체주문", "Group Orders")}
         </h2>
-        <p className="sr-init sr-fade-up font-sans text-mocha/65 text-lg max-w-2xl mx-auto leading-relaxed mb-10" style={{ transitionDelay: "160ms" }}>
+        <p className="sr-init sr-fade-up font-sans text-mocha/65 text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-6 md:mb-10" style={{ transitionDelay: "160ms" }}>
           {t(
             "행사, 모임, 선물 등 단체주문은 전화 또는 인스타그램으로 미리 문의해 주세요. 미경 대표님이 정성껏 준비해 드립니다.",
             "For events, gatherings, or gifts — please enquire in advance by phone or Instagram. Mi-gyeong will prepare everything with care."
