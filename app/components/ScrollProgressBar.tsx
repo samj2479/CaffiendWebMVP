@@ -68,7 +68,7 @@ export default function ScrollProgressBar() {
             position: "absolute", top: 0, left: 0, width: "100%",
             height: `${Math.min(progress, 1) * 100}%`,
             background: fillColor,
-            transition: "height 80ms ease-out, background 400ms ease",
+            transition: "background 400ms ease",
             borderRadius: 3,
           }}
         />

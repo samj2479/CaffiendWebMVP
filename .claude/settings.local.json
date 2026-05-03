@@ -16,7 +16,9 @@
       "Bash(claude:*)",
       "Bash(git:*)",
       "WebFetch(domain:www.coffeebay.com)",
-      "Bash(gh auth:*)"
+      "Bash(gh auth:*)",
+      "Bash(python3:*)",
+      "Bash(node:*)"
     ]
   }
 }

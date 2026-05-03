@@ -244,8 +244,8 @@ function ReserveSection() {
           )}
         </p>
         <div className="sr-init sr-fade-up flex justify-center" style={{ transitionDelay: "240ms" }}>
-          <a href="tel:0507-1366-4878"
-            className="font-sans text-sm tracking-widest uppercase bg-sienna text-cream px-10 py-3.5 rounded-full hover:bg-caramel transition-colors duration-300">
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSeIHVtuqFlW7piju-yZyt0PWDX_ZN-UUniu87Y5wemfKpymQg/viewform" target="_blank" rel="noopener noreferrer"
+            className="font-sans text-sm tracking-widest uppercase bg-caramel text-cream px-10 py-3.5 rounded-full hover:bg-sienna transition-colors duration-300">
             {t("단체주문 예약", "Reserve Group Order")}
           </a>
         </div>

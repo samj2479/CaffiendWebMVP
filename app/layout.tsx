@@ -4,6 +4,8 @@ import "./globals.css";
 import Nav from "./components/Nav";
 import ScrollAnimationObserver from "./components/ScrollAnimationObserver";
 import ScrollProgressBar from "./components/ScrollProgressBar";
+import ScrollToTop from "./components/ScrollToTop";
+import ScrollSnapController from "./components/ScrollSnapController";
 import { LanguageProvider } from "./context/LanguageContext";
 
 const playfair = Playfair_Display({
@@ -47,12 +49,13 @@ export default function RootLayout({
           <Nav />
           <ScrollAnimationObserver />
           <ScrollProgressBar />
+          <ScrollToTop />
+          <ScrollSnapController />
           <div
             id="scroll-container"
             style={{
               height: "100vh",
               overflowY: "scroll",
-              scrollSnapType: "y mandatory",
             }}
           >
             {children}
