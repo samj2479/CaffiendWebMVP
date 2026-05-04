@@ -10,16 +10,16 @@ const sortOptions = [
 ];
 
 const seasonItems = [
-  { ko: "스프링 블라썸 에이드", en: "Spring Blossom Ade" },
-  { ko: "벚꽃 슈크림 라떼", en: "Cherry Blossom Cream Latte" },
-  { ko: "망고 말차 라떼", en: "Mango Matcha Latte", image: "/%EB%A7%9D%EA%B3%A0%EB%A7%90%EC%B0%A8%20%EB%9D%BC%EB%96%BC.png" },
-  { ko: "산타 메리", en: "Santa Mary" },
-  { ko: "고구마 크림브륄레 라떼", en: "Sweet Potato Crème Brûlée Latte", image: "/%ED%81%AC%EB%A6%BC%20%EB%B8%8C%EB%A5%84%EB%A0%88%20%EB%9D%BC%EB%96%BC.png" },
-  { ko: "청귤티", en: "Green Tangerine Tea" },
-  { ko: "청귤에이드", en: "Green Tangerine Ade", image: "/%EC%B2%AD%EA%B7%A4%20%EC%97%90%EC%9D%B4%EB%93%9C.png" },
-  { ko: "오미자 티", en: "Omija Tea" },
-  { ko: "오미자 에이드", en: "Omija Ade" },
-  { ko: "오미자 라떼", en: "Omija Latte" },
+  { ko: "스프링 블라썸 에이드", en: "Spring Blossom Ade", season: true },
+  { ko: "벚꽃 슈크림 라떼", en: "Cherry Blossom Cream Latte", season: true },
+  { ko: "망고 말차 라떼", en: "Mango Matcha Latte", image: "/%EB%A7%9D%EA%B3%A0%EB%A7%90%EC%B0%A8%20%EB%9D%BC%EB%96%BC.png", season: true },
+  { ko: "산타 메리", en: "Santa Mary", season: true },
+  { ko: "고구마 크림브륄레 라떼", en: "Sweet Potato Crème Brûlée Latte", image: "/%ED%81%AC%EB%A6%BC%20%EB%B8%8C%EB%A5%84%EB%A0%88%20%EB%9D%BC%EB%96%BC.png", season: true },
+  { ko: "청귤티", en: "Green Tangerine Tea", season: true },
+  { ko: "청귤에이드", en: "Green Tangerine Ade", image: "/%EC%B2%AD%EA%B7%A4%20%EC%97%90%EC%9D%B4%EB%93%9C.png", season: true },
+  { ko: "오미자 티", en: "Omija Tea", season: true },
+  { ko: "오미자 에이드", en: "Omija Ade", season: true },
+  { ko: "오미자 라떼", en: "Omija Latte", season: true },
 ];
 
 const soufleeItems = [
@@ -195,15 +195,30 @@ export default function Page() {
   const [activeCatIndex, setActiveCatIndex] = useState(0);
   const [activeSubIndex, setActiveSubIndex] = useState(0);
   const [sortOpen, setSortOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const sortRef = useRef<HTMLDivElement>(null);
 
   const activeCat = categories[activeCatIndex];
+  const allItems = categories[0].items;
 
   const menuItems = (() => {
     if (activeCat.sub) {
       return activeCat.sub[activeSubIndex]?.items ?? [];
     }
     return activeCat.items;
+  })();
+
+  const displayItems = (() => {
+    const q = searchQuery.trim().toLowerCase();
+    const base = q
+      ? allItems.filter((item) => item.ko.toLowerCase().includes(q) || item.en.toLowerCase().includes(q))
+      : menuItems;
+    if (activeSort === 2) {
+      return [...base].sort((a, b) =>
+        lang === "ko" ? a.ko.localeCompare(b.ko, "ko") : a.en.localeCompare(b.en, "en")
+      );
+    }
+    return base;
   })();
 
   useEffect(() => {
@@ -219,6 +234,7 @@ export default function Page() {
   function handleCatClick(i: number) {
     setActiveCatIndex(i);
     setActiveSubIndex(0);
+    setSearchQuery("");
   }
 
   return (
@@ -234,52 +250,55 @@ export default function Page() {
             MENU
           </h1>
 
-          {/* Top-level category row */}
-          <div className="flex flex-wrap justify-start mt-8 gap-2">
-            {categories.map((cat, i) => (
-              <button
-                key={i}
-                onClick={() => handleCatClick(i)}
-                className={`font-sans text-sm px-6 py-2.5 rounded-full border transition-all ${
-                  activeCatIndex === i
-                    ? "bg-caramel text-white border-caramel"
-                    : "bg-white text-black/70 border-black/20 hover:border-black/40"
-                }`}
-              >
-                {lang === "ko" ? cat.ko : cat.en}
-              </button>
-            ))}
-          </div>
-
-          {/* Sub-category row (only for 디저트 / 음료) */}
-          <div
-            className="overflow-hidden transition-all duration-300 ease-in-out"
-            style={{
-              maxHeight: activeCat.sub ? "120px" : "0px",
-              opacity: activeCat.sub ? 1 : 0,
-              marginTop: activeCat.sub ? "16px" : "0px",
-            }}
-          >
-            <div className="flex flex-wrap justify-start gap-2">
-              {(activeCat.sub ?? []).map((sub, i) => (
+          {/* Category + Search + Sort row */}
+          <div className="flex items-center justify-between mt-8 gap-4" ref={sortRef}>
+            {/* Left: category pills */}
+            <div className="flex flex-wrap gap-2">
+              {categories.map((cat, i) => (
                 <button
                   key={i}
-                  onClick={() => setActiveSubIndex(i)}
-                  className={`font-sans text-xs px-4 py-1.5 rounded-full border transition-all ${
-                    activeSubIndex === i
-                      ? "bg-black text-white border-black"
-                      : "bg-white text-black/50 border-black/15 hover:border-black/30 hover:text-black/70"
+                  onClick={() => handleCatClick(i)}
+                  className={`font-sans text-sm px-6 py-2.5 rounded-full border transition-all ${
+                    activeCatIndex === i
+                      ? "bg-caramel text-white border-caramel"
+                      : "bg-white text-black/70 border-black/20 hover:border-black/40"
                   }`}
                 >
-                  {lang === "ko" ? sub.ko : sub.en}
+                  {lang === "ko" ? cat.ko : cat.en}
                 </button>
               ))}
             </div>
-          </div>
 
-          {/* Sort row */}
-          <div className="flex justify-end mt-6" ref={sortRef}>
-            <div className="flex items-center gap-3">
+            {/* Right: search + sort */}
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <div className="relative">
+                <svg
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-black/30 pointer-events-none"
+                  width="13" height="13" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" strokeWidth="2.5"
+                  strokeLinecap="round" strokeLinejoin="round"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.35-4.35" />
+                </svg>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={lang === "ko" ? "검색..." : "Search..."}
+                  className="w-40 font-sans text-sm pl-8 pr-7 py-2 rounded-full border border-black/20 bg-white text-black/80 placeholder:text-black/30 focus:outline-none focus:border-caramel transition-all"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-black/30 hover:text-black/60 transition-colors"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
+              </div>
               <span className="font-sans text-sm text-black/50">{lang === "ko" ? "정렬" : "Sort"}</span>
               <div className="relative">
                 <button
@@ -308,10 +327,46 @@ export default function Page() {
             </div>
           </div>
 
+          {/* Sub-category row (only for 디저트 / 음료) */}
+          <div
+            className="overflow-hidden transition-all duration-300 ease-in-out"
+            style={{
+              maxHeight: activeCat.sub ? "120px" : "0px",
+              opacity: activeCat.sub ? 1 : 0,
+              marginTop: activeCat.sub ? "16px" : "0px",
+            }}
+          >
+            <div className="flex flex-wrap justify-start gap-2">
+              {(activeCat.sub ?? []).map((sub, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveSubIndex(i)}
+                  className={`font-sans text-xs px-4 py-1.5 rounded-full border transition-all ${
+                    activeSubIndex === i
+                      ? "bg-black text-white border-black"
+                      : "bg-white text-black/50 border-black/15 hover:border-black/30 hover:text-black/70"
+                  }`}
+                >
+                  {lang === "ko" ? sub.ko : sub.en}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Menu grid */}
           <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {menuItems.map((item, i) => (
-              <div key={i} className="flex flex-col">
+            {displayItems.length === 0 && (
+              <p className="col-span-full text-center font-sans text-sm text-black/40 py-12">
+                {lang === "ko" ? "검색 결과가 없습니다." : "No results found."}
+              </p>
+            )}
+            {displayItems.map((item, i) => (
+              <div key={i} className="relative flex flex-col">
+                {(item as { season?: boolean }).season && (
+                  <span className="absolute -top-1 -left-1 z-10 bg-black text-white font-sans text-xs font-semibold px-3 py-1 leading-tight">
+                    {lang === "ko" ? "시즌" : "Seasonal"}
+                  </span>
+                )}
                 <div className="aspect-square bg-gray-200 overflow-hidden">
                   {(item as { image?: string; objectPosition?: string; scale?: number }).image && (
                     <img

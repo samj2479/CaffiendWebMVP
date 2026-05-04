@@ -75,6 +75,16 @@ Hero → Story (CEO timeline) → Philosophy (values + seasons) → Menu (carous
 - `isDark` = `isHome && !scrolled && !megaOpen` (sub-pages always white nav)
 - `ScrollAnimationObserver` re-runs on `pathname` change so EN page sections animate in correctly
 
+## Menu Page (`app/menu/page.tsx` + `app/en/menu/page.tsx`)
+- Both files are always identical — always update both together
+- Top control row: `flex items-center justify-between mt-8 gap-4` — category pills (left) + search+sort (right) on one single row, vertically centered
+- Search input: `w-40`, right side, filters across `allItems` (all categories) when query is non-empty; clears on category change
+- Sort: index 0 = Popular (no-op), 1 = Latest (no-op), 2 = Name → `localeCompare` by `item.ko` (`"ko"` locale) or `item.en` (`"en"` locale) depending on `lang`
+- `displayItems` = filtered+sorted derived array; `menuItems` = category/subcategory slice; `allItems = categories[0].items`
+- Season badge: items in `seasonItems` carry `season: true`; rendered as `absolute -top-1 -left-1 z-10 bg-black text-white` on the card `div` (not inside the grey box)
+- Card structure: `relative flex flex-col` → badge (absolute sibling) + `aspect-square bg-gray-200 overflow-hidden` grey box + name `<p>`
+- Grey boxes must stay `aspect-square overflow-hidden` — no inner wrappers, no `overflow-visible` on the grey box itself
+
 ## Completed Changes (previous sessions)
 - Lang button: shows "English" / "🇰🇷 한국어", animates on switch (`lang-in` keyframe)
 - Reviews section label: "소중한 고객님들의 후기"
