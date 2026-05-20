@@ -102,10 +102,10 @@ const nonCoffeeItems = [
 
 const einItems = [
   { ko: "아인슈페너", en: "Einspänner", image: "/%EC%95%84%EC%9D%B8%EC%8A%88%ED%8E%98%EB%84%88.png" },
-  { ko: "로투스 카라멜라떼", en: "Lotus Caramel Latte", image: "/%EB%A1%9C%ED%88%AC%EC%8A%A4%EC%B9%B4%EB%9D%BC%EB%A9%9C%20%EB%9D%BC%EB%96%BC.png" },
+  { ko: "로투스 카라멜라떼", en: "Lotus Caramel Latte", image: "/%EB%A1%9C%ED%88%AC%EC%8A%A4%20%EC%B9%B4%EB%9D%BC%EB%A9%9C%20%EB%9D%BC%EB%96%BC.png" },
   { ko: "헤이즐토피넛라떼", en: "Hazel Toffee Nut Latte", image: "/%ED%97%A4%EC%9D%B4%EC%A6%90%ED%86%A0%ED%94%BC%EB%84%9B%20%EB%9D%BC%EB%96%BC.png" },
   { ko: "옥수수슈페너", en: "Corn Einspänner", image: "/%EC%98%A5%EC%88%98%EC%88%98%EC%8A%88%ED%8E%98%EB%84%88.png" },
-  { ko: "얼그레이 바닐라티라떼", en: "Earl Grey Vanilla Tea Latte", image: "/%EC%96%BC%EA%B7%B8%EB%A0%88%EC%9D%B4%20%EB%B0%94%EB%8B%90%EB%9D%BC%ED%8B%B0%20%EB%9D%BC%EB%96%BC.png" },
+  { ko: "얼그레이 바닐라티라떼", en: "Earl Grey Vanilla Tea Latte", image: "/%EB%A1%9C%ED%88%AC%EC%8A%A4%EC%B9%B4%EB%9D%BC%EB%A9%9C%20%EB%9D%BC%EB%96%BC.png" },
   { ko: "런던포그", en: "London Fog", image: "/%EB%9F%B0%EB%8D%98%ED%8F%AC%EA%B7%B8.png" },
   { ko: "흑임자 슈페너", en: "Black Sesame Einspänner", image: "/%ED%9D%91%EC%9E%84%EC%9E%90%20%EC%8A%88%ED%8E%98%EB%84%88.png" },
   { ko: "에쏘 아포가토", en: "Espresso Affogato", image: "/%EC%97%90%EC%8F%98%20%EC%95%84%ED%8F%AC%EC%B9%B4%ED%86%A0.png" },
@@ -116,7 +116,7 @@ const einItems = [
 const teaItems = [
   { ko: "청귤티", en: "Green Tangerine Tea", image: "/%EC%B2%AD%EA%B7%A4%ED%8B%B0.png", season: true },
   { ko: "오미자 티", en: "Omija Tea", image: "/%EC%98%A4%EB%AF%B8%EC%9E%90%ED%8B%B0.png", season: true },
-  { ko: "허브티", en: "Herb Tea", image: "/%ED%97%88%EB%B8%8C%ED%8B%B0.png" },
+  { ko: "허브티", en: "Herb Tea", image: "/%ED%97%88%EB%B8%8C%ED%8B%B0%20.png" },
   { ko: "아이스티", en: "Iced Tea", image: "/%EC%95%84%EC%9D%B4%EC%8A%A4%ED%8B%B0.png" },
   { ko: "꿀생강차", en: "Honey Ginger Tea", image: "/%EA%BF%80%EC%83%9D%EA%B0%95%EC%B0%A8.png" },
   { ko: "레몬생강차", en: "Lemon Ginger Tea", image: "/%EB%A0%88%EB%AA%AC%EC%83%9D%EA%B0%95%EC%B0%A8.png" },
@@ -133,7 +133,7 @@ const adeItems = [
   { ko: "청귤에이드", en: "Green Tangerine Ade", image: "/%EC%B2%AD%EA%B7%A4%20%EC%97%90%EC%9D%B4%EB%93%9C.png", season: true },
   { ko: "오미자 에이드", en: "Omija Ade", image: "/%EC%98%A4%EB%AF%B8%EC%9E%90%EC%97%90%EC%9D%B4%EB%93%9C.png", season: true },
   { ko: "자몽에이드", en: "Grapefruit Ade", image: "/%EC%9E%90%EB%AA%BD%EC%97%90%EC%9D%B4%EB%93%9C.png" },
-  { ko: "레몬 에이드", en: "Lemon Ade" },
+  { ko: "레몬 에이드", en: "Lemon Ade", image: "/%EB%A0%88%EB%AA%AC%EC%97%90%EC%9D%B4%EB%93%9C%20.png" },
   { ko: "패션후르츠 에이드", en: "Passion Fruit Ade", image: "/%ED%8C%A8%EC%85%98%ED%9B%84%EB%A5%B4%EC%B8%A0%20%EC%97%90%EC%9D%B4%EB%93%9C.png" },
   { ko: "얼그레이유자 에이드", en: "Earl Grey Yuzu Ade", image: "/%EC%96%BC%EA%B7%B8%EB%A0%88%EC%9D%B4%20%EC%9C%A0%EC%9E%90%20%EC%97%90%EC%9D%B4%EB%93%9C.png" },
   { ko: "바질토마토 에이드", en: "Basil Tomato Ade", image: "/%EB%B0%94%EC%A7%88%20%ED%86%A0%EB%A7%88%ED%86%A0%20%EC%97%90%EC%9D%B4%EB%93%9C.png" },
