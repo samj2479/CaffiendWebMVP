@@ -270,9 +270,9 @@ export default function Page() {
             MENU
           </h1>
 
-          {/* Category + Search + Sort row */}
-          <div className="flex items-center justify-between mt-8 gap-4" ref={sortRef}>
-            {/* Left: category pills */}
+          {/* Category + Search + Sort */}
+          <div className="flex flex-col gap-3 mt-8 md:flex-row md:items-center md:justify-between" ref={sortRef}>
+            {/* Category pills */}
             <div className="flex flex-wrap gap-2">
               {categories.map((cat, i) => (
                 <button
@@ -289,9 +289,9 @@ export default function Page() {
               ))}
             </div>
 
-            {/* Right: search + sort */}
-            <div className="flex items-center gap-3 flex-shrink-0">
-              <div className="relative">
+            {/* Search + sort */}
+            <div className="flex items-center gap-3 md:flex-shrink-0">
+              <div className="relative flex-1 md:flex-none">
                 <svg
                   className="absolute left-3 top-1/2 -translate-y-1/2 text-black/30 pointer-events-none"
                   width="13" height="13" viewBox="0 0 24 24"
@@ -306,7 +306,7 @@ export default function Page() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={lang === "ko" ? "검색..." : "Search..."}
-                  className="w-40 font-sans text-sm pl-8 pr-7 py-2 rounded-full border border-[#174C35]/30 bg-[#FAF7F2] text-[#174C35] placeholder:text-[#174C35]/40 focus:outline-none focus:border-[#174C35] transition-all"
+                  className="w-full md:w-40 font-sans text-sm pl-8 pr-7 py-2 rounded-full border border-[#174C35]/30 bg-[#FAF7F2] text-[#174C35] placeholder:text-[#174C35]/40 focus:outline-none focus:border-[#174C35] transition-all"
                 />
                 {searchQuery && (
                   <button
@@ -319,7 +319,7 @@ export default function Page() {
                   </button>
                 )}
               </div>
-              <span className="font-sans text-sm text-black/50">{lang === "ko" ? "정렬" : "Sort"}</span>
+              <span className="hidden md:inline font-sans text-sm text-black/50">{lang === "ko" ? "정렬" : "Sort"}</span>
               <div className="relative">
                 <button
                   onClick={() => setSortOpen(!sortOpen)}

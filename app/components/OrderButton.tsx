@@ -11,7 +11,8 @@ const EXPANDED_FONT = "clamp(0.75rem, 2.2vw, 2.1rem)";
 
 function computeSize() {
   if (typeof window === "undefined") return 192;
-  return Math.round(Math.min(Math.max(window.innerWidth * 0.18, 60), 192));
+  if (window.matchMedia("(max-width: 768px)").matches) return 52;
+  return Math.round(Math.min(Math.max(window.innerWidth * 0.18, 80), 192));
 }
 
 function computeIsMobile() {
