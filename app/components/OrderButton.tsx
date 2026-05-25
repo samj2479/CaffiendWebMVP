@@ -1,16 +1,17 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLanguage } from "../context/LanguageContext";
 
 const ORDER_URL = "https://caffiend-qr-fh.web.app/";
 
-const DESKTOP = { size: 192, circleFont: "2.25rem", expandedFont: "2.1rem", expandedWidth: "min(680px, 88vw)", bottom: "7rem" };
+const DESKTOP = { size: 192, circleFont: "2.25rem", expandedFont: "2.1rem",  expandedWidth: "min(680px, 88vw)", bottom: "7rem"  };
 const MOBILE  = { size: 128, circleFont: "1.5rem",  expandedFont: "1.5rem",  expandedWidth: "min(340px, 85vw)", bottom: "5.5rem" };
 
 export default function OrderButton() {
   const { lang } = useLanguage();
-  const [hovered, setHovered] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const ref = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 768px)");
@@ -19,6 +20,18 @@ export default function OrderButton() {
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
   }, []);
+
+  // Close on outside click (mobile only)
+  useEffect(() => {
+    if (!isMobile || !expanded) return;
+    const onOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setExpanded(false);
+      }
+    };
+    document.addEventListener("mousedown", onOutside);
+    return () => document.removeEventListener("mousedown", onOutside);
+  }, [isMobile, expanded]);
 
   const cfg = isMobile ? MOBILE : DESKTOP;
   const { size, circleFont, expandedFont, expandedWidth, bottom } = cfg;
@@ -29,20 +42,31 @@ export default function OrderButton() {
       ? "카페에 계시다면? 테이블에서 주문하기"
       : "At the Cafe? Order from your table";
 
+  function handleClick(e: React.MouseEvent) {
+    if (!isMobile) return; // desktop: href handles navigation normally
+    if (!expanded) {
+      e.preventDefault();  // first tap: expand, don't navigate
+      setExpanded(true);
+    }
+    // second tap while expanded: let href navigate naturally
+  }
+
   return (
     <a
+      ref={ref}
       href={ORDER_URL}
       target="_blank"
       rel="noopener noreferrer"
       aria-label={long}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onClick={handleClick}
+      onMouseEnter={() => { if (!isMobile) setExpanded(true); }}
+      onMouseLeave={() => { if (!isMobile) setExpanded(false); }}
       style={{
         position: "fixed",
         bottom,
         right: "2rem",
         height: `${size}px`,
-        width: hovered ? expandedWidth : `${size}px`,
+        width: expanded ? expandedWidth : `${size}px`,
         borderRadius: `${radius}px`,
         background: "#174C35",
         boxShadow: "0 4px 24px rgba(23,76,53,0.4)",
@@ -70,7 +94,7 @@ export default function OrderButton() {
           fontFamily: "var(--font-lato), system-ui, sans-serif",
           fontWeight: 600,
           color: "#fff",
-          opacity: hovered ? 1 : 0,
+          opacity: expanded ? 1 : 0,
           transition: "opacity 0.2s ease 0.15s",
           pointerEvents: "none",
           zIndex: 1,
@@ -94,7 +118,7 @@ export default function OrderButton() {
           gap: "2px",
           color: "#fff",
           zIndex: 2,
-          opacity: hovered ? 0 : 1,
+          opacity: expanded ? 0 : 1,
           transition: "opacity 0.18s ease",
         }}
       >
