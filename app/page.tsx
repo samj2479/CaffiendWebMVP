@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import HeroSection from "./components/HeroSection";
 import FooterSection from "./components/FooterSection";
 import { useT } from "./i18n/useT";
@@ -170,10 +170,10 @@ function MenuSection() {
   return (
     <section
       id="menu"
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
-      style={{ background: "#0D0D0D" }}
+      className="relative h-screen flex flex-col items-center justify-between overflow-hidden"
+      style={{ background: "#0D0D0D", paddingTop: "10vh", paddingBottom: "10vh" }}
     >
-      {/* Blurred backdrop — fills the top & bottom gaps like hero/story */}
+      {/* Blurred backdrop */}
       <div className="absolute inset-0">
         <Image
           src={`/${encodeURIComponent("딸기 수플레.png")}`}
@@ -199,39 +199,38 @@ function MenuSection() {
         style={{ background: "linear-gradient(to bottom, #0D0D0D 0%, transparent 30%, transparent 70%, #0D0D0D 100%)" }}
       />
 
-      {/* Title + subtitle block — pushed slightly toward marquee */}
-      <div className="relative z-20 text-center flex flex-col items-center" style={{ marginTop: "clamp(5rem, 10vh, 10rem)" }}>
+      {/* Title + subtitle */}
+      <div className="relative z-20 text-center flex flex-col items-center">
         <h2
-          className="sr-replay font-serif font-bold leading-[0.9] text-white mb-6"
+          className="sr-replay font-serif font-bold leading-[0.9] text-white mb-3"
           data-delay="100ms"
-          style={{ fontSize: "clamp(2rem, 6vw, 5rem)", letterSpacing: "-0.02em" }}
+          style={{ fontSize: "clamp(2rem, 5vh, 5rem)", letterSpacing: "-0.02em" }}
         >
           MENU
         </h2>
-
         <p
-          className="sr-replay mb-10 md:mb-14 max-w-md leading-relaxed text-center"
+          className="sr-replay max-w-md leading-relaxed text-center"
           data-delay="350ms"
-          style={{ fontSize: "clamp(0.9rem, 1.4vw, 1.05rem)", color: "rgba(255,255,255,0.72)" }}
+          style={{ fontSize: "clamp(0.8rem, 1.6vh, 1.05rem)", color: "rgba(255,255,255,0.72)" }}
         >
           {t("계절마다 바뀌는 다양한 제철 메뉴들을 고객님들께 선보입니다.", "We present a variety of seasonal menus that change with every season.")}
         </p>
       </div>
 
-      {/* Rotating image strip */}
+      {/* Rotating image strip — plain <img> to prevent lazy-load flicker */}
       <div className="relative z-20 w-full overflow-hidden">
         <div className="marquee-track flex" style={{ animationDuration: "48s" }}>
           {doubled.map((name, i) => (
             <div
               key={i}
               className="flex-shrink-0 overflow-hidden border border-white/10"
-              style={{ width: "clamp(140px, 38vw, 460px)", height: "clamp(140px, 38vw, 460px)" }}
+              style={{ width: "clamp(120px, 46vh, 460px)", height: "clamp(120px, 46vh, 460px)" }}
             >
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={`/${encodeURIComponent(name)}`}
                 alt={name.replace(".png", "")}
-                width={500}
-                height={500}
+                loading="eager"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -240,7 +239,7 @@ function MenuSection() {
       </div>
 
       {/* CTA button */}
-      <div className="relative z-20 mt-10 md:mt-14">
+      <div className="relative z-20">
         <a
           href="/menu"
           className="font-sans text-sm tracking-widest uppercase bg-white text-black px-10 py-3.5 rounded-full hover:bg-white/90 transition-colors duration-300"
@@ -260,22 +259,6 @@ function MenuSection() {
 ───────────────────────────────────────────── */
 function ReserveSection() {
   const t = useT();
-  const [atBottom, setAtBottom] = useState(false);
-
-  useEffect(() => {
-    const container = document.getElementById("scroll-container");
-    if (!container) return;
-
-    const onScroll = () => {
-      const footer = container.querySelector("footer#contact") as HTMLElement | null;
-      if (!footer) { setAtBottom(false); return; }
-      setAtBottom(footer.getBoundingClientRect().top < window.innerHeight);
-    };
-
-    onScroll();
-    container.addEventListener("scroll", onScroll, { passive: true });
-    return () => container.removeEventListener("scroll", onScroll);
-  }, []);
 
   return (
     <section
@@ -359,11 +342,6 @@ function ReserveSection() {
             <a
               href="/reserve"
               className="inline-block font-sans text-sm tracking-widest uppercase bg-white text-black px-10 py-3.5 rounded-full hover:bg-white/90 transition-colors duration-300"
-              style={{
-                opacity: atBottom ? 0 : 1,
-                pointerEvents: atBottom ? "none" : "auto",
-                transition: "opacity 0.3s ease",
-              }}
             >
               {t("단체주문 예약", "Group Order Reservation")}
             </a>
