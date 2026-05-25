@@ -212,16 +212,21 @@ section, footer#contact {
 /* ─── Menu card 3D flip ────────────────────────── */
 .menu-flip-wrap {
   perspective: 900px;
+  -webkit-perspective: 900px;
   position: relative;
 }
 .menu-flip-inner {
   position: absolute;
   inset: 0;
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
 }
 .menu-flip-inner.flipped {
   transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
 }
 .menu-flip-front,
 .menu-flip-back {
@@ -231,8 +236,13 @@ section, footer#contact {
   -webkit-backface-visibility: hidden;
   overflow: hidden;
 }
+.menu-flip-front {
+  transform: rotateY(0deg);
+  -webkit-transform: rotateY(0deg);
+}
 .menu-flip-back {
   transform: rotateY(180deg);
+  -webkit-transform: rotateY(180deg);
 }
 
 /* ─── Marquee ───────────────────────────────────── */
