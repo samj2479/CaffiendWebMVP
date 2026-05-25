@@ -1,5 +1,6 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useLayoutEffect, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { useLanguage } from "../context/LanguageContext";
 
 const ORDER_URL = "https://caffiend-qr-fh.web.app/";
@@ -7,19 +8,30 @@ const ORDER_URL = "https://caffiend-qr-fh.web.app/";
 const DESKTOP = { size: 192, expandedWidth: "min(680px, 88vw)", bottom: "7rem"  };
 const MOBILE  = { size: 128, expandedWidth: "calc(100vw - 4rem)", bottom: "5.5rem" };
 
-// Fonts scale with viewport width
 const CIRCLE_FONT   = "clamp(1.1rem, 3vw, 2.25rem)";
 const EXPANDED_FONT = "clamp(0.85rem, 2.2vw, 2.1rem)";
 
+const HIDDEN_PATHS = ["/notice/allergy", "/en/notice/allergy"];
+
+function getIsMobile() {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(max-width: 768px)").matches;
+}
+
 export default function OrderButton() {
   const { lang } = useLanguage();
+  const pathname = usePathname();
   const [expanded, setExpanded] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(getIsMobile);
   const ref = useRef<HTMLAnchorElement>(null);
+
+  // Sync immediately before paint to avoid flash
+  useLayoutEffect(() => {
+    setIsMobile(getIsMobile());
+  }, []);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 768px)");
-    setIsMobile(mq.matches);
     const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
@@ -37,6 +49,8 @@ export default function OrderButton() {
     return () => document.removeEventListener("mousedown", onOutside);
   }, [isMobile, expanded]);
 
+  if (HIDDEN_PATHS.includes(pathname)) return null;
+
   const cfg = isMobile ? MOBILE : DESKTOP;
   const { size, expandedWidth, bottom } = cfg;
   const radius = size / 2;
@@ -47,12 +61,11 @@ export default function OrderButton() {
       : "At the Cafe? Order from your table";
 
   function handleClick(e: React.MouseEvent) {
-    if (!isMobile) return; // desktop: href handles navigation normally
+    if (!isMobile) return;
     if (!expanded) {
-      e.preventDefault();  // first tap: expand, don't navigate
+      e.preventDefault();
       setExpanded(true);
     }
-    // second tap while expanded: let href navigate naturally
   }
 
   return (

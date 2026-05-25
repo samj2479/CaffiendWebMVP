@@ -115,7 +115,7 @@ export default function Nav() {
         style={{
           transition: "background 200ms ease, box-shadow 200ms ease",
           background: (!isHome || megaOpen || menuOpen) ? "#fff" : "transparent",
-          boxShadow: !isHome ? "0 1px 0 rgba(0,0,0,0.10)" : "none",
+          boxShadow: (!isHome && !menuOpen) ? "0 1px 0 rgba(0,0,0,0.10)" : "none",
         }}
       />
 
@@ -240,7 +240,6 @@ export default function Nav() {
         className="lg:hidden flex items-center justify-between px-5 h-14 transition-colors duration-300 relative z-10"
         style={{
           background: (isDark && !menuOpen) ? "transparent" : "#fff",
-          boxShadow: menuOpen ? "0 1px 0 rgba(0,0,0,0.08)" : "none",
         }}
       >
         <a
