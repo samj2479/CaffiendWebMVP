@@ -5,7 +5,7 @@ import { useLanguage } from "../context/LanguageContext";
 const ORDER_URL = "https://caffiend-qr-fh.web.app/";
 
 const DESKTOP = { size: 192, circleFont: "2.25rem", expandedFont: "2.1rem",  expandedWidth: "min(680px, 88vw)", bottom: "7rem"  };
-const MOBILE  = { size: 128, circleFont: "1.5rem",  expandedFont: "1.5rem",  expandedWidth: "min(340px, 85vw)", bottom: "5.5rem" };
+const MOBILE  = { size: 128, circleFont: "1.5rem",  expandedFont: "0.75rem", expandedWidth: "min(92vw, 420px)",  bottom: "5.5rem" };
 
 export default function OrderButton() {
   const { lang } = useLanguage();
