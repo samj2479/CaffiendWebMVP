@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { useLanguage } from "../../context/LanguageContext";
 import FooterSection from "../../components/FooterSection";
 import { allergyCols, getItemAllergenKeys } from "../../data/allergyData";
@@ -409,11 +410,15 @@ export default function Page() {
                       {/* Front */}
                       <div className="menu-flip-front">
                         {imgSrc && (
-                          <img
+                          <Image
                             src={imgSrc}
                             alt={lang === "ko" ? item.ko : item.en}
-                            className="w-full h-full object-cover"
+                            fill
+                            quality={80}
+                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                            className="object-cover"
                             style={{ objectPosition: (item as { objectPosition?: string }).objectPosition ?? "center" }}
+                            priority={i < 4}
                           />
                         )}
                       </div>
@@ -421,11 +426,14 @@ export default function Page() {
                       {/* Back */}
                       <div className="menu-flip-back" style={{ background: "#FAF7F2" }}>
                         {imgSrc && (
-                          <img
+                          <Image
                             src={imgSrc}
                             alt=""
                             aria-hidden
-                            className="absolute inset-0 w-full h-full object-cover"
+                            fill
+                            quality={80}
+                            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                            className="object-cover"
                             style={{ opacity: 0.15, objectPosition: (item as { objectPosition?: string }).objectPosition ?? "center" }}
                           />
                         )}
