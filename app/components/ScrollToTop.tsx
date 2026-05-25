@@ -56,16 +56,19 @@ export default function ScrollToTop() {
         position: "fixed",
         bottom: "2rem",
         right: "2rem",
-        width: "44px",
-        height: "44px",
+        width: "56px",
+        height: "56px",
         borderRadius: "50%",
-        background: "#fff",
-        border: "1px solid rgba(0,0,0,0.15)",
-        boxShadow: "0 2px 12px rgba(0,0,0,0.12)",
+        background: isHome ? "#fff" : "#174C35",
+        border: "none",
+        boxShadow: isHome
+          ? "0 4px 16px rgba(0,0,0,0.25)"
+          : "0 4px 16px rgba(23,76,53,0.35)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         cursor: "pointer",
+        color: isHome ? "#000" : "#fff",
         zIndex: 50,
         opacity: visible ? 1 : 0,
         pointerEvents: visible ? "auto" : "none",
@@ -73,7 +76,7 @@ export default function ScrollToTop() {
         transition: "opacity 0.25s ease, transform 0.25s ease",
       }}
     >
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M8 12V4M4 7l4-4 4 4" />
       </svg>
     </button>

@@ -5,6 +5,7 @@ import Nav from "./components/Nav";
 import ScrollAnimationObserver from "./components/ScrollAnimationObserver";
 import ScrollProgressBar from "./components/ScrollProgressBar";
 import ScrollToTop from "./components/ScrollToTop";
+import OrderButton from "./components/OrderButton";
 import ScrollSnapController from "./components/ScrollSnapController";
 import { LanguageProvider } from "./context/LanguageContext";
 
@@ -49,6 +50,7 @@ export default function RootLayout({
           <Nav />
           <ScrollAnimationObserver />
           <ScrollProgressBar />
+          <OrderButton />
           <ScrollToTop />
           <ScrollSnapController />
           <div

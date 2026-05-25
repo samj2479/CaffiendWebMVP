@@ -18,7 +18,7 @@ export default function HeroSection() {
       {/* Blurred backdrop */}
       <div className="absolute inset-0">
         <Image
-          src={`/${encodeURIComponent("strawberry souffle.png")}`}
+          src={`/${encodeURIComponent("딸기 수플레.png")}`}
           alt=""
           fill
           className="object-cover"
@@ -34,8 +34,8 @@ export default function HeroSection() {
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="relative w-full h-full">
           <Image
-            src={`/${encodeURIComponent("strawberry souffle.png")}`}
-            alt="Caffiend strawberry soufflé"
+            src={`/${encodeURIComponent("딸기 수플레.png")}`}
+            alt="Caffiend 딸기 수플레"
             fill
             className="object-contain"
             priority
@@ -70,14 +70,15 @@ export default function HeroSection() {
 
           {/* Since 2022 — top left, above CAFFIEND */}
           <p
-            className="hero-fade-1 font-serif font-bold text-cream mb-3"
+            className="sr-replay font-serif font-bold text-cream mb-3"
+            data-delay="100ms"
             style={{ fontSize: "clamp(1rem, 2vw, 1.5rem)", letterSpacing: "0.12em" }}
           >
             Since 2022
           </p>
 
           {/* Giant heading */}
-          <div className="hero-fade-2 mb-8">
+          <div className="sr-replay mb-8" data-delay="350ms">
             <div>
               <h1
                 className="font-serif font-bold text-cream leading-[0.9]"

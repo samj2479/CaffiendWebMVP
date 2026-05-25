@@ -10,12 +10,14 @@ export default function BlankPage({
   en,
   animate = false,
   position = "top-center",
+  hideTitle = false,
   children
 }: {
   ko: string;
   en: string;
   animate?: boolean;
   position?: Position;
+  hideTitle?: boolean;
   children?: ReactNode;
 }) {
   const { lang } = useLanguage();
@@ -43,11 +45,25 @@ export default function BlankPage({
 
   const finalStyle = getFinalStyle();
 
+  if (hideTitle) {
+    return (
+      <main>
+        <section className="flex items-center justify-center bg-[#FAF7F2]" style={{ minHeight: "100vh" }}>
+          {children}
+        </section>
+        <FooterSection />
+      </main>
+    );
+  }
+
   return (
     <main>
-      <section className="min-h-screen flex bg-white relative">
+      <section
+        className="flex bg-[#FAF7F2] relative"
+        style={{ minHeight: children ? "clamp(140px, 18vh, 200px)" : "100vh" }}
+      >
         <h1
-          className="font-serif font-bold text-caramel absolute z-40"
+          className="font-serif font-bold text-black absolute z-40"
           style={{
             opacity: phase === 0 ? 0 : 1,
             fontSize: phase === 2 ? "clamp(2rem, 4vw, 3rem)" : "clamp(2.5rem, 6vw, 5rem)",
@@ -64,7 +80,7 @@ export default function BlankPage({
       </section>
 
       {children && (
-        <section className="bg-white py-12 md:py-20 px-5 md:px-6">
+        <section className="bg-[#FAF7F2] py-12 md:py-20 px-5 md:px-6">
           <div className="max-w-4xl mx-auto">
             {children}
           </div>

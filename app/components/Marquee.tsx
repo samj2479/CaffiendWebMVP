@@ -32,7 +32,7 @@ export default function Marquee() {
   return (
     <div
       className="overflow-hidden py-4 border-y border-caramel/20"
-      style={{ background: "linear-gradient(90deg, #7D4E24 0%, #4A2C1A 100%)" }}
+      style={{ background: "linear-gradient(90deg, #174C35 0%, #0D3224 100%)" }}
       aria-hidden="true"
     >
       <div className="marquee-track">

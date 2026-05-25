@@ -1,34 +1,10 @@
 "use client";
 
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import HeroSection from "./components/HeroSection";
 import FooterSection from "./components/FooterSection";
 import { useT } from "./i18n/useT";
-import { useLanguage } from "./context/LanguageContext";
-
-const krFont = { fontFamily: "var(--font-noto-kr), var(--font-lato), sans-serif" };
-
-function StarRating({ count }: { count: number }) {
-  return (
-    <div className="flex gap-0.5">
-      {Array(5).fill(null).map((_, i) => (
-        <svg key={i} width="14" height="14" viewBox="0 0 20 20"
-          fill={i < count ? "#1A1A1A" : "none"} stroke="#1A1A1A" strokeWidth="1.5">
-          <path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27l-4.77 2.44.91-5.32L2.27 6.62l5.34-.78L10 1z" />
-        </svg>
-      ))}
-    </div>
-  );
-}
-
-function Ornament() {
-  return (
-    <div className="flex items-center justify-center gap-4 my-2">
-      <div className="h-px w-12 bg-sienna/40" />
-      <span className="text-sienna text-sm">✦</span>
-      <div className="h-px w-12 bg-sienna/40" />
-    </div>
-  );
-}
 
 /* ─────────────────────────────────────────────
    Section: CEO's Story
@@ -79,15 +55,90 @@ const timeline = [
 function StorySection() {
   const t = useT();
   return (
-    <section id="story" className="min-h-screen flex flex-col justify-center py-14 md:py-24 px-6 bg-white">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center">
+    <section
+      id="story"
+      className="relative min-h-screen flex flex-col justify-center overflow-hidden"
+      style={{ background: "#0D0D0D" }}
+    >
+      {/* Blurred backdrop */}
+      <div className="absolute inset-0">
+        <Image
+          src={`/${encodeURIComponent("김미경 대표님.png")}`}
+          alt=""
+          fill
+          className="object-cover"
+          quality={60}
+          sizes="100vw"
+          style={{ filter: "blur(18px) brightness(0.65) saturate(1.1)", transform: "scale(1.08)" }}
+          aria-hidden
+        />
+      </div>
+
+      {/* Sharp portrait — pushed right, fades + scales in */}
+      <div className="sr-replay story-img absolute inset-0" data-delay="0ms">
+        <Image
+          src={`/${encodeURIComponent("김미경 대표님.png")}`}
+          alt={t("김미경 대표님", "CEO Kim Mi-kyung")}
+          fill
+          className="object-contain"
+          quality={90}
+          sizes="100vw"
+          style={{ objectPosition: "72% center" }}
+        />
+      </div>
+
+      {/* Left + right edge vignette */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to right, rgba(13,13,13,0.80) 0%, transparent 30%, transparent 70%, rgba(13,13,13,0.80) 100%)",
+        }}
+      />
+
+      {/* Top + bottom gradient */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(13,13,13,0.35) 0%, rgba(13,13,13,0.02) 40%, rgba(13,13,13,0.35) 100%)",
+        }}
+      />
+
+      {/* Content */}
+      <div className="relative z-10 w-full pt-24 md:pt-36 pb-12 md:pb-16 px-6 md:px-12">
+        <div className="max-w-7xl mx-auto">
+          <p
+            className="sr-replay font-serif font-bold mb-3"
+            data-delay="100ms"
+            style={{ fontSize: "clamp(1rem, 2vw, 1.5rem)", letterSpacing: "0.12em", color: "rgba(255,255,255,0.75)" }}
+          >
+            {t("카피엔드", "Caffiend")}
+          </p>
           <h2
-            className="sr-init sr-fade-up font-serif font-bold text-caramel"
-            style={{ fontSize: "clamp(2rem, 5vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 0.9 }}
+            className="sr-replay font-serif font-bold leading-[0.9] mb-6"
+            data-delay="350ms"
+            style={{ fontSize: "clamp(3rem, 9vw, 8rem)", letterSpacing: "-0.02em", color: "#fff" }}
           >
             {t("브랜드 이야기", "Brand Story")}
           </h2>
+          <p
+            className="sr-replay mb-10 max-w-md leading-relaxed"
+            data-delay="600ms"
+            style={{ fontSize: "clamp(0.9rem, 1.4vw, 1.05rem)", color: "rgba(255,255,255,0.72)" }}
+          >
+            {t(
+              "유치원 교사에서 카피엔드의 대표로 — 배움과 나눔을 바탕으로 한 삶이 오늘의 카피엔드를 만들었습니다.",
+              "From kindergarten teacher to the founder of Caffiend — a life built on learning and giving back."
+            )}
+          </p>
+          <a
+            href="/brand/founder"
+            className="sr-replay inline-block font-sans text-sm tracking-widest uppercase bg-white text-black px-10 py-3.5 rounded-full hover:bg-white/90 transition-colors duration-300"
+            data-delay="850ms"
+          >
+            {t("자세히 보기", "Learn More")}
+          </a>
         </div>
       </div>
     </section>
@@ -96,125 +147,106 @@ function StorySection() {
 
 /* ─────────────────────────────────────────────
 /* ─────────────────────────────────────────────
-   Section: Menu — carousel (client component)
+   Section: Menu — rotating marquee strip
 ───────────────────────────────────────────── */
+const menuMarqueeImages = [
+  "딸기 수플레.png",
+  "무화과 수플레.png",
+  "복숭아 수플레.png",
+  "크림 브륄레 수플레.png",
+  "흑임자 수플레.png",
+  "인절미 수플레.png",
+  "딸기 빙수.png",
+  "망고 빙수.png",
+  "복숭아 빙수.png",
+  "1인 티라미수.png",
+  "말차 숲 라떼.png",
+  "티라미수볼(코코아 말차 인절미 로투스).png",
+];
+const doubled = [...menuMarqueeImages, ...menuMarqueeImages];
+
 function MenuSection() {
   const t = useT();
   return (
-    <section id="menu" className="min-h-screen flex flex-col justify-center py-14 md:py-24 px-6 bg-white">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center">
-          <h2
-            className="sr-init sr-fade-up font-serif font-bold text-caramel"
-            style={{ fontSize: "clamp(2rem, 5vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 0.9 }}
-          >
-            MENU
-          </h2>
-        </div>
+    <section
+      id="menu"
+      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
+      style={{ background: "#0D0D0D" }}
+    >
+      {/* Blurred backdrop — fills the top & bottom gaps like hero/story */}
+      <div className="absolute inset-0">
+        <Image
+          src={`/${encodeURIComponent("딸기 수플레.png")}`}
+          alt=""
+          fill
+          className="object-cover"
+          quality={50}
+          sizes="100vw"
+          style={{ filter: "blur(22px) brightness(0.45) saturate(1.2)", transform: "scale(1.1)" }}
+          aria-hidden
+        />
       </div>
-    </section>
-  );
-}
 
-/* ─────────────────────────────────────────────
+      {/* Left + right vignette */}
+      <div
+        className="absolute inset-0 pointer-events-none z-10"
+        style={{ background: "linear-gradient(to right, rgba(13,13,13,0.85) 0%, transparent 25%, transparent 75%, rgba(13,13,13,0.85) 100%)" }}
+      />
 
-/* ─────────────────────────────────────────────
-   Section: Customer Reviews
-───────────────────────────────────────────── */
-const reviews = [
-  {
-    name: "박지영",
-    locationKo: "포항",
-    locationEn: "Pohang",
-    rating: 5,
-    textKo: "수플레가 정말 환상적이었어요 — 이렇게 가볍고 완벽한 맛은 처음이에요. 사장님이 너무 따뜻하게 맞아주셔서 진짜 가족을 만난 것 같았어요.",
-    textEn: "The soufflé was truly magical — I've never tasted anything so light and perfect. The owner welcomed us so warmly, it felt like meeting family.",
-  },
-  {
-    name: "이서준",
-    locationKo: "서울에서 방문",
-    locationEn: "Visiting from Seoul",
-    rating: 5,
-    textKo: "SNS에서 무화과 수플레를 보고 서울에서 직접 운전해 왔어요. 그 거리가 전혀 아깝지 않았어요. 가을 시즌 메뉴는 필수입니다. 이미 재방문을 예약했어요.",
-    textEn: "I drove all the way from Seoul after seeing the fig soufflé online. Not a single regret. The autumn menu is a must. Already planning my return visit.",
-  },
-  {
-    name: "김민아",
-    locationKo: "대구",
-    locationEn: "Daegu",
-    rating: 5,
-    textKo: "미경 대표님가 그 자리에서 팬케이크 레시피를 가르쳐 주셨어요. 그 나눔의 정신은 진짜예요 — 마케팅이 아닙니다. 진정한 영혼이 있는 카페입니다.",
-    textEn: "Mi-gyeong taught me the pancake recipe right on the spot. That spirit of giving is real — not marketing. This is a café with a genuine soul.",
-  },
-];
+      {/* Top + bottom vignette */}
+      <div
+        className="absolute inset-0 pointer-events-none z-10"
+        style={{ background: "linear-gradient(to bottom, #0D0D0D 0%, transparent 30%, transparent 70%, #0D0D0D 100%)" }}
+      />
 
-function ReviewsSection() {
-  const t = useT();
-  const { lang } = useLanguage();
-  return (
-    <section id="reviews" className="min-h-screen flex flex-col justify-center py-14 md:py-24 px-6 bg-white">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-10 md:mb-16">
-          <h2
-            className="sr-init sr-fade-up font-serif font-bold text-caramel"
-            style={{ fontSize: "clamp(2rem, 5vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 0.9 }}
-          >
-            {t("소중한 고객님들의 후기", "Guest Reviews")}
-          </h2>
-        </div>
+      {/* Title + subtitle block — pushed slightly toward marquee */}
+      <div className="relative z-20 text-center flex flex-col items-center" style={{ marginTop: "clamp(5rem, 10vh, 10rem)" }}>
+        <h2
+          className="sr-replay font-serif font-bold leading-[0.9] text-white mb-6"
+          data-delay="100ms"
+          style={{ fontSize: "clamp(2rem, 6vw, 5rem)", letterSpacing: "-0.02em" }}
+        >
+          MENU
+        </h2>
 
-        <div className="grid md:grid-cols-3 gap-4 md:gap-6">
-          {reviews.map((review, i) => (
-            <div key={i}
-              className="sr-init sr-fade-up bg-cream rounded-3xl p-5 md:p-8 border border-latte flex flex-col gap-4 md:gap-5 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
-              style={{ transitionDelay: `${i * 120}ms` }}>
-              <StarRating count={review.rating} />
-              <p className="font-sans text-mocha/70 text-sm leading-relaxed flex-1">
-                &ldquo;{lang === "ko" ? review.textKo : review.textEn}&rdquo;
-              </p>
-              <div className="flex items-center gap-3 pt-4 border-t border-latte">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center font-serif text-lg text-cream flex-shrink-0"
-                  style={{ background: "linear-gradient(135deg, #333333, #111111)" }}>
-                  {review.name[0]}
-                </div>
-                <div>
-                  <p className="font-sans text-sm font-bold text-caramel" style={krFont}>{review.name}</p>
-                  <p className="font-sans text-xs text-mocha/40" style={krFont}>
-                    {lang === "ko" ? review.locationKo : review.locationEn}
-                  </p>
-                </div>
-              </div>
+        <p
+          className="sr-replay mb-10 md:mb-14 max-w-md leading-relaxed text-center"
+          data-delay="350ms"
+          style={{ fontSize: "clamp(0.9rem, 1.4vw, 1.05rem)", color: "rgba(255,255,255,0.72)" }}
+        >
+          {t("계절마다 바뀌는 다양한 제철 메뉴들을 고객님들께 선보입니다.", "We present a variety of seasonal menus that change with every season.")}
+        </p>
+      </div>
+
+      {/* Rotating image strip */}
+      <div className="relative z-20 w-full overflow-hidden">
+        <div className="marquee-track flex" style={{ animationDuration: "48s" }}>
+          {doubled.map((name, i) => (
+            <div
+              key={i}
+              className="flex-shrink-0 overflow-hidden border border-white/10"
+              style={{ width: "clamp(260px, 30vw, 460px)", height: "clamp(260px, 30vw, 460px)" }}
+            >
+              <Image
+                src={`/${encodeURIComponent(name)}`}
+                alt={name.replace(".png", "")}
+                width={500}
+                height={500}
+                className="w-full h-full object-cover"
+              />
             </div>
           ))}
         </div>
-
-        <div className="sr-init sr-fade-up mt-16 text-center" style={{ transitionDelay: "200ms" }}>
-          <Ornament />
-          <p className="font-serif italic text-lg text-mocha/40 mt-4">
-            &ldquo;{t("낯선 이로 오셔서, 가족으로 돌아가세요.", "Come as strangers, leave as family.")}&rdquo;
-          </p>
-        </div>
       </div>
-    </section>
-  );
-}
 
-/* ─────────────────────────────────────────────
-   Section: Photo Mosaic CTA
-───────────────────────────────────────────── */
-function NoticeSection() {
-  const t = useT();
-  return (
-    <section id="notice" className="min-h-screen flex flex-col justify-center py-14 md:py-24 px-6 bg-white">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center">
-          <h2
-            className="sr-init sr-fade-up font-serif font-bold text-caramel"
-            style={{ fontSize: "clamp(2rem, 5vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 0.9 }}
-          >
-            {t("공지", "Notice")}
-          </h2>
-        </div>
+      {/* CTA button */}
+      <div className="relative z-20 mt-10 md:mt-14">
+        <a
+          href="/menu"
+          className="font-sans text-sm tracking-widest uppercase bg-white text-black px-10 py-3.5 rounded-full hover:bg-white/90 transition-colors duration-300"
+        >
+          {t("메뉴 상세 바로가기", "View Full Menu")}
+        </a>
       </div>
     </section>
   );
@@ -228,26 +260,114 @@ function NoticeSection() {
 ───────────────────────────────────────────── */
 function ReserveSection() {
   const t = useT();
+  const [atBottom, setAtBottom] = useState(false);
+
+  useEffect(() => {
+    const container = document.getElementById("scroll-container");
+    if (!container) return;
+
+    const onScroll = () => {
+      const footer = container.querySelector("footer#contact") as HTMLElement | null;
+      if (!footer) { setAtBottom(false); return; }
+      setAtBottom(footer.getBoundingClientRect().top < window.innerHeight);
+    };
+
+    onScroll();
+    container.addEventListener("scroll", onScroll, { passive: true });
+    return () => container.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <section id="reserve" className="min-h-screen flex flex-col justify-center py-14 md:py-24 px-6 bg-white">
-      <div className="max-w-4xl mx-auto text-center">
-        <h2
-          className="sr-init sr-fade-up font-serif font-bold text-caramel mb-4 md:mb-6"
-          style={{ fontSize: "clamp(2rem, 5vw, 4.5rem)", letterSpacing: "-0.02em", lineHeight: 0.9 }}
-        >
-          {t("단체주문", "Group Orders")}
-        </h2>
-        <p className="sr-init sr-fade-up font-sans text-mocha/65 text-base md:text-lg max-w-2xl mx-auto leading-relaxed mb-6 md:mb-10" style={{ transitionDelay: "160ms" }}>
-          {t(
-            "행사, 모임, 선물 등 단체주문은 전화 또는 인스타그램으로 미리 문의해 주세요. 미경 대표님이 정성껏 준비해 드립니다.",
-            "For events, gatherings, or gifts — please enquire in advance by phone or Instagram. Mi-gyeong will prepare everything with care."
-          )}
-        </p>
-        <div className="sr-init sr-fade-up flex justify-center" style={{ transitionDelay: "240ms" }}>
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSeIHVtuqFlW7piju-yZyt0PWDX_ZN-UUniu87Y5wemfKpymQg/viewform" target="_blank" rel="noopener noreferrer"
-            className="font-sans text-sm tracking-widest uppercase bg-caramel text-cream px-10 py-3.5 rounded-full hover:bg-sienna transition-colors duration-300">
-            {t("단체주문 예약", "Reserve Group Order")}
-          </a>
+    <section
+      id="reserve"
+      className="relative min-h-screen flex flex-col justify-center overflow-hidden"
+      style={{ background: "#0D0D0D" }}
+    >
+      {/* Blurred backdrop */}
+      <div className="absolute inset-0">
+        <Image
+          src={`/${encodeURIComponent("단체주문.png")}`}
+          alt=""
+          fill
+          className="object-cover"
+          quality={60}
+          sizes="100vw"
+          style={{ filter: "blur(18px) brightness(0.55) saturate(1.1)", transform: "scale(1.08)" }}
+          aria-hidden
+        />
+      </div>
+
+      {/* Sharp image */}
+      <div className="sr-replay story-img absolute inset-0" data-delay="0ms">
+        <Image
+          src={`/${encodeURIComponent("단체주문.png")}`}
+          alt={t("단체주문", "Group Order")}
+          fill
+          className="object-cover"
+          quality={90}
+          sizes="100vw"
+          style={{ objectPosition: "center" }}
+        />
+      </div>
+
+      {/* Left + right vignette */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to right, rgba(13,13,13,0.85) 0%, transparent 40%, transparent 60%, rgba(13,13,13,0.85) 100%)",
+        }}
+      />
+
+      {/* Top + bottom gradient */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to bottom, rgba(13,13,13,0.45) 0%, rgba(13,13,13,0.05) 40%, rgba(13,13,13,0.05) 60%, rgba(13,13,13,0.45) 100%)",
+        }}
+      />
+
+      {/* Content */}
+      <div className="relative z-10 w-full pb-12 md:pb-16 px-6 md:pl-16 md:pr-72" style={{ paddingTop: "clamp(0rem, 0.5vh, 0.5rem)", marginTop: "-2vh" }}>
+        <div className="w-full flex justify-end">
+          <div>
+            <p
+              className="sr-replay font-serif font-bold mb-3"
+              data-delay="100ms"
+              style={{ fontSize: "clamp(1rem, 2vw, 1.5rem)", letterSpacing: "0.12em", color: "rgba(255,255,255,0.75)" }}
+            >
+              {t("카피엔드", "Caffiend")}
+            </p>
+            <h2
+              className="sr-replay font-serif font-bold leading-[0.9] mb-6"
+              data-delay="350ms"
+              style={{ fontSize: "clamp(3rem, 9vw, 8rem)", letterSpacing: "-0.02em", color: "#fff" }}
+            >
+              {t("단체주문", "Group Order")}
+            </h2>
+            <p
+              className="sr-replay mb-10 max-w-md leading-relaxed"
+              data-delay="600ms"
+              style={{ fontSize: "clamp(0.9rem, 1.4vw, 1.05rem)", color: "rgba(255,255,255,0.72)" }}
+            >
+              {t(
+                "특별한 날을 더욱 특별하게 — 카피엔드의 단체주문 서비스를 이용해 보세요.",
+                "Make special days even more special — try Caffiend's group order service."
+              )}
+            </p>
+            <a
+              href="/reserve"
+              className="inline-block font-sans text-sm tracking-widest uppercase bg-white text-black px-10 py-3.5 rounded-full hover:bg-white/90 transition-colors duration-300"
+              style={{
+                opacity: atBottom ? 0 : 1,
+                pointerEvents: atBottom ? "none" : "auto",
+                transition: "opacity 0.3s ease",
+              }}
+            >
+              {t("단체주문 예약", "Group Order Reservation")}
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -279,12 +399,10 @@ export default function Page() {
   return (
     <main>
       <HeroSection />
-      <MenuSection />
       <StorySection />
+      <MenuSection />
       <ReserveSection />
-      <ReviewsSection />
-      <NoticeSection />
-      <FooterSection />
+      <div id="page-footer"><FooterSection /></div>
     </main>
   );
 }

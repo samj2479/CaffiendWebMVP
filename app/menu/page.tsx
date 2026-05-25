@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useLanguage } from "../context/LanguageContext";
 import FooterSection from "../components/FooterSection";
+import { allergyCols, getItemAllergenKeys } from "../data/allergyData";
 
 const sortOptions = [
   { ko: "인기순", en: "Popular" },
@@ -206,7 +207,16 @@ export default function Page() {
   const [activeSubIndex, setActiveSubIndex] = useState(0);
   const [sortOpen, setSortOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [flipped, setFlipped] = useState<Set<string>>(new Set());
   const sortRef = useRef<HTMLDivElement>(null);
+
+  function toggleFlip(ko: string) {
+    setFlipped(prev => {
+      const next = new Set(prev);
+      next.has(ko) ? next.delete(ko) : next.add(ko);
+      return next;
+    });
+  }
 
   const activeCat = categories[activeCatIndex];
   const allItems = categories[0].items;
@@ -249,12 +259,12 @@ export default function Page() {
 
   return (
     <main>
-      <section className="min-h-screen flex flex-col bg-white relative pt-[100px] md:pt-[140px] px-4 sm:px-6 pb-20 md:pb-32">
+      <section className="min-h-screen flex flex-col bg-[#FAF7F2] relative pt-[100px] md:pt-[140px] px-4 sm:px-6 pb-20 md:pb-32">
         <div className="max-w-6xl mx-auto w-full">
 
           {/* Title */}
           <h1
-            className="font-serif font-bold text-caramel text-center"
+            className="font-serif font-bold text-black text-center"
             style={{ fontSize: "clamp(2rem, 4vw, 3rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
           >
             MENU
@@ -271,7 +281,7 @@ export default function Page() {
                   className={`font-sans text-sm px-6 py-2.5 rounded-full border transition-all ${
                     activeCatIndex === i
                       ? "bg-caramel text-white border-caramel"
-                      : "bg-white text-black/70 border-black/20 hover:border-black/40"
+                      : "bg-[#FAF7F2] text-black/70 border-black/20 hover:border-black/40"
                   }`}
                 >
                   {lang === "ko" ? cat.ko : cat.en}
@@ -296,7 +306,7 @@ export default function Page() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={lang === "ko" ? "검색..." : "Search..."}
-                  className="w-40 font-sans text-sm pl-8 pr-7 py-2 rounded-full border border-black/20 bg-white text-black/80 placeholder:text-black/30 focus:outline-none focus:border-caramel transition-all"
+                  className="w-40 font-sans text-sm pl-8 pr-7 py-2 rounded-full border border-[#174C35]/30 bg-[#FAF7F2] text-[#174C35] placeholder:text-[#174C35]/40 focus:outline-none focus:border-[#174C35] transition-all"
                 />
                 {searchQuery && (
                   <button
@@ -313,19 +323,19 @@ export default function Page() {
               <div className="relative">
                 <button
                   onClick={() => setSortOpen(!sortOpen)}
-                  className="flex items-center gap-2 font-sans text-sm px-4 py-2 rounded-full border border-black/20 bg-white text-black/80 hover:border-black/40 transition-all"
+                  className="flex items-center gap-2 font-sans text-sm px-4 py-2 rounded-full border border-[#174C35]/30 bg-[#FAF7F2] text-[#174C35] hover:border-[#174C35] transition-all"
                 >
                   {lang === "ko" ? sortOptions[activeSort].ko : sortOptions[activeSort].en}
                   <ChevronIcon open={sortOpen} />
                 </button>
                 {sortOpen && (
-                  <div className="absolute top-full right-0 mt-2 bg-white border border-black/10 rounded-lg shadow-lg overflow-hidden z-50 min-w-[120px]">
+                  <div className="absolute top-full right-0 mt-2 bg-[#FAF7F2] border border-black/10 rounded-lg shadow-lg overflow-hidden z-50 min-w-[120px]">
                     {sortOptions.map((option, i) => (
                       <button
                         key={i}
                         onClick={() => { setActiveSort(i); setSortOpen(false); }}
                         className={`w-full text-left font-sans text-sm px-4 py-2.5 transition-colors ${
-                          activeSort === i ? "bg-caramel/10 text-caramel" : "text-black/70 hover:bg-black/5"
+                          activeSort === i ? "bg-[#174C35]/10 text-[#174C35]" : "text-[#174C35]/70 hover:bg-[#174C35]/5"
                         }`}
                       >
                         {lang === "ko" ? option.ko : option.en}
@@ -353,8 +363,8 @@ export default function Page() {
                   onClick={() => setActiveSubIndex(i)}
                   className={`font-sans text-xs px-4 py-1.5 rounded-full border transition-all ${
                     activeSubIndex === i
-                      ? "bg-black text-white border-black"
-                      : "bg-white text-black/50 border-black/15 hover:border-black/30 hover:text-black/70"
+                      ? "bg-[#174C35] text-white border-[#174C35]"
+                      : "bg-[#FAF7F2] text-[#174C35]/60 border-[#174C35]/20 hover:border-[#174C35]/50 hover:text-[#174C35]"
                   }`}
                 >
                   {lang === "ko" ? sub.ko : sub.en}
@@ -370,31 +380,81 @@ export default function Page() {
                 {lang === "ko" ? "검색 결과가 없습니다." : "No results found."}
               </p>
             )}
-            {displayItems.map((item, i) => (
-              <div key={i} className="relative flex flex-col">
-                {(item as { season?: boolean }).season && (
-                  <span className="absolute -top-1 -left-1 z-10 bg-black text-white font-sans text-xs font-semibold px-3 py-1 leading-tight">
-                    {lang === "ko" ? "시즌" : "Seasonal"}
-                  </span>
-                )}
-                <div className="aspect-square bg-gray-200 overflow-hidden">
-                  {(item as { image?: string; objectPosition?: string; scale?: number }).image && (
-                    <img
-                      src={(item as { image?: string }).image}
-                      alt={lang === "ko" ? item.ko : item.en}
-                      className="w-full h-full object-cover"
-                      style={{
-                        objectPosition: (item as { objectPosition?: string }).objectPosition ?? "center",
-                        transform: `scale(${(item as { scale?: number }).scale ?? 1})`,
-                      }}
-                    />
+            {displayItems.map((item, i) => {
+              const isFlipped = flipped.has(item.ko);
+              const allergenKeys = getItemAllergenKeys(item.ko);
+              const allergenLabel = allergenKeys.length === 0
+                ? (lang === "ko" ? "없음" : "None")
+                : allergenKeys.map(k => {
+                    const col = allergyCols.find(c => c.key === k);
+                    return lang === "ko" ? col?.ko : col?.en;
+                  }).join(", ");
+              const imgSrc = (item as { image?: string }).image;
+              return (
+                <div key={i} className="relative flex flex-col">
+                  {(item as { season?: boolean }).season && (
+                    <span className="absolute -top-1 -left-1 z-10 bg-[#174C35] text-white font-sans text-xs font-semibold px-3 py-1 leading-tight">
+                      {lang === "ko" ? "시즌" : "Seasonal"}
+                    </span>
                   )}
+
+                  {/* Flip card */}
+                  <div
+                    className="menu-flip-wrap bg-[#FAF7F2] cursor-pointer w-full"
+                    style={{ paddingBottom: "100%" }}
+                    onClick={() => toggleFlip(item.ko)}
+                  >
+                    <div className={`menu-flip-inner${isFlipped ? " flipped" : ""}`}>
+
+                      {/* Front */}
+                      <div className="menu-flip-front">
+                        {imgSrc && (
+                          <img
+                            src={imgSrc}
+                            alt={lang === "ko" ? item.ko : item.en}
+                            className="w-full h-full object-cover"
+                            style={{ objectPosition: (item as { objectPosition?: string }).objectPosition ?? "center" }}
+                          />
+                        )}
+                      </div>
+
+                      {/* Back */}
+                      <div className="menu-flip-back" style={{ background: "#FAF7F2" }}>
+                        {imgSrc && (
+                          <img
+                            src={imgSrc}
+                            alt=""
+                            aria-hidden
+                            className="absolute inset-0 w-full h-full object-cover"
+                            style={{ opacity: 0.15, objectPosition: (item as { objectPosition?: string }).objectPosition ?? "center" }}
+                          />
+                        )}
+                        <div className="absolute inset-0 flex flex-col items-center justify-center px-3 text-center gap-1">
+                          <p className="font-serif font-bold text-black leading-tight" style={{ fontSize: "clamp(0.75rem, 2vw, 1rem)" }}>
+                            {lang === "ko" ? item.ko : item.en}
+                          </p>
+                          <p className="font-sans text-black/50 leading-tight" style={{ fontSize: "clamp(0.6rem, 1.4vw, 0.75rem)" }}>
+                            {lang === "ko" ? item.en : item.ko}
+                          </p>
+                          <div style={{ width: "60%", height: 1, background: "rgba(0,0,0,0.2)", margin: "6px 0" }} />
+                          <p className="font-sans font-semibold text-black/60" style={{ fontSize: "clamp(0.55rem, 1.2vw, 0.7rem)" }}>
+                            {lang === "ko" ? "알레르기 정보" : "Allergen Info"}
+                          </p>
+                          <p className="font-sans text-black/80 leading-snug" style={{ fontSize: "clamp(0.55rem, 1.2vw, 0.7rem)" }}>
+                            {allergenLabel}
+                          </p>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <p className="font-sans text-sm md:text-base text-black mt-3 text-center">
+                    {lang === "ko" ? item.ko : item.en}
+                  </p>
                 </div>
-                <p className="font-sans text-sm md:text-base text-black/80 mt-3 text-center">
-                  {lang === "ko" ? item.ko : item.en}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
         </div>

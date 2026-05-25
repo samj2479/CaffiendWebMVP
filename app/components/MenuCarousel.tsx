@@ -189,7 +189,7 @@ export default function MenuCarousel() {
 
                   {/* Content */}
                   <div className="p-6 md:p-8 flex flex-col">
-                    <h3 className="font-serif text-2xl text-caramel mb-2">
+                    <h3 className="font-serif text-2xl text-black mb-2">
                       {lang === "ko" ? itm.nameKo : itm.nameEn}
                     </h3>
                     <p className="font-sans text-mocha/65 text-sm leading-relaxed">

@@ -7,11 +7,11 @@ export default function Page() {
 
   return (
     <main>
-      <section className="min-h-screen flex flex-col bg-white relative pt-[100px] md:pt-[140px] px-4 sm:px-6 pb-20 md:pb-32">
+      <section className="min-h-screen flex flex-col bg-[#FAF7F2] relative pt-[100px] md:pt-[140px] px-4 sm:px-6 pb-20 md:pb-32">
         <div className="max-w-6xl mx-auto w-full">
           {/* Title */}
           <h1
-            className="font-serif font-bold text-caramel text-center"
+            className="font-serif font-bold text-black text-center"
             style={{ fontSize: "clamp(2rem, 4vw, 3rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
           >
             {lang === "ko" ? "위치 보기" : "View Location"}

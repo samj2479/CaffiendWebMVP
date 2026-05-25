@@ -4,11 +4,11 @@ import { usePathname } from "next/navigation";
 
 export default function ScrollProgressBar() {
   const pathname = usePathname();
-  const [progress, setProgress] = useState(0);   // uncapped raw value
-
+  const isHome = pathname === "/" || pathname === "/en";
+  const [progress, setProgress] = useState(0);
   const [isDark, setIsDark] = useState(false);
 
-  // Track scroll progress — full when footer enters view
+  // Track scroll progress
   useEffect(() => {
     const container = document.getElementById("scroll-container");
     if (!container) return;
@@ -19,16 +19,17 @@ export default function ScrollProgressBar() {
       const max = footer
         ? footer.offsetTop - clientHeight
         : container.scrollHeight - clientHeight;
-      setProgress(max > 0 ? scrollTop / max : 0); // uncapped
+      setProgress(max > 0 ? scrollTop / max : 0);
     };
 
-    onScroll(); // initialise on mount / page change
+    onScroll();
     container.addEventListener("scroll", onScroll, { passive: true });
     return () => container.removeEventListener("scroll", onScroll);
   }, [pathname]);
 
-  // Detect dark hero section (home pages only)
+  // Detect dark hero section (non-home pages only — home page is always dark)
   useEffect(() => {
+    if (isHome) { setIsDark(true); return; }
     setIsDark(false);
     const hero = document.querySelector("#home");
     if (!hero) return;
@@ -43,12 +44,12 @@ export default function ScrollProgressBar() {
     );
     observer.observe(hero);
     return () => observer.disconnect();
-  }, [pathname]);
+  }, [pathname, isHome]);
 
   const atBottom = progress > 1;
   const atTop = progress <= 0;
-  const fillColor = isDark ? "#fff" : "#111";
-  const trackColor = isDark ? "rgba(255,255,255,0.2)" : "#D0D0D0";
+  const fillColor = isDark ? "#fff" : "#174C35";
+  const trackColor = isDark ? "rgba(255,255,255,0.2)" : "rgba(23,76,53,0.15)";
 
   return (
     <div

@@ -22,7 +22,7 @@ const links = [
   {
     href: "/#reserve", ko: "예약",          en: "Reservation",
     sub: [
-      { href: "/reserve",        ko: "단체주문 예약",   en: "Group Reservation" },
+      { href: "/reserve",        ko: "단체주문 예약",   en: "Group Order Reservation" },
     ],
   },
   {
@@ -34,7 +34,6 @@ const links = [
   {
     href: "/#notice",  ko: "공지",          en: "Notice",
     sub: [
-      { href: "/notice/news",    ko: "새소식",          en: "News"             },
       { href: "/notice/allergy", ko: "알레르기 정보",   en: "Allergy Info"     },
     ],
   },
@@ -60,23 +59,40 @@ function InstagramIcon() {
 export default function Nav() {
   const pathname = usePathname();
   const isHome = pathname === "/" || pathname === "/en";
-  const [scrolled, setScrolled] = useState(!isHome);
   const [menuOpen, setMenuOpen] = useState(false);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [megaOpen, setMegaOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [navHovered, setNavHovered] = useState(false);
+  const [isDarkBg, setIsDarkBg] = useState(isHome);
 
   const { lang, setLang } = useLanguage();
 
+  // Track whether any dark-background section (#home, #story) is in view.
+  // Use a Set so non-intersecting initial callbacks don't incorrectly clear the state.
   useEffect(() => {
-    const container = document.getElementById("scroll-container");
-    if (!container) return;
-    const onScroll = () => setScrolled(container.scrollTop > 60);
-    container.addEventListener("scroll", onScroll, { passive: true });
-    return () => container.removeEventListener("scroll", onScroll);
-  }, []);
+    setIsDarkBg(isHome);
+    if (!isHome) return;
+    const visible = new Set<string>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          const id = (e.target as HTMLElement).id;
+          if (e.isIntersecting) visible.add(id);
+          else visible.delete(id);
+        });
+        setIsDarkBg(visible.size > 0);
+      },
+      { threshold: 0.15 }
+    );
+    ["home", "story", "menu", "reserve"].forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, [isHome, pathname]);
 
-  const isDark = isHome && !scrolled && !megaOpen;
+  const isDark = isHome && !megaOpen && isDarkBg;
   const closeMega = () => { setMegaOpen(false); setHoveredIndex(null); };
 
   // Prefix hrefs with /en when in English so links stay on the correct site.
@@ -87,15 +103,19 @@ export default function Nav() {
       : href;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50">
+    <nav
+      className="fixed top-0 left-0 right-0 z-50"
+      onMouseEnter={() => setNavHovered(true)}
+      onMouseLeave={() => setNavHovered(false)}
+    >
 
       {/* ── Nav bar background ─────────────────────── */}
       <div
         className="absolute inset-x-0 top-0 h-[60px] pointer-events-none"
         style={{
           transition: "background 200ms ease, box-shadow 200ms ease",
-          background: scrolled || megaOpen ? "#fff" : "transparent",
-          boxShadow: scrolled && !megaOpen ? "0 1px 0 rgba(0,0,0,0.08)" : "none",
+          background: (!isHome || megaOpen || menuOpen) ? "#fff" : "transparent",
+          boxShadow: !isHome ? "0 1px 0 rgba(0,0,0,0.10)" : "none",
         }}
       />
 
@@ -171,7 +191,7 @@ export default function Nav() {
                   style={{ fontFamily: "var(--font-playfair)", transition: "color 200ms ease" }}
                   className={`text-[18px] font-bold tracking-normal whitespace-nowrap ${
                     isActive
-                      ? "text-[#7D4E24]"
+                      ? "text-[#174C35]"
                       : isDark
                       ? "text-white hover:text-white/70"
                       : "text-black hover:text-black/60"
@@ -202,8 +222,8 @@ export default function Nav() {
                     style={{ fontFamily: "var(--font-playfair)" }}
                     className={`text-[14px] whitespace-nowrap transition-colors duration-150 ${
                       isActive
-                        ? "text-[#4A2C1A] hover:text-[#7D4E24]"
-                        : "text-black/50 hover:text-[#7D4E24]"
+                        ? "text-[#0D3224] hover:text-[#174C35]"
+                        : "text-black/50 hover:text-[#174C35]"
                     }`}
                   >
                     {lang === "ko" ? item.ko : item.en}

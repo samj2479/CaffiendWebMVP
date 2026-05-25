@@ -9,7 +9,7 @@
   --color-cream:     #FFFFFF;
   --color-parchment: #F2F2F2;
   --color-latte:     #E0E0E0;
-  --color-caramel:   #1A1A1A;
+  --color-caramel:   #174C35;
   --color-sienna:    #555555;
   --color-blush:     #888888;
   --color-mocha:     #333333;
@@ -85,7 +85,7 @@ section, footer#contact {
 
 /* ─── B&W CSS variables ──────────────────────── */
 :root {
-  --background:         oklch(1 0 0);
+  --background:         #FAF7F2;
   --foreground:         oklch(0.13 0 0);
 
   --card:               oklch(1 0 0);
@@ -185,6 +185,54 @@ section, footer#contact {
 .sr-init.sr-visible {
   opacity: 1;
   transform: none;
+}
+
+/* ─── Replay animation (bidirectional, re-fires on every entry) ─── */
+.sr-replay {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+}
+.sr-replay.in-view {
+  opacity: 1;
+  transform: none;
+}
+
+/* ─── Story section portrait reveal (override sr-replay) ─── */
+.story-img {
+  opacity: 0;
+  transform: scale(1.06);
+  transition: opacity 1.2s ease-out, transform 1.2s ease-out;
+}
+.story-img.in-view {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ─── Menu card 3D flip ────────────────────────── */
+.menu-flip-wrap {
+  perspective: 900px;
+  position: relative;
+}
+.menu-flip-inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.menu-flip-inner.flipped {
+  transform: rotateY(180deg);
+}
+.menu-flip-front,
+.menu-flip-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+}
+.menu-flip-back {
+  transform: rotateY(180deg);
 }
 
 /* ─── Marquee ───────────────────────────────────── */
