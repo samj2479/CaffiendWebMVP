@@ -37,6 +37,7 @@ export default function ScrollToTop() {
     }
 
     function step(timestamp: number) {
+      if (!container) return;
       if (!startTime) startTime = timestamp;
       const elapsed = timestamp - startTime;
       const progress = Math.min(elapsed / duration, 1);
