@@ -1,14 +1,28 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "../context/LanguageContext";
 
 const ORDER_URL = "https://caffiend-qr-fh.web.app/";
-const SIZE = 192;
-const RADIUS = SIZE / 2;
+
+const DESKTOP = { size: 192, circleFont: "2.25rem", expandedFont: "2.1rem", expandedWidth: "min(680px, 88vw)", bottom: "7rem" };
+const MOBILE  = { size: 64,  circleFont: "0.75rem", expandedFont: "0.75rem", expandedWidth: "min(280px, 85vw)", bottom: "5.5rem" };
 
 export default function OrderButton() {
   const { lang } = useLanguage();
   const [hovered, setHovered] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  const cfg = isMobile ? MOBILE : DESKTOP;
+  const { size, circleFont, expandedFont, expandedWidth, bottom } = cfg;
+  const radius = size / 2;
 
   const long =
     lang === "ko"
@@ -25,11 +39,11 @@ export default function OrderButton() {
       onMouseLeave={() => setHovered(false)}
       style={{
         position: "fixed",
-        bottom: "7rem",
+        bottom,
         right: "2rem",
-        height: `${SIZE}px`,
-        width: hovered ? "min(680px, 88vw)" : `${SIZE}px`,
-        borderRadius: `${RADIUS}px`,
+        height: `${size}px`,
+        width: hovered ? expandedWidth : `${size}px`,
+        borderRadius: `${radius}px`,
         background: "#174C35",
         boxShadow: "0 4px 24px rgba(23,76,53,0.4)",
         cursor: "pointer",
@@ -40,7 +54,7 @@ export default function OrderButton() {
         transition: "width 0.38s cubic-bezier(0.34, 1.4, 0.64, 1)",
       }}
     >
-      {/* Extended text — spans full width, circle z-index covers the overlap */}
+      {/* Extended text */}
       <span
         style={{
           position: "absolute",
@@ -52,7 +66,7 @@ export default function OrderButton() {
           alignItems: "center",
           justifyContent: "center",
           whiteSpace: "nowrap",
-          fontSize: "2.1rem",
+          fontSize: expandedFont,
           fontFamily: "var(--font-lato), system-ui, sans-serif",
           fontWeight: 600,
           color: "#fff",
@@ -65,27 +79,27 @@ export default function OrderButton() {
         {long}
       </span>
 
-      {/* Circle face — always anchored to the right, fades out on hover */}
+      {/* Circle face */}
       <span
         style={{
           position: "absolute",
           right: 0,
           top: 0,
-          width: `${SIZE}px`,
-          height: `${SIZE}px`,
+          width: `${size}px`,
+          height: `${size}px`,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: "4px",
+          gap: "2px",
           color: "#fff",
           zIndex: 2,
           opacity: hovered ? 0 : 1,
           transition: "opacity 0.18s ease",
         }}
       >
-        <span style={{ fontSize: "2.25rem", fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>QR</span>
-        <span style={{ fontSize: "2.25rem", fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>{lang === "ko" ? "주문" : "Order"}</span>
+        <span style={{ fontSize: circleFont, fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>QR</span>
+        <span style={{ fontSize: circleFont, fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>{lang === "ko" ? "주문" : "Order"}</span>
       </span>
     </a>
   );
