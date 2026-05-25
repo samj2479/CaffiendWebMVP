@@ -5,7 +5,7 @@ import { useLanguage } from "../context/LanguageContext";
 const ORDER_URL = "https://caffiend-qr-fh.web.app/";
 
 const DESKTOP = { size: 192, expandedWidth: "min(680px, 88vw)", bottom: "7rem"  };
-const MOBILE  = { size: 128, expandedWidth: "min(92vw, 420px)",  bottom: "5.5rem" };
+const MOBILE  = { size: 128, expandedWidth: "calc(100vw - 4rem)", bottom: "5.5rem" };
 
 // Fonts scale with viewport width
 const CIRCLE_FONT   = "clamp(1.1rem, 3vw, 2.25rem)";
