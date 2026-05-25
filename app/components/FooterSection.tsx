@@ -42,10 +42,10 @@ export default function FooterSection() {
 
   return (
     <footer id="contact" style={{ background: "#0A0A0A" }}>
-      <div className="max-w-6xl mx-auto px-6 pt-12 md:pt-20 pb-8 md:pb-12 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10">
+      <div className="max-w-6xl mx-auto px-6 pt-12 md:pt-20 pb-8 md:pb-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 md:gap-10">
 
         {/* Brand column */}
-        <div className="col-span-2 md:col-span-1">
+        <div className="col-span-1 sm:col-span-2 md:col-span-1">
           <p className="font-serif text-3xl text-cream mb-4">Caffiend</p>
           <p className="font-sans text-cream/70 text-sm mb-6" style={krFont}>
             {t("눈꽃빙수·수플레", "Snowflake Bingsu · Soufflé")}

@@ -83,7 +83,7 @@ function StorySection() {
           className="object-contain"
           quality={90}
           sizes="100vw"
-          style={{ objectPosition: "72% center" }}
+          style={{ objectPosition: "center center" }}
         />
       </div>
 
@@ -118,7 +118,7 @@ function StorySection() {
           <h2
             className="sr-replay font-serif font-bold leading-[0.9] mb-6"
             data-delay="350ms"
-            style={{ fontSize: "clamp(3rem, 9vw, 8rem)", letterSpacing: "-0.02em", color: "#fff" }}
+            style={{ fontSize: "clamp(2.2rem, 9vw, 8rem)", letterSpacing: "-0.02em", color: "#fff" }}
           >
             {t("브랜드 이야기", "Brand Story")}
           </h2>
@@ -225,7 +225,7 @@ function MenuSection() {
             <div
               key={i}
               className="flex-shrink-0 overflow-hidden border border-white/10"
-              style={{ width: "clamp(260px, 30vw, 460px)", height: "clamp(260px, 30vw, 460px)" }}
+              style={{ width: "clamp(140px, 38vw, 460px)", height: "clamp(140px, 38vw, 460px)" }}
             >
               <Image
                 src={`/${encodeURIComponent(name)}`}
@@ -329,8 +329,8 @@ function ReserveSection() {
       />
 
       {/* Content */}
-      <div className="relative z-10 w-full pb-12 md:pb-16 px-6 md:pl-16 md:pr-72" style={{ paddingTop: "clamp(0rem, 0.5vh, 0.5rem)", marginTop: "-2vh" }}>
-        <div className="w-full flex justify-end">
+      <div className="relative z-10 w-full pb-12 md:pb-16 px-6 md:pl-16 md:pr-72">
+        <div className="w-full flex justify-start md:justify-end">
           <div>
             <p
               className="sr-replay font-serif font-bold mb-3"
@@ -342,7 +342,7 @@ function ReserveSection() {
             <h2
               className="sr-replay font-serif font-bold leading-[0.9] mb-6"
               data-delay="350ms"
-              style={{ fontSize: "clamp(3rem, 9vw, 8rem)", letterSpacing: "-0.02em", color: "#fff" }}
+              style={{ fontSize: "clamp(2.2rem, 9vw, 8rem)", letterSpacing: "-0.02em", color: "#fff" }}
             >
               {t("단체주문", "Group Order")}
             </h2>

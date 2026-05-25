@@ -82,14 +82,14 @@ export default function HeroSection() {
             <div>
               <h1
                 className="font-serif font-bold text-cream leading-[0.9]"
-                style={{ fontSize: "clamp(5rem, 15vw, 13rem)", letterSpacing: "-0.02em" }}
+                style={{ fontSize: "clamp(2.8rem, 14vw, 13rem)", letterSpacing: "-0.02em" }}
               >
                 CAFFIEND
               </h1>
               {/* 카피엔드 — below CAFFIEND, right-aligned but ends before D */}
               <p
                 className="font-serif font-bold text-cream tracking-[0.3em] text-right mt-2"
-                style={{ ...krFont, fontSize: "clamp(0.75rem, 2vw, 1.6rem)", paddingRight: "clamp(2%, 21%, 21%)" }}
+                style={{ ...krFont, fontSize: "clamp(0.65rem, 2vw, 1.6rem)", paddingRight: "clamp(2%, 21%, 21%)" }}
               >
                 카피엔드
               </p>
