@@ -4,16 +4,17 @@ import { usePathname } from "next/navigation";
 import { useLanguage } from "../context/LanguageContext";
 
 const ORDER_URL = "https://caffiend-qr-fh.web.app/";
-
-const DESKTOP = { size: 192, expandedWidth: "min(680px, 88vw)", bottom: "7rem"  };
-const MOBILE  = { size: 128, expandedWidth: "calc(100vw - 4rem)", bottom: "5.5rem" };
-
-const CIRCLE_FONT   = "clamp(1.1rem, 3vw, 2.25rem)";
-const EXPANDED_FONT = "clamp(0.85rem, 2.2vw, 2.1rem)";
-
 const HIDDEN_PATHS = ["/notice/allergy", "/en/notice/allergy"];
 
-function getIsMobile() {
+const CIRCLE_FONT   = "clamp(0.7rem, 3vw, 2.25rem)";
+const EXPANDED_FONT = "clamp(0.75rem, 2.2vw, 2.1rem)";
+
+function computeSize() {
+  if (typeof window === "undefined") return 192;
+  return Math.round(Math.min(Math.max(window.innerWidth * 0.18, 60), 192));
+}
+
+function computeIsMobile() {
   if (typeof window === "undefined") return false;
   return window.matchMedia("(max-width: 768px)").matches;
 }
@@ -22,19 +23,22 @@ export default function OrderButton() {
   const { lang } = useLanguage();
   const pathname = usePathname();
   const [expanded, setExpanded] = useState(false);
-  const [isMobile, setIsMobile] = useState(getIsMobile);
+  const [size, setSize] = useState(computeSize);
+  const [isMobile, setIsMobile] = useState(computeIsMobile);
   const ref = useRef<HTMLAnchorElement>(null);
 
-  // Sync immediately before paint to avoid flash
   useLayoutEffect(() => {
-    setIsMobile(getIsMobile());
+    setSize(computeSize());
+    setIsMobile(computeIsMobile());
   }, []);
 
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 768px)");
-    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
+    const onResize = () => {
+      setSize(computeSize());
+      setIsMobile(computeIsMobile());
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 
   // Close on outside click (mobile only)
@@ -51,9 +55,8 @@ export default function OrderButton() {
 
   if (HIDDEN_PATHS.includes(pathname)) return null;
 
-  const cfg = isMobile ? MOBILE : DESKTOP;
-  const { size, expandedWidth, bottom } = cfg;
   const radius = size / 2;
+  const expandedWidth = isMobile ? "calc(100vw - 4rem)" : "min(680px, 88vw)";
 
   const long =
     lang === "ko"
@@ -80,7 +83,7 @@ export default function OrderButton() {
       onMouseLeave={() => { if (!isMobile) setExpanded(false); }}
       style={{
         position: "fixed",
-        bottom,
+        bottom: "calc(3rem + 56px)",
         right: "2rem",
         height: `${size}px`,
         width: expanded ? expandedWidth : `${size}px`,
@@ -96,51 +99,34 @@ export default function OrderButton() {
       }}
     >
       {/* Extended text */}
-      <span
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          whiteSpace: "nowrap",
-          fontSize: EXPANDED_FONT,
-          fontFamily: "var(--font-lato), system-ui, sans-serif",
-          fontWeight: 600,
-          color: "#fff",
-          opacity: expanded ? 1 : 0,
-          transition: "opacity 0.2s ease 0.15s",
-          pointerEvents: "none",
-          zIndex: 1,
-        }}
-      >
+      <span style={{
+        position: "absolute", left: 0, right: 0, top: 0, bottom: 0,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        whiteSpace: "nowrap",
+        fontSize: EXPANDED_FONT,
+        fontFamily: "var(--font-lato), system-ui, sans-serif",
+        fontWeight: 600, color: "#fff",
+        opacity: expanded ? 1 : 0,
+        transition: "opacity 0.2s ease 0.15s",
+        pointerEvents: "none", zIndex: 1,
+      }}>
         {long}
       </span>
 
       {/* Circle face */}
-      <span
-        style={{
-          position: "absolute",
-          right: 0,
-          top: 0,
-          width: `${size}px`,
-          height: `${size}px`,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "2px",
-          color: "#fff",
-          zIndex: 2,
-          opacity: expanded ? 0 : 1,
-          transition: "opacity 0.18s ease",
-        }}
-      >
+      <span style={{
+        position: "absolute", right: 0, top: 0,
+        width: `${size}px`, height: `${size}px`,
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center",
+        gap: "2px", color: "#fff", zIndex: 2,
+        opacity: expanded ? 0 : 1,
+        transition: "opacity 0.18s ease",
+      }}>
         <span style={{ fontSize: CIRCLE_FONT, fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>QR</span>
-        <span style={{ fontSize: CIRCLE_FONT, fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>{lang === "ko" ? "주문" : "Order"}</span>
+        <span style={{ fontSize: CIRCLE_FONT, fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>
+          {lang === "ko" ? "주문" : "Order"}
+        </span>
       </span>
     </a>
   );
