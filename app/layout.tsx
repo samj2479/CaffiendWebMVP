@@ -5,7 +5,7 @@ import Nav from "./components/Nav";
 import ScrollAnimationObserver from "./components/ScrollAnimationObserver";
 import ScrollProgressBar from "./components/ScrollProgressBar";
 import ScrollToTop from "./components/ScrollToTop";
-import OrderButton from "./components/OrderButton";
+import OrderButtonClient from "./components/OrderButtonClient";
 import ScrollSnapController from "./components/ScrollSnapController";
 import { LanguageProvider } from "./context/LanguageContext";
 
@@ -45,12 +45,12 @@ export default function RootLayout({
       lang="ko"
       className={`${playfair.variable} ${lato.variable} ${notoSansKR.variable}`}
     >
-      <body className="overflow-hidden">
+      <body className="overflow-hidden" suppressHydrationWarning>
         <LanguageProvider>
           <Nav />
           <ScrollAnimationObserver />
           <ScrollProgressBar />
-          <OrderButton />
+          <OrderButtonClient />
           <ScrollToTop />
           <ScrollSnapController />
           <div

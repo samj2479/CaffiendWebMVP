@@ -253,7 +253,7 @@ export default function Nav() {
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => setLang(lang === "ko" ? "en" : "ko")}
-            className={`relative h-7 px-3 rounded-full border font-sans text-[11px] font-semibold overflow-hidden transition-all duration-300 ${
+            className={`inline-flex items-center justify-center h-7 px-3 rounded-full border font-sans text-[11px] font-semibold overflow-hidden transition-all duration-300 ${
               (isDark && !menuOpen)
                 ? "border-white/50 text-white hover:bg-white hover:text-black"
                 : "border-black/40 text-black hover:bg-black hover:text-white"
@@ -261,10 +261,8 @@ export default function Nav() {
             style={{ minWidth: 72 }}
             aria-label="언어 전환"
           >
-            <span key={lang} className="block lang-in">
-              {lang === "ko"
-                ? <span className="inline-flex items-center gap-1.5"><GlobeIcon />English</span>
-                : "🇰🇷 한국어"}
+            <span key={lang} className="inline-flex items-center gap-1.5 lang-in">
+              {lang === "ko" ? <><GlobeIcon />English</> : <>🇰🇷 한국어</>}
             </span>
           </button>
 

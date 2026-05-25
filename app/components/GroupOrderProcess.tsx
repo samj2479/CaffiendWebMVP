@@ -120,18 +120,17 @@ export default function GroupOrderProcess() {
       </div>
 
       {/* Mobile: vertical stack */}
-      <div className="flex flex-col items-center gap-0 md:hidden">
+      <div className="flex flex-col md:hidden w-full" style={{ maxWidth: 384, margin: "0 auto", padding: "0 16px" }}>
         {steps.map((step, i) => (
-          <div key={i} className="flex flex-col items-center">
-            <div className="flex items-center gap-5 w-full max-w-sm px-4">
-              {/* Circle */}
+          <div key={i}>
+            {/* Step row: circle column fixed 80px, text takes rest */}
+            <div style={{ display: "grid", gridTemplateColumns: "80px 1fr", gap: "20px", alignItems: "center" }}>
               <div
-                className="flex-shrink-0 flex items-center justify-center rounded-full"
+                className="flex items-center justify-center rounded-full"
                 style={{ width: 80, height: 80, background: "#FAF7F2", border: "2px solid #174C35" }}
               >
                 <div style={{ transform: "scale(0.75)" }}>{step.icon}</div>
               </div>
-              {/* Text */}
               <div>
                 <p
                   className="text-[#174C35] font-semibold mb-1 leading-snug"
@@ -146,9 +145,9 @@ export default function GroupOrderProcess() {
               </div>
             </div>
 
-            {/* Vertical arrow */}
+            {/* Arrow sits under circle column (80px wide) so it lines up with circle center */}
             {i < steps.length - 1 && (
-              <div className="my-3">
+              <div style={{ width: 80, display: "flex", justifyContent: "center", padding: "10px 0" }}>
                 <svg width="16" height="28" viewBox="0 0 16 28" fill="none">
                   <line x1="8" y1="0" x2="8" y2="20" stroke="#7AAF95" strokeWidth="1.5" strokeDasharray="4 3" />
                   <path d="M4 18l4 6 4-6" stroke="#7AAF95" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />

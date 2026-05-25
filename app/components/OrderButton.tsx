@@ -6,12 +6,11 @@ import { useLanguage } from "../context/LanguageContext";
 const ORDER_URL = "https://caffiend-qr-fh.web.app/";
 const HIDDEN_PATHS = ["/notice/allergy", "/en/notice/allergy"];
 
-const CIRCLE_FONT   = "clamp(0.7rem, 3vw, 2.25rem)";
 const EXPANDED_FONT = "clamp(0.75rem, 2.2vw, 2.1rem)";
 
 function computeSize() {
   if (typeof window === "undefined") return 192;
-  if (window.matchMedia("(max-width: 768px)").matches) return 52;
+  if (window.matchMedia("(max-width: 768px)").matches) return 34;
   return Math.round(Math.min(Math.max(window.innerWidth * 0.18, 80), 192));
 }
 
@@ -24,8 +23,8 @@ export default function OrderButton() {
   const { lang } = useLanguage();
   const pathname = usePathname();
   const [expanded, setExpanded] = useState(false);
-  const [size, setSize] = useState(computeSize);
-  const [isMobile, setIsMobile] = useState(computeIsMobile);
+  const [size, setSize] = useState(192);
+  const [isMobile, setIsMobile] = useState(false);
   const ref = useRef<HTMLAnchorElement>(null);
 
   useLayoutEffect(() => {
@@ -124,8 +123,8 @@ export default function OrderButton() {
         opacity: expanded ? 0 : 1,
         transition: "opacity 0.18s ease",
       }}>
-        <span style={{ fontSize: CIRCLE_FONT, fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>QR</span>
-        <span style={{ fontSize: CIRCLE_FONT, fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>
+        <span style={{ fontSize: `${Math.round(size * 0.28)}px`, fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>QR</span>
+        <span style={{ fontSize: `${Math.round(size * 0.28)}px`, fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>
           {lang === "ko" ? "주문" : "Order"}
         </span>
       </span>
