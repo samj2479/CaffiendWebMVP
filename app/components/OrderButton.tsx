@@ -4,8 +4,12 @@ import { useLanguage } from "../context/LanguageContext";
 
 const ORDER_URL = "https://caffiend-qr-fh.web.app/";
 
-const DESKTOP = { size: 192, circleFont: "2.25rem", expandedFont: "2.1rem",  expandedWidth: "min(680px, 88vw)", bottom: "7rem"  };
-const MOBILE  = { size: 128, circleFont: "1.5rem",  expandedFont: "0.75rem", expandedWidth: "min(92vw, 420px)",  bottom: "5.5rem" };
+const DESKTOP = { size: 192, expandedWidth: "min(680px, 88vw)", bottom: "7rem"  };
+const MOBILE  = { size: 128, expandedWidth: "min(92vw, 420px)",  bottom: "5.5rem" };
+
+// Fonts scale with viewport width
+const CIRCLE_FONT   = "clamp(1.1rem, 3vw, 2.25rem)";
+const EXPANDED_FONT = "clamp(0.85rem, 2.2vw, 2.1rem)";
 
 export default function OrderButton() {
   const { lang } = useLanguage();
@@ -34,7 +38,7 @@ export default function OrderButton() {
   }, [isMobile, expanded]);
 
   const cfg = isMobile ? MOBILE : DESKTOP;
-  const { size, circleFont, expandedFont, expandedWidth, bottom } = cfg;
+  const { size, expandedWidth, bottom } = cfg;
   const radius = size / 2;
 
   const long =
@@ -90,7 +94,7 @@ export default function OrderButton() {
           alignItems: "center",
           justifyContent: "center",
           whiteSpace: "nowrap",
-          fontSize: expandedFont,
+          fontSize: EXPANDED_FONT,
           fontFamily: "var(--font-lato), system-ui, sans-serif",
           fontWeight: 600,
           color: "#fff",
@@ -122,8 +126,8 @@ export default function OrderButton() {
           transition: "opacity 0.18s ease",
         }}
       >
-        <span style={{ fontSize: circleFont, fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>QR</span>
-        <span style={{ fontSize: circleFont, fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>{lang === "ko" ? "주문" : "Order"}</span>
+        <span style={{ fontSize: CIRCLE_FONT, fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>QR</span>
+        <span style={{ fontSize: CIRCLE_FONT, fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>{lang === "ko" ? "주문" : "Order"}</span>
       </span>
     </a>
   );
