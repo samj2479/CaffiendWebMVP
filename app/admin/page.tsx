@@ -7,7 +7,7 @@ import SiteMenuManager from "./SiteMenuManager";
 import QRMenuManager from "./QRMenuManager";
 import QRDetailsManager from "./QRDetailsManager";
 
-const ADMIN_PIN    = process.env.NEXT_PUBLIC_ADMIN_PIN ?? "1234";
+const ADMIN_PIN    = process.env.NEXT_PUBLIC_ADMIN_PIN ?? "2479";
 const CONFIG_KEY   = "caffiend-menu-config";
 
 // ─── Types ───────────────────────────────────────────────────
