@@ -1,82 +1,60 @@
 "use client";
-import { useState, useLayoutEffect, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { useLanguage } from "../context/LanguageContext";
 
-const ORDER_URL = "https://caffiend-qr-fh.web.app/";
+const ORDER_URL = "/order";
 const HIDDEN_PATHS = ["/notice/allergy", "/en/notice/allergy"];
-
 const EXPANDED_FONT = "clamp(0.75rem, 2.2vw, 2.1rem)";
-
-function computeSize() {
-  if (typeof window === "undefined") return 192;
-  if (window.matchMedia("(max-width: 768px)").matches) return 34;
-  return Math.round(Math.min(Math.max(window.innerWidth * 0.18, 80), 192));
-}
-
-function computeIsMobile() {
-  if (typeof window === "undefined") return false;
-  return window.matchMedia("(max-width: 768px)").matches;
-}
 
 export default function OrderButton() {
   const { lang } = useLanguage();
   const pathname = usePathname();
   const [expanded, setExpanded] = useState(false);
-  const [size, setSize] = useState(192);
+  const [size, setSize] = useState(0);       // 0 = not yet measured (SSR-safe sentinel)
   const [isMobile, setIsMobile] = useState(false);
   const ref = useRef<HTMLAnchorElement>(null);
 
-  useLayoutEffect(() => {
-    setSize(computeSize());
-    setIsMobile(computeIsMobile());
-  }, []);
-
+  // Measure on mount (client-only — window is available here)
   useEffect(() => {
-    const onResize = () => {
-      setSize(computeSize());
-      setIsMobile(computeIsMobile());
-    };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
+    function measure() {
+      const mobile = window.matchMedia("(max-width: 768px)").matches;
+      setIsMobile(mobile);
+      setSize(mobile ? 34 : Math.round(Math.min(Math.max(window.innerWidth * 0.18, 80), 192)));
+    }
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
   }, []);
 
-  // Close on outside click (mobile only)
+  // Close on outside click (mobile expand mode)
   useEffect(() => {
     if (!isMobile || !expanded) return;
-    const onOutside = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setExpanded(false);
-      }
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setExpanded(false);
     };
-    document.addEventListener("mousedown", onOutside);
-    return () => document.removeEventListener("mousedown", onOutside);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, [isMobile, expanded]);
 
-  if (HIDDEN_PATHS.includes(pathname)) return null;
+  // Hide on certain pages or before client measurement
+  if (HIDDEN_PATHS.includes(pathname) || size === 0) return null;
 
   const radius = size / 2;
   const expandedWidth = isMobile ? "calc(100vw - 4rem)" : "min(680px, 88vw)";
-
-  const long =
-    lang === "ko"
-      ? "카페에 계시다면? 테이블에서 주문하기"
-      : "At the Cafe? Order from your table";
+  const long = lang === "ko"
+    ? "카페에 계시다면? 테이블에서 주문하기"
+    : "At the Cafe? Order from your table";
 
   function handleClick(e: React.MouseEvent) {
     if (!isMobile) return;
-    if (!expanded) {
-      e.preventDefault();
-      setExpanded(true);
-    }
+    if (!expanded) { e.preventDefault(); setExpanded(true); }
   }
 
   return (
     <a
       ref={ref}
       href={ORDER_URL}
-      target="_blank"
-      rel="noopener noreferrer"
       aria-label={long}
       onClick={handleClick}
       onMouseEnter={() => { if (!isMobile) setExpanded(true); }}
@@ -98,9 +76,9 @@ export default function OrderButton() {
         transition: "width 0.38s cubic-bezier(0.34, 1.4, 0.64, 1)",
       }}
     >
-      {/* Extended text */}
+      {/* Expanded text */}
       <span style={{
-        position: "absolute", left: 0, right: 0, top: 0, bottom: 0,
+        position: "absolute", inset: 0,
         display: "flex", alignItems: "center", justifyContent: "center",
         whiteSpace: "nowrap",
         fontSize: EXPANDED_FONT,
@@ -113,7 +91,7 @@ export default function OrderButton() {
         {long}
       </span>
 
-      {/* Circle face */}
+      {/* Circle label */}
       <span style={{
         position: "absolute", right: 0, top: 0,
         width: `${size}px`, height: `${size}px`,

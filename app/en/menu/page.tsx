@@ -4,6 +4,11 @@ import Image from "next/image";
 import { useLanguage } from "../../context/LanguageContext";
 import FooterSection from "../../components/FooterSection";
 import { allergyCols, getItemAllergenKeys } from "../../data/allergyData";
+import { supabase } from "@/lib/supabase";
+
+interface DbItem { ko: string; en: string; image: string; season?: boolean; allergens?: Record<string, boolean>; }
+interface DynSub { ko: string; en: string; items: DbItem[]; }
+interface DynCat { ko: string; en: string; sub: DynSub[] | null; items: DbItem[]; }
 
 const sortOptions = [
   { ko: "인기순", en: "Popular" },
@@ -144,7 +149,7 @@ const adeItems = [
 const smoothieItems = [
   { ko: "미숫가루", en: "Misugaru", image: "/%EB%AF%B8%EC%88%AB%EA%B0%80%EB%A3%A8.png" },
   { ko: "냉귀리 쉐이크", en: "Cold Oat Shake", image: "/%EB%83%89%EA%B7%80%EB%A6%AC%EC%89%90%EC%9D%B4%ED%81%AC.png" },
-  { ko: "그릭요거드 (그래놀라/딸기/블루베리/망고)", en: "Greek Yogurt (Granola/Strawberry/Blueberry/Mango)", image: "/%EA%B7%B8%EB%A6%AD%EC%9A%94%EA%B1%B0%ED%8A%B8(%EA%B7%B8%EB%9E%98%EB%86%80%EB%9D%BC%20%EB%94%B8%EA%B8%B0%20%EB%B8%94%EB%A3%A8%EB%B2%A0%EB%A6%AC%20%EB%A7%9D%EA%B3%A0).png" },
+  { ko: "그릭요거트 (그래놀라/딸기/블루베리/망고)", en: "Greek Yogurt (Granola/Strawberry/Blueberry/Mango)", image: "/%EA%B7%B8%EB%A6%AD%EC%9A%94%EA%B1%B0%ED%8A%B8(%EA%B7%B8%EB%9E%98%EB%86%80%EB%9D%BC%20%EB%94%B8%EA%B8%B0%20%EB%B8%94%EB%A3%A8%EB%B2%A0%EB%A6%AC%20%EB%A7%9D%EA%B3%A0).png" },
   { ko: "배 스무디", en: "Pear Smoothie", image: "/%EB%B0%B0%EC%88%98%EB%AC%B4%EB%94%94.png" },
   { ko: "유자 스무디", en: "Yuzu Smoothie", image: "/%EC%9C%A0%EC%9E%90%EC%8A%A4%EB%AC%B4%EB%94%94.png" },
 ];
@@ -210,6 +215,66 @@ export default function Page() {
   const [searchQuery, setSearchQuery] = useState("");
   const [flipped, setFlipped] = useState<Set<string>>(new Set());
   const sortRef = useRef<HTMLDivElement>(null);
+  const [dynCats, setDynCats] = useState<DynCat[] | null>(null);
+
+  useEffect(() => {
+    async function fetchFromDb() {
+      if (!supabase) return;
+      const [catsRes, itemsRes, linksRes] = await Promise.all([
+        supabase.from("site_categories").select("id, ko, en, sort_order, parent_id, hidden").order("sort_order"),
+        supabase.from("site_menu_items").select("id, ko, en, image_url, season, allergens").eq("hidden_on_main", false).order("sort_order"),
+        supabase.from("site_menu_category_items").select("menu_item_id, category_id, sort_order").order("sort_order"),
+      ]);
+      const dbCats = catsRes.data;
+      const dbItems = itemsRes.data;
+      const dbLinks = linksRes.data;
+      if (!dbCats || !dbItems || dbItems.length === 0) return;
+
+      const itemMap = new Map(dbItems.map(i => [i.id, i]));
+      const normalize = (i: typeof dbItems[0]): DbItem => ({
+        ko: i.ko, en: i.en,
+        image: i.image_url ?? "",
+        season: i.season ?? false,
+        allergens: (i.allergens as Record<string, boolean>) ?? {},
+      });
+
+      const allNorm = dbItems.map(normalize);
+
+      const byCatId = new Map<string, DbItem[]>();
+      for (const cat of dbCats) {
+        const catLinks = (dbLinks ?? []).filter(l => l.category_id === cat.id).sort((a, b) => a.sort_order - b.sort_order);
+        byCatId.set(cat.id, catLinks.map(l => itemMap.get(l.menu_item_id)).filter(Boolean).map(i => normalize(i!))
+          .sort((a, b) => (b.season ? 1 : 0) - (a.season ? 1 : 0)));
+      }
+
+      const topLevel = dbCats.filter((c: {parent_id: string | null; hidden: boolean}) => !c.parent_id && !c.hidden).sort((a, b) => a.sort_order - b.sort_order);
+      const subOf = (parentId: string) => dbCats.filter((c: {parent_id: string | null; id: string; hidden: boolean}) => c.parent_id === parentId && !c.hidden).sort((a, b) => a.sort_order - b.sort_order);
+
+      const seasonItems = allNorm.filter(i => i.season);
+      const catList: DynCat[] = [
+        { ko: "전체", en: "All", sub: null, items: [...allNorm].sort((a, b) => (b.season ? 1 : 0) - (a.season ? 1 : 0)) },
+        ...(seasonItems.length > 0 ? [{ ko: "시즌 메뉴", en: "Season Menu", sub: null as null, items: seasonItems }] : []),
+      ];
+
+      for (const parent of topLevel) {
+        if (parent.ko === "시즌") continue;
+        const subs = subOf(parent.id);
+        if (subs.length > 0) {
+          const subList = subs.map((sub: {id: string; ko: string; en: string}) => ({ ko: sub.ko, en: sub.en, items: byCatId.get(sub.id) ?? [] }));
+          if (subList.some(s => s.items.length > 0)) {
+            catList.push({ ko: parent.ko, en: parent.en, sub: subList, items: [] });
+          }
+        } else {
+          const its = byCatId.get(parent.id) ?? [];
+          if (its.length > 0) catList.push({ ko: parent.ko, en: parent.en, sub: null, items: its });
+        }
+      }
+
+      setDynCats(catList);
+      setActiveCatIndex(0);
+    }
+    fetchFromDb();
+  }, []);
 
   function toggleFlip(ko: string) {
     setFlipped(prev => {
@@ -219,8 +284,9 @@ export default function Page() {
     });
   }
 
-  const activeCat = categories[activeCatIndex];
-  const allItems = categories[0].items;
+  const activeCategories = (dynCats ?? categories) as typeof categories;
+  const activeCat = activeCategories[Math.min(activeCatIndex, activeCategories.length - 1)];
+  const allItems = activeCategories[0].items;
 
   const menuItems = (() => {
     if (activeCat.sub) {
@@ -275,7 +341,7 @@ export default function Page() {
           <div className="flex flex-col gap-3 mt-8 md:flex-row md:items-center md:justify-between" ref={sortRef}>
             {/* Category pills */}
             <div className="flex flex-wrap gap-2">
-              {categories.map((cat, i) => (
+              {activeCategories.map((cat, i) => (
                 <button
                   key={i}
                   onClick={() => handleCatClick(i)}
@@ -383,14 +449,17 @@ export default function Page() {
             )}
             {displayItems.map((item, i) => {
               const isFlipped = flipped.has(item.ko);
-              const allergenKeys = getItemAllergenKeys(item.ko);
+              const dbAllergens = (item as DbItem).allergens;
+              const allergenKeys = dbAllergens
+                ? Object.entries(dbAllergens).filter(([, v]) => v).map(([k]) => k)
+                : getItemAllergenKeys(item.ko);
               const allergenLabel = allergenKeys.length === 0
                 ? (lang === "ko" ? "없음" : "None")
                 : allergenKeys.map(k => {
                     const col = allergyCols.find(c => c.key === k);
                     return lang === "ko" ? col?.ko : col?.en;
-                  }).join(", ");
-              const imgSrc = (item as { image?: string }).image;
+                  }).filter(Boolean).join(", ");
+              const imgSrc = (item as DbItem).image ?? (item as { image?: string }).image;
               return (
                 <div key={i} className="relative flex flex-col">
                   {(item as { season?: boolean }).season && (

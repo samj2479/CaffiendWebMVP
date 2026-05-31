@@ -140,6 +140,15 @@ section, footer#contact {
   }
 }
 
+/* ─── Order modal slide-up ──────────────────────── */
+@keyframes slideUpSheet {
+  from { transform: translateY(100%); opacity: 0.6; }
+  to   { transform: translateY(0);    opacity: 1;   }
+}
+.sheet-slide-up {
+  animation: slideUpSheet 0.22s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+}
+
 /* ─── Hero entrance animations ─────────────────── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(24px); }
@@ -293,6 +302,15 @@ section, footer#contact {
   from { background-position: -200% 0; }
   to   { background-position:  200% 0; }
 }
+
+/* ─── Admin eye toggle animation ────────────────── */
+@keyframes eyePop {
+  0%   { transform: scale(1) rotate(0deg); }
+  30%  { transform: scale(1.45) rotate(-12deg); }
+  60%  { transform: scale(0.88) rotate(6deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+.eye-pop { animation: eyePop 0.28s cubic-bezier(0.34,1.56,0.64,1) both; }
 
 .shimmer-overlay {
   position: absolute;

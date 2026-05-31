@@ -1,12 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Lato, Noto_Sans_KR } from "next/font/google";
 import "./globals.css";
-import Nav from "./components/Nav";
-import ScrollAnimationObserver from "./components/ScrollAnimationObserver";
-import ScrollProgressBar from "./components/ScrollProgressBar";
-import ScrollToTop from "./components/ScrollToTop";
-import OrderButtonClient from "./components/OrderButtonClient";
-import ScrollSnapController from "./components/ScrollSnapController";
+import LayoutShell from "./components/LayoutShell";
 import { LanguageProvider } from "./context/LanguageContext";
 
 const playfair = Playfair_Display({
@@ -45,23 +40,9 @@ export default function RootLayout({
       lang="ko"
       className={`${playfair.variable} ${lato.variable} ${notoSansKR.variable}`}
     >
-      <body className="overflow-hidden" suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <LanguageProvider>
-          <Nav />
-          <ScrollAnimationObserver />
-          <ScrollProgressBar />
-          <OrderButtonClient />
-          <ScrollToTop />
-          <ScrollSnapController />
-          <div
-            id="scroll-container"
-            style={{
-              height: "100vh",
-              overflowY: "scroll",
-            }}
-          >
-            {children}
-          </div>
+          <LayoutShell>{children}</LayoutShell>
         </LanguageProvider>
       </body>
     </html>

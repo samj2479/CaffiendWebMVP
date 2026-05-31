@@ -85,6 +85,39 @@ Hero → Story (CEO timeline) → Philosophy (values + seasons) → Menu (carous
 - Card structure: `relative flex flex-col` → badge (absolute sibling) + `aspect-square bg-gray-200 overflow-hidden` grey box + name `<p>`
 - Grey boxes must stay `aspect-square overflow-hidden` — no inner wrappers, no `overflow-visible` on the grey box itself
 
+## QR Order System (실시간 주문 관리)
+
+### Architecture
+- Customer orders via `/order/[table]` → inserts into Supabase `orders` table
+- Admin views and manages orders at `/admin` → 주문 관리 screen
+
+### Supabase `orders` table schema
+```ts
+{ id: string; table_number: number; items: OrderItem[]; status: "pending" | "cooking" | "completed" | "cancelled"; created_at: string }
+```
+
+### Status flow
+`pending` (대기 중) → `cooking` (조리 중) → `completed` (조리 완료)
+`pending` → `cancelled` (취소됨)
+
+### Admin side (`app/admin/page.tsx`)
+- Real-time via `supabase.channel("admin-orders")` with `postgres_changes` on `orders` table (no filter — listens to all)
+- New orders: INSERT event → prepended to `orders` state
+- Status updates: UPDATE event → merged into `orders` state
+- Buttons: **주문 수락** (pending → cooking), **취소** (pending → cancelled), **조리 완료** (cooking → completed)
+- `updateStatus` is `async` and `await`s the Supabase write — critical for Realtime to fire reliably
+
+### Customer side (`app/order/[table]/page.tsx`)
+- Real-time via `supabase.channel("orders-status-${tableNumber}")` with `postgres_changes` UPDATE on `orders` (no server-side filter)
+- Client-side filter: only applies update if the order ID exists in local `history` state
+- Initial `refresh()` fetch on entering success/history screen syncs any missed changes
+- ⚠️ Server-side filter (`table_number=eq.X`) was tried but silently fails without RLS + Realtime policies — do NOT use it
+
+### Key lesson
+`updateStatus` must be `async`/`await` — fire-and-forget skips the DB write before function exits, causing Realtime events to not fire.
+
+---
+
 ## Completed Changes (previous sessions)
 - Lang button: shows "English" / "🇰🇷 한국어", animates on switch (`lang-in` keyframe)
 - Reviews section label: "소중한 고객님들의 후기"
