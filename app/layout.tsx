@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Lato, Noto_Sans_KR } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import LayoutShell from "./components/LayoutShell";
 import { LanguageProvider } from "./context/LanguageContext";
@@ -45,6 +46,7 @@ export default function RootLayout({
           <LayoutShell>{children}</LayoutShell>
         </LanguageProvider>
       </body>
+      <GoogleAnalytics gaId="G-H84L1G1Y80" />
     </html>
   );
 }
