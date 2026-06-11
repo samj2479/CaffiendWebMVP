@@ -148,8 +148,12 @@ function ItemModal({
   const [customSelections, setCustomSelections] = useState<Record<string, string>>(() =>
     Object.fromEntries((qrCustomOptions ?? []).map(opt => [opt.name_ko, entry?.extras?.customSelections?.[opt.name_ko] ?? opt.choices[0]?.ko ?? ""]))
   );
+  const [showTempError, setShowTempError] = useState(false);
 
   const allergens = getAllergens(item.ko);
+
+  // Check if temperature selection is required (drink with no fixed temp)
+  const needsTempSelection = isDrink && fixedTemp === null;
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -158,6 +162,11 @@ function ItemModal({
 
   function handleConfirm() {
     if (qty < 1) return;
+    // Validate required options
+    if (needsTempSelection && temp === null) {
+      setShowTempError(true);
+      return;
+    }
     const hasCustom = qrCustomOptions && qrCustomOptions.length > 0;
     const extras: ExtraOptions | undefined = (() => {
       const base: ExtraOptions = {};
@@ -217,9 +226,16 @@ function ItemModal({
             {/* 온도 — drinks only */}
             {isDrink && (
               <div>
-                <p className="font-sans text-sm font-semibold text-[#0D0D0D] mb-2">
-                  {lang === "ko" ? "온도" : "Temperature"}
-                </p>
+                <div className="flex items-center gap-2 mb-2">
+                  <p className="font-sans text-sm font-semibold text-[#0D0D0D]">
+                    {lang === "ko" ? "온도" : "Temperature"}
+                  </p>
+                  {needsTempSelection && (
+                    <span className="font-sans text-[10px] font-semibold text-red-500 bg-red-50 px-1.5 py-0.5 rounded">
+                      {lang === "ko" ? "필수" : "Required"}
+                    </span>
+                  )}
+                </div>
                 <div className="flex gap-2">
                   {(["HOT", "ICE"] as const)
                     .filter((t) => fixedTemp === null || fixedTemp === t)
@@ -228,11 +244,11 @@ function ItemModal({
                       return (
                         <button
                           key={t}
-                          onClick={() => setTemp(isActive ? null : t)}
+                          onClick={() => { setTemp(isActive ? null : t); setShowTempError(false); }}
                           className="flex-1 py-2.5 rounded-full border font-sans text-sm font-semibold transition-all"
                           style={isActive
                             ? { backgroundColor: "#174C35", borderColor: "#174C35", color: "#fff" }
-                            : { backgroundColor: "#fff", borderColor: "rgba(0,0,0,0.15)", color: "#555" }}
+                            : { backgroundColor: "#fff", borderColor: showTempError ? "#ef4444" : "rgba(0,0,0,0.15)", color: "#555" }}
                         >
                           {t === "HOT"
                             ? (lang === "ko" ? "🔥 핫" : "🔥 HOT")
@@ -241,6 +257,11 @@ function ItemModal({
                       );
                     })}
                 </div>
+                {showTempError && (
+                  <p className="font-sans text-xs text-red-500 mt-2">
+                    {lang === "ko" ? "*옵션을 선택해야 합니다." : "*Please select an option."}
+                  </p>
+                )}
               </div>
             )}
 
@@ -788,7 +809,11 @@ export default function OrderPage() {
               {lang === "ko" ? "주문 완료!" : "Order Placed!"}
             </h2>
             <p className="font-sans text-sm text-[#555] mt-2">
-              {lang === "ko" ? `테이블 ${tableNumber}번 주문이 접수되었습니다.` : `Order for Table ${tableNumber} received.`}
+              {lang === "ko" ? (
+                <>테이블 {tableNumber}번 주문이 접수되었습니다.<br /><span className="font-bold">카운터에서 결제 해주세요.</span></>
+              ) : (
+                <>Your order for Table {tableNumber} has been received.<br /><span className="font-bold">Please pay at the counter.</span></>
+              )}
             </p>
             {sc && (
               <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 border-2 rounded-full" style={{ borderColor: sc.color }}>
@@ -926,100 +951,92 @@ export default function OrderPage() {
   // ── Cart screen ───────────────────────────────────────────
   if (screen === "cart") {
     return (
-      <Shell>
-        <div className="flex-shrink-0 px-5 pt-6 pb-4 border-b border-black/8 flex items-center gap-3">
-          <button onClick={() => setScreen("menu")} className="w-8 h-8 flex items-center justify-center">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-          </button>
-          <h1 className="font-serif text-xl font-bold text-[#0D0D0D]">
-            {lang === "ko" ? "장바구니" : "Cart"}
-          </h1>
-          <span className="font-sans text-xs text-[#888] ml-auto">
-            {lang === "ko" ? `테이블 ${tableNumber}번` : `Table ${tableNumber}`}
-          </span>
-        </div>
-        <div className="flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-3">
-          {cartItems.length === 0 ? (
-            <p className="text-center font-sans text-sm text-[#888] py-12">
-              {lang === "ko" ? "선택된 메뉴가 없습니다." : "No items selected."}
-            </p>
-          ) : cartItems.map((ci) => (
-            <div key={ci.name} className="bg-[#FAF7F2] rounded-xl px-4 py-3.5 border border-black/8">
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="font-sans text-base text-[#0D0D0D] font-medium">{ci.name}</p>
-                    {ci.temp && (
-                      <span className={`font-sans text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
-                        ci.temp === "HOT" ? "bg-red-100 text-red-600" : "bg-blue-100 text-blue-600"
-                      }`}>{ci.temp}</span>
+      <div className="min-h-[100dvh] bg-[#FAF7F2] flex justify-center">
+        <div className="w-full max-w-md h-[100dvh] bg-white flex flex-col shadow-xl">
+          <div className="flex-shrink-0 px-5 pt-6 pb-4 border-b border-black/8 flex items-center gap-3">
+            <button onClick={() => setScreen("menu")} className="w-8 h-8 flex items-center justify-center">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <h1 className="font-serif text-xl font-bold text-[#0D0D0D]">
+              {lang === "ko" ? "장바구니" : "Cart"}
+            </h1>
+            <span className="font-sans text-xs text-[#888] ml-auto">
+              {lang === "ko" ? `테이블 ${tableNumber}번` : `Table ${tableNumber}`}
+            </span>
+          </div>
+          <div className="flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-3">
+            {cartItems.length === 0 ? (
+              <p className="text-center font-sans text-sm text-[#888] py-12">
+                {lang === "ko" ? "선택된 메뉴가 없습니다." : "No items selected."}
+              </p>
+            ) : cartItems.map((ci) => (
+              <div key={ci.name} className="bg-[#FAF7F2] rounded-xl px-4 py-3.5 border border-black/8">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="font-sans text-base text-[#0D0D0D] font-medium">{ci.name}</p>
+                      {ci.temp && (
+                        <span className={`font-sans text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
+                          ci.temp === "HOT" ? "bg-red-100 text-red-600" : "bg-blue-100 text-blue-600"
+                        }`}>{ci.temp}</span>
+                      )}
+                    </div>
+                    <p className="font-sans text-sm text-[#174C35] mt-0.5 font-semibold">{fmt(ci.price, lang)}</p>
+                    {ci.extras?.flavor && (
+                      <p className="font-sans text-xs text-[#aaa] mt-0.5">맛: {ci.extras.flavor}</p>
                     )}
+                    {ci.extras?.strength && (
+                      <p className="font-sans text-xs text-[#aaa] mt-0.5">농도 {ci.extras.strength} · 로스팅 {ci.extras.roasting}</p>
+                    )}
+                    {ci.extras?.herbType && (
+                      <p className="font-sans text-xs text-[#aaa] mt-0.5">{ci.extras.herbType}</p>
+                    )}
+                    {ci.note && <p className="font-sans text-xs text-[#aaa] mt-1">💬 {ci.note}</p>}
                   </div>
-                  <p className="font-sans text-sm text-[#174C35] mt-0.5 font-semibold">{fmt(ci.price, lang)}</p>
-                  {ci.extras?.flavor && (
-                    <p className="font-sans text-xs text-[#aaa] mt-0.5">맛: {ci.extras.flavor}</p>
-                  )}
-                  {ci.extras?.strength && (
-                    <p className="font-sans text-xs text-[#aaa] mt-0.5">농도 {ci.extras.strength} · 로스팅 {ci.extras.roasting}</p>
-                  )}
-                  {ci.extras?.herbType && (
-                    <p className="font-sans text-xs text-[#aaa] mt-0.5">{ci.extras.herbType}</p>
-                  )}
-                  {ci.note && <p className="font-sans text-xs text-[#aaa] mt-1">💬 {ci.note}</p>}
-                </div>
-                <div className="flex items-center gap-2.5 ml-3">
-                  <button onClick={() => adjustCartQty(ci.name, -1)} className="w-8 h-8 rounded-full border border-[#174C35] text-[#174C35] flex items-center justify-center text-xl font-light leading-none">−</button>
-                  <span className="font-sans text-base font-bold text-[#174C35] w-5 text-center">{ci.quantity}</span>
-                  <button onClick={() => adjustCartQty(ci.name, 1)} className="w-8 h-8 rounded-full bg-[#174C35] text-white flex items-center justify-center text-xl font-light leading-none">+</button>
+                  <div className="flex items-center gap-2.5 ml-3">
+                    <button onClick={() => adjustCartQty(ci.name, -1)} className="w-8 h-8 rounded-full border border-[#174C35] text-[#174C35] flex items-center justify-center text-xl font-light leading-none">−</button>
+                    <span className="font-sans text-base font-bold text-[#174C35] w-5 text-center">{ci.quantity}</span>
+                    <button onClick={() => adjustCartQty(ci.name, 1)} className="w-8 h-8 rounded-full bg-[#174C35] text-white flex items-center justify-center text-xl font-light leading-none">+</button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-        <div className="flex-shrink-0 px-5 py-5 border-t border-black/8 flex flex-col gap-3">
-          <div className="flex justify-between items-center">
-            <span className="font-sans text-base text-[#555]">{lang === "ko" ? "합계" : "Total"}</span>
-            <span className="font-sans text-lg font-bold text-[#0D0D0D]">{fmt(cartTotal, lang)}</span>
+            ))}
           </div>
-          {error && <p className="font-sans text-sm text-red-500 text-center">{error}</p>}
-          <button
-            onClick={handleSubmit}
-            disabled={submitting || cartItems.length === 0}
-            className="w-full py-4 rounded-2xl bg-[#174C35] text-white font-sans font-semibold text-base disabled:opacity-50"
-          >
-            {submitting
-              ? (lang === "ko" ? "주문 중..." : "Placing order...")
-              : (lang === "ko" ? `테이블 ${tableNumber}번 주문하기` : `Order for Table ${tableNumber}`)}
-          </button>
+          <div className="flex-shrink-0 px-5 py-5 border-t border-black/8 flex flex-col gap-3 bg-white">
+            <div className="flex justify-between items-center">
+              <span className="font-sans text-base text-[#555]">{lang === "ko" ? "합계" : "Total"}</span>
+              <span className="font-sans text-lg font-bold text-[#0D0D0D]">{fmt(cartTotal, lang)}</span>
+            </div>
+            {error && <p className="font-sans text-sm text-red-500 text-center">{error}</p>}
+            <button
+              onClick={handleSubmit}
+              disabled={submitting || cartItems.length === 0}
+              className="w-full py-4 rounded-2xl bg-[#174C35] text-white font-sans font-semibold text-base disabled:opacity-50"
+            >
+              {submitting
+                ? (lang === "ko" ? "주문 중..." : "Placing order...")
+                : (lang === "ko" ? `테이블 ${tableNumber}번 주문하기` : `Order for Table ${tableNumber}`)}
+            </button>
+          </div>
         </div>
-      </Shell>
+      </div>
     );
   }
 
   // ── Menu screen ───────────────────────────────────────────
   return (
     <>
-      {/* Scroll to top — outside Shell so fixed positioning is viewport-relative */}
-      <button
-        onClick={scrollToTop}
-        aria-label="Scroll to top"
+      {/* Floating buttons — outside Shell so fixed positioning is viewport-relative */}
+      <div
         style={{
           position: "fixed",
           bottom: cartCount > 0 ? "7rem" : "2rem",
           right: "max(0.75rem, calc((100vw - 28rem) / 2 + 0.75rem))",
-          width: 48,
-          height: 48,
-          borderRadius: "50%",
-          backgroundColor: "#174C35",
-          border: "none",
-          boxShadow: "0 4px 16px rgba(23,76,53,0.35), 0 0 0 2.5px white",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-          color: "#fff",
+          flexDirection: "column",
+          gap: "0.75rem",
           zIndex: 60,
           opacity: scrolled && !selectedItem ? 1 : 0,
           pointerEvents: scrolled && !selectedItem ? "auto" : "none",
@@ -1027,10 +1044,76 @@ export default function OrderPage() {
           transition: "opacity 0.25s ease, transform 0.25s ease, bottom 0.25s ease",
         }}
       >
-        <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M8 12V4M4 7l4-4 4 4" />
-        </svg>
-      </button>
+        {/* Scroll to top */}
+        <button
+          onClick={scrollToTop}
+          aria-label="Scroll to top"
+          style={{
+            width: 48,
+            height: 48,
+            borderRadius: "50%",
+            backgroundColor: "#174C35",
+            border: "none",
+            boxShadow: "0 4px 16px rgba(23,76,53,0.35), 0 0 0 2.5px white",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "pointer",
+            color: "#fff",
+          }}
+        >
+          <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M8 12V4M4 7l4-4 4 4" />
+          </svg>
+        </button>
+
+        {/* Cart button */}
+        {cartCount > 0 && (
+          <button
+            onClick={() => setScreen("cart")}
+            aria-label="Go to cart"
+            style={{
+              position: "relative",
+              width: 48,
+              height: 48,
+              borderRadius: "50%",
+              backgroundColor: "#174C35",
+              border: "none",
+              boxShadow: "0 4px 16px rgba(23,76,53,0.35), 0 0 0 2.5px white",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+              color: "#fff",
+            }}
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+            </svg>
+            <span
+              style={{
+                position: "absolute",
+                top: -4,
+                right: -4,
+                minWidth: 20,
+                height: 20,
+                backgroundColor: "#ef4444",
+                color: "#fff",
+                fontSize: 11,
+                fontWeight: 700,
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "0 4px",
+              }}
+            >
+              {cartCount}
+            </span>
+          </button>
+        )}
+      </div>
 
       {/* Item detail modal */}
       {selectedItem && (

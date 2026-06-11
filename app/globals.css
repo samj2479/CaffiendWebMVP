@@ -388,3 +388,19 @@ section, footer#contact {
 .sr-expand.sr-visible {
   animation: expandFromCenter 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* ─── Admin modal scale-in ─────────────────────── */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.modal-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.modal-center.animate-scale-in {
+  animation: scaleIn 0.2s ease-out forwards;
+  transform-origin: center center;
+}

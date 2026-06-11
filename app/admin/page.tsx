@@ -38,6 +38,10 @@ function fmt(price: number) { return price.toLocaleString("ko-KR") + "원"; }
 function timeStr(iso: string) {
   return new Date(iso).toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" });
 }
+function dateTimeStr(iso: string) {
+  const d = new Date(iso);
+  return `${d.getMonth()+1}/${d.getDate()} ${d.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" })}`;
+}
 
 // ─── Shell ───────────────────────────────────────────────────
 function Shell({ children }: { children: React.ReactNode }) {
@@ -130,7 +134,7 @@ function OrderCard({ order, onCook, onCancel, onDone }: {
             <span className="font-sans text-[10px] font-bold px-2 py-0.5" style={{ backgroundColor: "rgba(255,255,255,0.18)", color: cfg.textColor }}>
               {cfg.label}
             </span>
-            <p className="font-sans text-xs mt-0.5" style={{ color: cfg.subColor }}>{timeStr(order.created_at)}</p>
+            <p className="font-sans text-xs mt-0.5" style={{ color: cfg.subColor }}>{dateTimeStr(order.created_at)}</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -345,6 +349,11 @@ export default function AdminPage() {
   const [orders,       setOrders]      = useState<Order[]>([]);
   const [historyOrders, setHistoryOrders] = useState<Order[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [revenuePeriod, setRevenuePeriod] = useState<"day" | "week" | "month" | "custom">("month");
+  const [dateRange, setDateRange] = useState<{ start: string; end: string }>({ start: "", end: "" });
+  const [showCalendar, setShowCalendar] = useState(false);
   const [loading,      setLoading]     = useState(true);
   const [config,       setConfig]      = useState<MenuConfig>({ prices: {}, hidden: {} });
   const [saved,        setSaved]       = useState(false);
@@ -387,6 +396,19 @@ export default function AdminPage() {
   const handleCook   = (id: string) => updateStatus(id, "cooking");
   const handleCancel = (id: string) => updateStatus(id, "cancelled");
   const handleDone   = (id: string) => updateStatus(id, "completed");
+
+  async function handleDeleteOrder(id: string) {
+    setDeletingId(id);
+    // Animation delay
+    await new Promise(r => setTimeout(r, 300));
+    setHistoryOrders((prev) => prev.filter((o) => o.id !== id));
+    setOrders((prev) => prev.filter((o) => o.id !== id));
+    if (supabase) {
+      await supabase.from("orders").delete().eq("id", id);
+    }
+    setDeletingId(null);
+    setDeleteConfirm(null);
+  }
 
   const fetchHistory = useCallback(async () => {
     if (!supabase) return;
@@ -584,8 +606,28 @@ export default function AdminPage() {
 
   // ── History screen ──────────────────────────────────────
   if (screen === "history") {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    // Filter orders based on selected period
+    const filteredOrders = historyOrders.filter((o) => {
+      const d = new Date(o.created_at);
+      if (revenuePeriod === "day") return d >= today;
+      if (revenuePeriod === "week") return d >= weekAgo;
+      if (revenuePeriod === "month") return d >= monthStart;
+      if (revenuePeriod === "custom" && dateRange.start && dateRange.end) {
+        const start = new Date(dateRange.start);
+        const end = new Date(dateRange.end);
+        end.setHours(23, 59, 59, 999);
+        return d >= start && d <= end;
+      }
+      return true;
+    });
+
     const grouped = new Map<string, Order[]>();
-    for (const o of historyOrders) {
+    for (const o of filteredOrders) {
       const d = new Date(o.created_at);
       const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
       if (!grouped.has(key)) grouped.set(key, []);
@@ -593,19 +635,91 @@ export default function AdminPage() {
     }
     const calcRevenue = (list: Order[]) =>
       list.filter(o => o.status === "completed").reduce((sum, o) => sum + o.items.reduce((s, i) => s + (i.price > 0 ? i.price * i.quantity : 0), 0), 0);
-    const monthRevenue = calcRevenue(historyOrders);
+    const periodRevenue = calcRevenue(filteredOrders);
     const days = ["일","월","화","수","목","금","토"];
+    const periodLabels = { day: "오늘", week: "이번 주", month: "이번 달", custom: "선택 기간" };
+
     return (
       <Shell>
         <Header title="CAFFIEND" sub="주문 내역" onBack={() => setScreen("select")}
           right={<button onClick={handleLogout} className="inline-flex items-center justify-center h-9 px-3 rounded-full border font-sans text-xs font-semibold hover:bg-white/15 transition-all mt-1" style={{ borderColor: "rgba(255,255,255,0.5)", color: "#fff" }}>로그아웃</button>}
         />
+
+        {/* Delete confirmation modal */}
+        {deleteConfirm && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            <div className="absolute inset-0 bg-black/50" onClick={() => setDeleteConfirm(null)} />
+            <div className="relative w-[90%] max-w-sm bg-white p-6 shadow-xl animate-scale-in">
+              <div className="text-center">
+                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  </svg>
+                </div>
+                <h3 className="font-sans text-lg font-bold text-[#0D0D0D] mb-2">주문 기록 삭제</h3>
+                <p className="font-sans text-sm text-[#666] mb-6">이 주문 기록을 삭제하시겠습니까?<br/>삭제된 기록은 복구할 수 없습니다.</p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setDeleteConfirm(null)}
+                    className="flex-1 py-3 font-sans text-sm font-semibold border border-black/15 text-[#555] hover:bg-black/5 transition-all active:scale-95"
+                  >
+                    취소
+                  </button>
+                  <button
+                    onClick={() => handleDeleteOrder(deleteConfirm)}
+                    className="flex-1 py-3 font-sans text-sm font-semibold bg-red-500 text-white hover:bg-red-600 transition-all active:scale-95"
+                  >
+                    삭제
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Period selector tabs */}
+        <div className="flex-shrink-0 flex border-b border-black/15 divide-x divide-black/15">
+          {(["day", "week", "month", "custom"] as const).map((p) => (
+            <button
+              key={p}
+              onClick={() => { setRevenuePeriod(p); if (p === "custom") setShowCalendar(true); }}
+              className="flex-1 py-3 font-sans text-xs font-semibold transition-colors"
+              style={revenuePeriod === p ? { backgroundColor: "#174C35", color: "#fff" } : { backgroundColor: "#fff", color: "#555" }}
+            >
+              {periodLabels[p]}
+            </button>
+          ))}
+        </div>
+
+        {/* Custom date range picker */}
+        {revenuePeriod === "custom" && (
+          <div className="flex-shrink-0 px-4 py-3 bg-[#FAF7F2] border-b border-black/8">
+            <div className="flex items-center gap-2">
+              <input
+                type="date"
+                value={dateRange.start}
+                onChange={(e) => setDateRange((prev) => ({ ...prev, start: e.target.value }))}
+                className="flex-1 px-3 py-2 text-sm border border-black/15 bg-white outline-none focus:border-[#174C35]"
+              />
+              <span className="font-sans text-sm text-[#888]">~</span>
+              <input
+                type="date"
+                value={dateRange.end}
+                onChange={(e) => setDateRange((prev) => ({ ...prev, end: e.target.value }))}
+                className="flex-1 px-3 py-2 text-sm border border-black/15 bg-white outline-none focus:border-[#174C35]"
+              />
+            </div>
+          </div>
+        )}
+
         <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-6">
-          {/* 월 총 매출 */}
+          {/* Revenue summary */}
           <div className="p-4 border border-[#174C35]/20 bg-[#174C35]/6">
-            <p className="font-sans text-xs text-[#174C35]/70 mb-1">이번 달 완료 주문 매출</p>
-            <p className="font-serif text-3xl font-bold text-[#174C35]">{fmt(monthRevenue)}</p>
-            <p className="font-sans text-xs text-[#888] mt-1">완료({historyOrders.filter(o=>o.status==="completed").length}건) · 취소({historyOrders.filter(o=>o.status==="cancelled").length}건)</p>
+            <p className="font-sans text-xs text-[#174C35]/70 mb-1">{periodLabels[revenuePeriod]} 완료 주문 매출</p>
+            <p className="font-serif text-3xl font-bold text-[#174C35]">{fmt(periodRevenue)}</p>
+            <p className="font-sans text-xs text-[#888] mt-1">
+              완료({filteredOrders.filter(o=>o.status==="completed").length}건) · 취소({filteredOrders.filter(o=>o.status==="cancelled").length}건)
+            </p>
           </div>
 
           {historyLoading ? (
@@ -624,7 +738,64 @@ export default function AdminPage() {
                     <span className="font-sans text-sm font-bold text-[#174C35]">{fmt(dayRevenue)}</span>
                   </div>
                   <div className="flex flex-col gap-2">
-                    {dayOrders.map((o) => <OrderCard key={o.id} order={o} onCook={handleCook} onCancel={handleCancel} onDone={handleDone} />)}
+                    {dayOrders.map((o) => {
+                      const total = o.items.reduce((s, i) => s + (i.price > 0 ? i.price * i.quantity : 0), 0);
+                      const cfg = STATUS_CONFIG[o.status] ?? STATUS_CONFIG.completed;
+                      const isDeleting = deletingId === o.id;
+                      return (
+                        <div
+                          key={o.id}
+                          className="border overflow-hidden transition-all duration-300"
+                          style={{
+                            borderColor: cfg.dim ? "rgba(0,0,0,0.08)" : cfg.bg,
+                            opacity: isDeleting ? 0 : (cfg.dim ? 0.6 : 1),
+                            transform: isDeleting ? "scale(0.95) translateX(-20px)" : "scale(1) translateX(0)",
+                          }}
+                        >
+                          <div className="px-4 py-3 flex items-center justify-between" style={{ backgroundColor: cfg.bg }}>
+                            <div className="flex items-center gap-3">
+                              <span className="font-serif text-2xl font-bold" style={{ color: cfg.textColor }}>{o.table_number}번</span>
+                              <div>
+                                <span className="font-sans text-[10px] font-bold px-2 py-0.5" style={{ backgroundColor: "rgba(255,255,255,0.18)", color: cfg.textColor }}>
+                                  {cfg.label}
+                                </span>
+                                <p className="font-sans text-xs mt-0.5" style={{ color: cfg.subColor }}>{dateTimeStr(o.created_at)}</p>
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => setDeleteConfirm(o.id)}
+                              className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition-all active:scale-90"
+                              title="삭제"
+                            >
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={cfg.textColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.7 }}>
+                                <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                              </svg>
+                            </button>
+                          </div>
+                          <div className="px-4 py-3 flex flex-col gap-2.5 bg-[#FAF7F2]">
+                            {o.items.map((item, i) => (
+                              <div key={i} className="flex items-start justify-between gap-2">
+                                <div className="flex-1">
+                                  <div className="flex items-center gap-2 flex-wrap">
+                                    <span className="font-sans text-sm font-semibold text-[#0D0D0D]">{item.name}</span>
+                                    <span className="font-sans text-sm font-bold" style={{ color: "#174C35" }}>× {item.quantity}</span>
+                                    {item.temp && <span className="font-sans text-[10px] font-bold px-1.5 py-0.5" style={{ backgroundColor: "#174C35", color: "#fff" }}>{item.temp}</span>}
+                                  </div>
+                                  {item.note && <p className="font-sans text-xs text-[#888] mt-0.5">💬 {item.note}</p>}
+                                </div>
+                                {item.price > 0 && <span className="font-sans text-sm text-[#555] flex-shrink-0">{fmt(item.price * item.quantity)}</span>}
+                              </div>
+                            ))}
+                          </div>
+                          {total > 0 && (
+                            <div className="px-4 py-2.5 border-t border-black/8 flex justify-between items-center bg-white">
+                              <span className="font-sans text-xs text-[#888]">합계</span>
+                              <span className="font-sans text-base font-bold text-[#0D0D0D]">{fmt(total)}</span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               );
