@@ -1,5 +1,7 @@
 # Session Context — Caffiend Website
 
+> Historical notes from Claude Code. Read `AGENTS.md` and `PROJECT_CONTEXT.md` first for current instructions, user preferences, and cross-session handoff. Update `PROJECT_CONTEXT.md` for new work; verify older details below against the current code.
+
 ## ⚠️ REMINDER FOR CLAUDE
 **Before tokens run out or session ends: update this file with all key changes made.**
 Do this proactively — don't wait for the user to ask.
