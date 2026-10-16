@@ -221,11 +221,7 @@ export default function Nav() {
                     href={h(item.href)}
                     onClick={closeMega}
                     style={{ fontFamily: "var(--font-playfair)" }}
-                    className={`text-[14px] whitespace-nowrap transition-colors duration-150 ${
-                      isActive
-                        ? "text-[#0D3224] hover:text-[#174C35]"
-                        : "text-black/50 hover:text-[#174C35]"
-                    }`}
+                    className="text-[14px] whitespace-nowrap transition-colors duration-150 text-black/50 hover:text-[#174C35]"
                   >
                     {lang === "ko" ? item.ko : item.en}
                   </a>
