@@ -20,7 +20,7 @@ export default function OrderButton() {
     function measure() {
       const mobile = window.matchMedia("(max-width: 768px)").matches;
       setIsMobile(mobile);
-      setSize(mobile ? 34 : Math.round(Math.min(Math.max(window.innerWidth * 0.18, 80), 192)));
+      setSize(mobile ? 72 : Math.round(Math.min(Math.max(window.innerWidth * 0.18, 80), 192)));
     }
     measure();
     window.addEventListener("resize", measure);
@@ -41,7 +41,7 @@ export default function OrderButton() {
   if (HIDDEN_PATHS.includes(pathname) || size === 0) return null;
 
   const radius = size / 2;
-  const expandedWidth = isMobile ? "calc(100vw - 4rem)" : "min(680px, 88vw)";
+  const expandedWidth = isMobile ? "min(420px, calc(100vw - 2rem))" : "min(680px, 88vw)";
   const long = lang === "ko"
     ? "카페에 계시다면? 테이블에서 주문하기"
     : "At the Cafe? Order from your table";
@@ -62,7 +62,7 @@ export default function OrderButton() {
       style={{
         position: "fixed",
         bottom: "calc(3rem + 56px)",
-        right: "2rem",
+        right: isMobile ? "1rem" : "2rem",
         height: `${size}px`,
         width: expanded ? expandedWidth : `${size}px`,
         borderRadius: `${radius}px`,
@@ -80,15 +80,22 @@ export default function OrderButton() {
       <span style={{
         position: "absolute", inset: 0,
         display: "flex", alignItems: "center", justifyContent: "center",
-        whiteSpace: "nowrap",
-        fontSize: EXPANDED_FONT,
+        flexDirection: isMobile ? "column" : "row",
+        padding: isMobile ? "0 24px" : 0,
+        whiteSpace: isMobile ? "normal" : "nowrap",
+        textAlign: "center",
+        lineHeight: isMobile ? 1.3 : undefined,
+        fontSize: isMobile ? "18px" : EXPANDED_FONT,
         fontFamily: "var(--font-lato), system-ui, sans-serif",
         fontWeight: 600, color: "#fff",
         opacity: expanded ? 1 : 0,
         transition: "opacity 0.2s ease 0.15s",
         pointerEvents: "none", zIndex: 1,
       }}>
-        {long}
+        {isMobile ? <>
+          <span>{lang === "ko" ? "카페에 계시다면?" : "At the Cafe?"}</span>
+          <span>{lang === "ko" ? "테이블에서 주문하기" : "Order from your table"}</span>
+        </> : long}
       </span>
 
       {/* Circle label */}
