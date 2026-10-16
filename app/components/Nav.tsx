@@ -8,6 +8,7 @@ const links = [
   {
     href: "/#story",   ko: "브랜드 이야기", en: "Brand Story",
     sub: [
+      { href: "/brand/dessert-friends", ko: "디저트 친구들", en: "Dessert Friends" },
       { href: "/brand/founder",  ko: "대표님 스토리",   en: "Founder's Story" },
       { href: "/brand/story",    ko: "카피엔드 스토리", en: "Caffiend Story"   },
       { href: "/brand/gallery",  ko: "사진첩",          en: "Gallery"          },
