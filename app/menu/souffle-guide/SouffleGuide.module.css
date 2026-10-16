@@ -1,0 +1,249 @@
+.root {
+  background: #faf7f2;
+  color: #0d0d0d;
+  font-family: var(--font-lato), var(--font-noto-kr), sans-serif;
+  padding: clamp(100px, 12vh, 140px) clamp(20px, 5vw, 80px) 88px;
+}
+
+.header {
+  max-width: 1120px;
+  margin: 0 auto 52px;
+}
+
+.eyebrow {
+  color: #174c35;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .17em;
+  line-height: 1.6;
+}
+
+.header h1 {
+  font-family: var(--font-playfair), var(--font-noto-kr), serif;
+  font-size: clamp(30px, 3.6vw, 52px);
+  font-weight: 600;
+  letter-spacing: -.035em;
+  line-height: 1.35;
+  margin: 16px 0 14px;
+  max-width: 23ch;
+  text-wrap: balance;
+  word-break: keep-all;
+}
+
+.intro {
+  color: #68675f;
+  font-size: 14px;
+  line-height: 1.9;
+  word-break: keep-all;
+}
+
+.contentGrid {
+  align-items: center;
+  display: grid;
+  gap: clamp(40px, 6vw, 88px);
+  grid-template-columns: minmax(0, .86fr) minmax(0, 1.14fr);
+  margin: 0 auto;
+  max-width: 1120px;
+}
+
+.videoFigure {
+  margin: 0 auto;
+  max-width: 360px;
+  width: 100%;
+}
+
+.videoFrame {
+  background: #23342b;
+  border: 1px solid rgb(23 76 53 / 14%);
+  border-radius: 16px;
+  box-shadow: 0 16px 42px rgb(37 47 37 / 10%);
+  overflow: hidden;
+}
+
+.video {
+  aspect-ratio: 406 / 722;
+  display: block;
+  height: auto;
+  object-fit: contain;
+  width: 100%;
+}
+
+.videoCaption {
+  color: #787970;
+  display: flex;
+  font-size: 9px;
+  gap: 16px;
+  justify-content: space-between;
+  letter-spacing: .1em;
+  line-height: 1.6;
+  padding: 16px 1px 0;
+}
+
+.guide {
+  min-width: 0;
+}
+
+.guideHeading h2 {
+  font-family: var(--font-playfair), var(--font-noto-kr), serif;
+  font-size: clamp(23px, 2.2vw, 32px);
+  font-weight: 500;
+  letter-spacing: -.035em;
+  line-height: 1.5;
+  margin: 12px 0 28px;
+  text-wrap: balance;
+  word-break: keep-all;
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.step {
+  border-top: 1px solid #d9ded2;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 42px minmax(0, 1fr);
+  padding: 28px 0;
+}
+
+.stepNumber {
+  color: #174c35;
+  font-family: var(--font-playfair), serif;
+  font-size: 28px;
+  font-style: italic;
+  line-height: 1.25;
+}
+
+.stepCopy h3 {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+  line-height: 1.5;
+  margin: 0;
+  word-break: keep-all;
+}
+
+.ingredients {
+  color: #174c35;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 11px;
+  line-height: 1.8;
+  margin: 12px 0;
+  row-gap: 3px;
+}
+
+.ingredients > span {
+  white-space: nowrap;
+}
+
+.plus {
+  color: #899281;
+  display: inline-block;
+  margin: 0 8px;
+}
+
+.description {
+  color: #62665b;
+  font-size: 13px;
+  line-height: 2;
+  margin: 0;
+  word-break: keep-all;
+}
+
+.closing {
+  border-top: 1px solid #d9ded2;
+  padding-top: 25px;
+}
+
+.closing p {
+  color: #62665b;
+  font-size: 13px;
+  line-height: 1.9;
+  margin: 0 0 22px;
+}
+
+.menuButton {
+  align-items: center;
+  background: #174c35;
+  border: 1px solid #174c35;
+  border-radius: 999px;
+  color: #fff;
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 500;
+  gap: 30px;
+  justify-content: center;
+  min-height: 48px;
+  padding: 12px 30px;
+  text-decoration: none;
+  transition: background 180ms ease;
+}
+
+.menuButton:hover {
+  background: #246548;
+  color: #fff;
+}
+
+.menuButton:focus-visible {
+  outline: 3px solid #a3b393;
+  outline-offset: 4px;
+}
+
+@media (max-width: 767px) {
+  .root {
+    padding-top: 96px;
+    padding-bottom: 60px;
+  }
+
+  .header {
+    margin-bottom: 32px;
+  }
+
+  .header h1 {
+    font-size: clamp(28px, 7.5vw, 38px);
+  }
+
+  .intro {
+    font-size: 13px;
+  }
+
+  .contentGrid {
+    gap: 38px;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .videoFigure {
+    max-width: 340px;
+  }
+
+  .guideHeading h2 {
+    font-size: 25px;
+  }
+
+  .step {
+    gap: 16px;
+    grid-template-columns: 34px minmax(0, 1fr);
+    padding: 25px 0;
+  }
+
+  .stepNumber {
+    font-size: 25px;
+  }
+
+  .stepCopy h3 {
+    font-size: 19px;
+  }
+
+  .menuButton {
+    min-height: 48px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menuButton {
+    transition: none;
+  }
+}

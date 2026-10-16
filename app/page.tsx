@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect } from "react";
 import HeroSection from "./components/HeroSection";
+import DessertFriendsSection from "./components/DessertFriendsSection";
 import FooterSection from "./components/FooterSection";
 import { useT } from "./i18n/useT";
 
@@ -170,6 +171,7 @@ export default function Page() {
   return (
     <main>
       <HeroSection />
+      <DessertFriendsSection />
       <StorySection />
       <div id="page-footer"><FooterSection /></div>
     </main>

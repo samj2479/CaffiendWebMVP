@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useLanguage } from "../context/LanguageContext";
 
 const ORDER_URL = "/order";
-const HIDDEN_PATHS = ["/notice/allergy", "/en/notice/allergy", "/brand/dessert-friends", "/en/brand/dessert-friends"];
+const HIDDEN_PATHS = ["/notice/allergy", "/en/notice/allergy", "/brand/dessert-friends", "/en/brand/dessert-friends", "/menu/souffle-guide", "/en/menu/souffle-guide"];
 const EXPANDED_FONT = "clamp(0.75rem, 2.2vw, 2.1rem)";
 const LABEL_REVEAL_TRANSITION = "opacity 0.12s ease 0.38s, visibility 0s linear 0.38s";
 
