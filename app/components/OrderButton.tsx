@@ -6,6 +6,7 @@ import { useLanguage } from "../context/LanguageContext";
 const ORDER_URL = "/order";
 const HIDDEN_PATHS = ["/notice/allergy", "/en/notice/allergy"];
 const EXPANDED_FONT = "clamp(0.75rem, 2.2vw, 2.1rem)";
+const LABEL_REVEAL_TRANSITION = "opacity 0.12s ease 0.38s, visibility 0s linear 0.38s";
 
 export default function OrderButton() {
   const { lang } = useLanguage();
@@ -78,7 +79,8 @@ export default function OrderButton() {
     >
       {/* Expanded text */}
       <span style={{
-        position: "absolute", inset: 0,
+        position: "absolute", right: 0, top: 0, bottom: 0,
+        width: expandedWidth,
         display: "flex", alignItems: "center", justifyContent: "center",
         flexDirection: isMobile ? "column" : "row",
         padding: isMobile ? "0 24px" : 0,
@@ -89,7 +91,8 @@ export default function OrderButton() {
         fontFamily: "var(--font-lato), system-ui, sans-serif",
         fontWeight: 600, color: "#fff",
         opacity: expanded ? 1 : 0,
-        transition: "opacity 0.2s ease 0.15s",
+        visibility: expanded ? "visible" : "hidden",
+        transition: expanded ? LABEL_REVEAL_TRANSITION : "none",
         pointerEvents: "none", zIndex: 1,
       }}>
         {isMobile ? <>
@@ -106,7 +109,8 @@ export default function OrderButton() {
         alignItems: "center", justifyContent: "center",
         gap: "2px", color: "#fff", zIndex: 2,
         opacity: expanded ? 0 : 1,
-        transition: "opacity 0.18s ease",
+        visibility: expanded ? "hidden" : "visible",
+        transition: expanded ? "none" : LABEL_REVEAL_TRANSITION,
       }}>
         <span style={{ fontSize: `${Math.round(size * 0.28)}px`, fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>QR</span>
         <span style={{ fontSize: `${Math.round(size * 0.28)}px`, fontWeight: 700, lineHeight: 1.2, fontFamily: "var(--font-lato), system-ui, sans-serif" }}>
