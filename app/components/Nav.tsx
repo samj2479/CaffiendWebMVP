@@ -18,6 +18,7 @@ const links = [
     href: "/#menu",    ko: "메뉴",          en: "Menu",
     sub: [
       { href: "/menu",           ko: "메뉴",            en: "Menu"             },
+      { href: "/menu/souffle-guide", ko: "수플레 맛있게 즐기는 법", en: "How to Enjoy Soufflé" },
     ],
   },
   {
@@ -86,7 +87,7 @@ export default function Nav() {
       },
       { threshold: 0.15 }
     );
-    ["home", "story", "menu", "reserve"].forEach((id) => {
+    ["home", "dessert-friends-intro", "story", "menu", "reserve"].forEach((id) => {
       const el = document.getElementById(id);
       if (el) observer.observe(el);
     });
@@ -135,7 +136,7 @@ export default function Nav() {
       />
 
       {/* ── Desktop: Logo + Right controls ─────────── */}
-      <div className="relative hidden lg:flex w-full px-16 h-[60px] items-center z-10">
+      <div className="relative hidden lg:flex w-full pl-8 pr-16 h-[60px] items-center z-10">
         <a
           href="/"
           style={{ fontFamily: "var(--font-playfair)", color: isDark ? "#fff" : "#000" }}
@@ -177,7 +178,7 @@ export default function Nav() {
       </div>
 
       {/* ── Desktop: Unified nav columns ────────────── */}
-      <div className="absolute inset-x-0 top-0 hidden lg:flex justify-center gap-14 xl:gap-20 z-20 pointer-events-none">
+      <div className="absolute inset-x-0 top-0 hidden lg:flex justify-center gap-4 xl:gap-20 z-20 pointer-events-none">
         {links.map((link, i) => {
           const isActive = hoveredIndex === i && megaOpen;
           return (
@@ -221,7 +222,11 @@ export default function Nav() {
                     href={h(item.href)}
                     onClick={closeMega}
                     style={{ fontFamily: "var(--font-playfair)" }}
-                    className="text-[14px] whitespace-nowrap transition-colors duration-150 text-black/50 hover:text-[#174C35]"
+                    className={`text-[14px] transition-colors duration-150 text-black/50 hover:text-[#174C35] ${
+                      item.href === "/menu/souffle-guide"
+                        ? "max-w-[7rem] whitespace-normal leading-relaxed xl:max-w-[9rem]"
+                        : "whitespace-nowrap"
+                    }`}
                   >
                     {lang === "ko" ? item.ko : item.en}
                   </a>
@@ -234,14 +239,14 @@ export default function Nav() {
 
       {/* ── Mobile bar ──────────────────────────────── */}
       <div
-        className="lg:hidden flex items-center justify-between px-5 h-14 transition-colors duration-300 relative z-10"
+        className="lg:hidden flex items-center justify-between pl-4 pr-5 h-14 transition-colors duration-300 relative z-10"
         style={{
           background: (isDark && !menuOpen) ? "transparent" : "#fff",
         }}
       >
         <a
           href="/"
-          style={{ color: isDark ? "#fff" : "#000", fontFamily: "var(--font-playfair)" }}
+          style={{ color: (isDark && !menuOpen) ? "#fff" : "#000", fontFamily: "var(--font-playfair)" }}
           className="text-lg font-bold tracking-wide"
         >
           Caffiend
@@ -278,10 +283,13 @@ export default function Nav() {
           </a>
 
           <button
+            type="button"
             className="flex flex-col justify-center items-center w-8 h-8 gap-[5px] transition-colors duration-300"
             style={{ color: (isDark && !menuOpen) ? "#fff" : "#000" }}
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="메뉴 열기"
+            onClick={() => { setMenuOpen((current) => !current); setExpandedIndex(null); }}
+            aria-label={menuOpen ? (lang === "ko" ? "메뉴 닫기" : "Close menu") : (lang === "ko" ? "메뉴 열기" : "Open menu")}
+            aria-expanded={menuOpen}
+            aria-controls="caffiend-mobile-menu"
           >
             {menuOpen ? (
               <svg width="18" height="18" viewBox="0 0 18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -301,10 +309,16 @@ export default function Nav() {
 
       {/* ── Mobile dropdown ─────────────────────────── */}
       <div
-        className={`lg:hidden transition-all duration-300 overflow-hidden ${
-          menuOpen ? "max-h-[40rem] opacity-100" : "max-h-0 opacity-0"
+        id="caffiend-mobile-menu"
+        aria-hidden={!menuOpen}
+        inert={!menuOpen}
+        className={`lg:hidden overflow-y-auto overscroll-contain transition-[max-height,opacity] duration-300 ${
+          menuOpen ? "opacity-100" : "opacity-0"
         }`}
-        style={{ boxShadow: menuOpen ? "0 1px 0 rgba(0,0,0,0.10)" : "none" }}
+        style={{
+          maxHeight: menuOpen ? "calc(100dvh - 3.5rem)" : "0px",
+          boxShadow: menuOpen ? "0 1px 0 rgba(0,0,0,0.10)" : "none",
+        }}
       >
         <div className="bg-white px-6 pb-5">
           {links.map((link, i) => {
@@ -312,35 +326,33 @@ export default function Nav() {
             return (
               <div key={link.href} className="border-b border-black/10 last:border-0">
                 {/* Row: label + chevron */}
-                <div className="flex items-center justify-between">
-                  <a
-                    href={h(link.sub[0].href)}
-                    className="flex-1 font-sans text-sm text-black py-3 pr-3"
-                    style={{ fontFamily: "var(--font-playfair)" }}
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    {lang === "ko" ? link.ko : link.en}
-                  </a>
-                  <button
-                    onClick={() => setExpandedIndex(isExpanded ? null : i)}
-                    className="p-2 text-black/40 hover:text-black transition-colors"
-                    aria-label="서브메뉴 열기"
-                  >
+                <button
+                  type="button"
+                  id={`caffiend-mobile-category-${i}`}
+                  onClick={() => setExpandedIndex((current) => current === i ? null : i)}
+                  className="flex w-full items-center justify-between py-3 text-left font-sans text-sm text-black"
+                  style={{ fontFamily: "var(--font-playfair)" }}
+                  aria-expanded={isExpanded}
+                  aria-controls={`caffiend-mobile-submenu-${i}`}
+                >
+                  <span className="pr-3">{lang === "ko" ? link.ko : link.en}</span>
                     <svg
                       width="14" height="14" viewBox="0 0 14 14"
+                      className="flex-shrink-0 text-black/40"
                       stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                       fill="none"
+                      aria-hidden="true"
                       style={{ transition: "transform 0.2s ease", transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)" }}
                     >
                       <path d="M2 4l5 5 5-5" />
                     </svg>
-                  </button>
-                </div>
+                </button>
 
                 {/* Sub-items */}
                 <div
-                  className="overflow-hidden transition-all duration-300"
-                  style={{ maxHeight: isExpanded ? `${link.sub.length * 44}px` : "0px" }}
+                  id={`caffiend-mobile-submenu-${i}`}
+                  hidden={!isExpanded}
+                  aria-labelledby={`caffiend-mobile-category-${i}`}
                 >
                   <div className="pl-4 pb-3 flex flex-col gap-1">
                     {link.sub.map((item) => (
