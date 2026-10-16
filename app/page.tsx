@@ -171,8 +171,8 @@ export default function Page() {
   return (
     <main>
       <HeroSection />
-      <DessertFriendsSection />
       <StorySection />
+      <DessertFriendsSection />
       <div id="page-footer"><FooterSection /></div>
     </main>
   );
