@@ -61,14 +61,6 @@
   height: auto;
 }
 
-.caption {
-  margin-top: 16px;
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 12px;
-  letter-spacing: 0.06em;
-  text-align: left;
-}
-
 @media (max-width: 767px) {
   .section {
     padding: 88px 24px 48px;

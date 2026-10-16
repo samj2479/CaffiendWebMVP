@@ -16,25 +16,26 @@ export default function DessertFriendsSection() {
     >
       <div className={styles.inner}>
         <div className={styles.copy}>
-          <p className={styles.eyebrow}>
+          <p className={`sr-replay ${styles.eyebrow}`} data-delay="100ms">
             {isEnglish ? "A little fun while you wait for your order" : "메뉴 기다리는 중 심심하다면?"}
           </p>
-          <h2 id="dessert-friends-intro-title" className={styles.title}>
+          <h2 id="dessert-friends-intro-title" className={`sr-replay ${styles.title}`} data-delay="350ms">
             {isEnglish ? <>Meet your<br />dessert friend.</> : <>나와 닮은<br />디저트 친구들</>}
           </h2>
-          <p className={styles.description}>
+          <p className={`sr-replay ${styles.description}`} data-delay="600ms">
             {isEnglish
               ? "A few little choices, a sweet discovery. Find the Caffiend dessert friend who shares your personality and taste."
               : "작은 선택을 따라 만나는 달콤한 발견. 나의 성격과 취향을 닮은 카피엔드 디저트 친구를 찾아보세요."}
           </p>
           <a
             href={isEnglish ? "/en/brand/dessert-friends" : "/brand/dessert-friends"}
-            className="inline-block font-sans text-sm tracking-widest uppercase bg-white text-black px-10 py-3.5 rounded-full hover:bg-white/90 transition-colors duration-300"
+            className="sr-replay inline-block font-sans text-sm tracking-widest uppercase bg-white text-black px-10 py-3.5 rounded-full hover:bg-white/90 transition-colors duration-300"
+            data-delay="850ms"
           >
             {isEnglish ? "Dessert Friends" : "디저트 친구들"}
           </a>
         </div>
-        <figure className={styles.figure}>
+        <figure className={`sr-replay ${styles.figure}`} data-delay="0ms">
           <div className={styles.art}>
             <Image
               src="/dessert-friends/assets/residents-v3/D.webp"
@@ -47,9 +48,6 @@ export default function DessertFriendsSection() {
                 : "두바이 수플레 위에서 돋보기로 초록 토핑을 살펴보는 두바이 탐구대장"}
             />
           </div>
-          <figcaption className={styles.caption}>
-            {isEnglish ? "Dubai Explorer Captain" : "두바이 탐구대장"}
-          </figcaption>
         </figure>
       </div>
     </section>
