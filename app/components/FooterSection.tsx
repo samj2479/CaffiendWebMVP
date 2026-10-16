@@ -6,8 +6,8 @@ const krFont = { fontFamily: "var(--font-noto-kr), var(--font-lato), sans-serif"
 
 const footerLinks = [
   { labelKo: "브랜드 이야기", labelEn: "Brand Story",    href: "/#story"   },
-  { labelKo: "메뉴",          labelEn: "Menu",            href: "/#menu"    },
-  { labelKo: "예약",          labelEn: "Reservation",     href: "/#reserve" },
+  { labelKo: "메뉴",          labelEn: "Menu",            href: "/menu"     },
+  { labelKo: "예약",          labelEn: "Reservation",     href: "/reserve"  },
   { labelKo: "찾아오시는 길", labelEn: "Location",        href: "/#visit"   },
   { labelKo: "공지",          labelEn: "Notice",          href: "/#notice"  },
 ];
