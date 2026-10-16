@@ -96,6 +96,14 @@ export default function HeroSection() {
             </div>
           </div>
 
+          <a
+            href={isEn ? "/en/menu" : "/menu"}
+            className="sr-replay inline-block font-sans text-sm tracking-widest uppercase bg-white text-black px-10 py-3.5 rounded-full hover:bg-white/90 transition-colors duration-300"
+            data-delay="600ms"
+          >
+            {isEn ? "View Menu" : "메뉴 보러가기"}
+          </a>
+
         </div>
       </div>
     </section>
