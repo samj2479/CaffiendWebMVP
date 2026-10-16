@@ -17,7 +17,7 @@ export default function DessertFriendsSection() {
       <div className={styles.inner}>
         <div className={styles.copy}>
           <p className={`sr-replay ${styles.eyebrow}`} data-delay="100ms">
-            {isEnglish ? "A little fun while you wait for your order" : "메뉴 기다리는 중 심심하다면?"}
+            {isEnglish ? "A little fun while you wait for your order" : "메뉴를 기다리는 와중에 심심하다면?"}
           </p>
           <h2 id="dessert-friends-intro-title" className={`sr-replay ${styles.title}`} data-delay="350ms">
             {isEnglish ? <>Meet your<br />dessert friend.</> : <>나와 닮은<br />디저트 친구들</>}
