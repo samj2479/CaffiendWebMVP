@@ -1,0 +1,1513 @@
+.root,
+.dialog,
+.toast {
+  --dessert-paper: #faf7f2;
+  --dessert-ink: #0d0d0d;
+  --dessert-green: #174c35;
+  --dessert-muted: #66645f;
+  --dessert-line: rgba(13, 13, 13, 0.16);
+}
+
+.root {
+  min-height: 80vh;
+  padding: 112px clamp(20px, 5vw, 80px) 88px;
+  color: var(--dessert-ink);
+  background: var(--dessert-paper);
+  font-family: var(--font-lato), var(--font-noto-kr), sans-serif;
+  font-size: 15px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.root :where(*) {
+  box-sizing: border-box;
+}
+
+.root :where(h1, h2, h3, p, figure, blockquote) {
+  margin: 0;
+}
+
+.root :where(button, input, a) {
+  font: inherit;
+}
+
+.root :where(button, a, input):focus-visible {
+  outline: 2px solid var(--dessert-green);
+  outline-offset: 5px;
+}
+
+.root :where(button) {
+  cursor: pointer;
+}
+
+.root :where(button:disabled) {
+  cursor: default;
+}
+
+.pageHeader {
+  max-width: 1280px;
+  margin: 0 auto 52px;
+  text-align: center;
+}
+
+.eyebrow {
+  display: block;
+  color: var(--dessert-green);
+  font-family: var(--font-lato), var(--font-noto-kr), sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin-top: 14px;
+  font-family: var(--font-playfair), var(--font-noto-kr), serif;
+  font-size: clamp(38px, 5vw, 72px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  word-break: keep-all;
+}
+
+.title:focus,
+.questionTitle:focus {
+  outline: none;
+}
+
+.lead {
+  max-width: 640px;
+  margin: 20px auto 0;
+  color: var(--dessert-muted);
+  font-size: clamp(14px, 1.35vw, 17px);
+  line-height: 1.9;
+  text-wrap: pretty;
+  word-break: keep-all;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 24px;
+  width: min(100%, 1280px);
+  margin: 0 auto 36px;
+}
+
+.textButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 6px 0;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  border-radius: 0;
+  color: var(--dessert-green);
+  background: transparent;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  transition: opacity 180ms ease;
+}
+
+.textButton:hover {
+  opacity: 0.65;
+}
+
+.primaryButton,
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 52px;
+  max-width: 100%;
+  padding: 13px 30px;
+  border: 1px solid var(--dessert-ink);
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.6;
+  text-align: center;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+
+.primaryButton {
+  color: #fff;
+  background: var(--dessert-ink);
+}
+
+.primaryButton:hover:not(:disabled) {
+  border-color: var(--dessert-green);
+  background: var(--dessert-green);
+}
+
+.primaryButton:disabled {
+  border-color: #d7d4ce;
+  color: #76736e;
+  background: #e8e4de;
+}
+
+.secondaryButton {
+  border-color: var(--dessert-line);
+  color: var(--dessert-ink);
+  background: transparent;
+}
+
+.secondaryButton:hover:not(:disabled) {
+  border-color: var(--dessert-ink);
+  background: #fff;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  align-items: center;
+  gap: clamp(28px, 4vw, 68px);
+  width: min(100%, 1280px);
+  margin: 0 auto;
+  padding-bottom: 60px;
+}
+
+.heroCopy {
+  min-width: 0;
+  padding: 20px 0;
+}
+
+.heroCopy .title {
+  font-size: clamp(42px, 4.6vw, 70px);
+  line-height: 1.3;
+}
+
+.heroCopy .lead {
+  max-width: 460px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.heroArt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+  text-align: center;
+}
+
+.heroArt:where(img),
+.heroArt :where(img) {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-right: auto;
+  margin-left: auto;
+  object-fit: contain;
+}
+
+.heroCaption {
+  display: block;
+  margin-top: 14px;
+  color: var(--dessert-muted);
+  font-size: 11px;
+  line-height: 1.7;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.heroActions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 30px;
+  text-align: center;
+}
+
+.resume {
+  display: block;
+  margin-top: 22px;
+  padding: 5px 0;
+  border: 0;
+  border-bottom: 1px solid var(--dessert-line);
+  color: var(--dessert-green);
+  background: transparent;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px 36px;
+  max-width: 1280px;
+  margin: 0 auto 32px;
+  padding: 28px 0;
+  border-top: 1px solid var(--dessert-line);
+  border-bottom: 1px solid var(--dessert-line);
+}
+
+.intro :where(p) {
+  max-width: 710px;
+  color: var(--dessert-muted);
+  font-size: 15px;
+  line-height: 1.9;
+  word-break: keep-all;
+}
+
+.collectionGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 40px 24px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.characterCard {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 0 0 22px;
+  border: 0;
+  border-bottom: 1px solid var(--dessert-line);
+  border-radius: 0;
+  color: var(--dessert-ink);
+  background: transparent;
+  text-align: left;
+  text-decoration: none;
+}
+
+.cardArt {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  margin-bottom: 18px;
+  object-fit: contain;
+}
+
+.cardArt :where(img) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.characterCard :where(img) {
+  transition: transform 250ms ease;
+}
+
+.characterCard:hover :where(img) {
+  transform: translateY(-5px);
+}
+
+.cardNumber {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  z-index: 1;
+  display: block;
+  color: var(--dessert-muted);
+  font-family: var(--font-playfair), serif;
+  font-size: 16px;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.category {
+  display: block;
+  margin-top: 8px;
+  color: var(--dessert-green);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.characterName {
+  display: block;
+  margin-top: 5px;
+  font-family: var(--font-playfair), var(--font-noto-kr), serif;
+  font-size: clamp(17px, 1.6vw, 24px);
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.caption {
+  display: block;
+  margin-top: 8px;
+  color: var(--dessert-muted);
+  font-size: 12px;
+  line-height: 1.8;
+  word-break: keep-all;
+}
+
+.quiz {
+  width: min(100%, 760px);
+  margin: 0 auto;
+  padding: 0 0 28px;
+}
+
+.quizTop {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--dessert-muted);
+  font-size: 13px;
+}
+
+.quizTop :where(b, strong) {
+  color: var(--dessert-green);
+  font-weight: 700;
+}
+
+.progress {
+  height: 3px;
+  margin-top: 24px;
+  overflow: hidden;
+  background: #e5e0d8;
+}
+
+.progressFill {
+  display: block;
+  height: 100%;
+  background: var(--dessert-green);
+  transition: width 240ms ease;
+}
+
+.questionHeader {
+  margin: 48px 0 30px;
+}
+
+.questionTitle {
+  margin-top: 16px;
+  font-family: var(--font-playfair), var(--font-noto-kr), serif;
+  font-size: clamp(27px, 3vw, 42px);
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.035em;
+  word-break: keep-all;
+  text-wrap: balance;
+}
+
+.questionHint {
+  margin-top: 16px;
+  color: var(--dessert-muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.choices {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.choice {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  min-height: 76px;
+  padding: 20px 24px;
+  border: 1px solid var(--dessert-line);
+  border-radius: 3px;
+  color: var(--dessert-ink);
+  background: transparent;
+  line-height: 1.8;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+
+.choice:hover {
+  border-color: var(--dessert-green);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.choice:has(:focus-visible) {
+  outline: 2px solid var(--dessert-green);
+  outline-offset: 4px;
+}
+
+.choice :where(input[type="radio"]) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.selectedChoice {
+  border-color: var(--dessert-green);
+  background: #eaf0e9;
+}
+
+.choiceText {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  line-height: 1.9;
+  word-break: keep-all;
+}
+
+.choiceCheck {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 23px;
+  height: 23px;
+  margin-left: auto;
+  border: 1px solid #aaa69f;
+  border-radius: 50%;
+  color: var(--dessert-green);
+  font-size: 13px;
+  line-height: 1;
+}
+
+.selectedChoice .choiceCheck {
+  border-color: var(--dessert-green);
+  color: #fff;
+  background: var(--dessert-green);
+}
+
+.questionFooter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.questionFooter .primaryButton {
+  width: 100%;
+  min-height: 56px;
+}
+
+.questionFooter :where(p) {
+  color: var(--dessert-muted);
+  font-size: 11px;
+  text-align: center;
+}
+
+.result {
+  width: min(100%, 1100px);
+  margin: 0 auto;
+}
+
+.resultLead {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(28px, 4vw, 60px);
+}
+
+.resultArt {
+  min-width: 0;
+  margin: 0;
+}
+
+.resultArt:where(img),
+.resultArt :where(img) {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.resultCopy {
+  min-width: 0;
+}
+
+.resultCopy .title {
+  font-size: clamp(32px, 3.5vw, 52px);
+  line-height: 1.3;
+}
+
+.menuName {
+  display: block;
+  margin-top: 12px;
+  color: var(--dessert-muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.menuName :where(span) {
+  display: block;
+  font-family: var(--font-playfair), serif;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.quote {
+  margin-top: 24px;
+  color: var(--dessert-green);
+  font-family: var(--font-playfair), var(--font-noto-kr), serif;
+  font-size: clamp(19px, 2vw, 25px);
+  font-weight: 700;
+  line-height: 1.7;
+  word-break: keep-all;
+}
+
+.story {
+  margin-top: 18px;
+  color: var(--dessert-muted);
+  font-size: 14px;
+  line-height: 2;
+  word-break: keep-all;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin-top: 20px;
+}
+
+.tags :where(span) {
+  padding: 4px 12px;
+  border: 1px solid var(--dessert-line);
+  border-radius: 999px;
+  color: var(--dessert-green);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.resultActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.resultActions :where(button, a) {
+  padding-right: 22px;
+  padding-left: 22px;
+  font-size: 12px;
+}
+
+.contentSection {
+  margin-top: 60px;
+  padding-top: 34px;
+  border-top: 1px solid var(--dessert-line);
+}
+
+.sectionHeading {
+  margin: 0 0 28px;
+}
+
+.sectionHeading :where(h2) {
+  margin-top: 10px;
+  font-family: var(--font-playfair), var(--font-noto-kr), serif;
+  font-size: clamp(24px, 2.7vw, 34px);
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.03em;
+  word-break: keep-all;
+}
+
+.sectionHeading :where(p) {
+  max-width: 700px;
+  margin-top: 12px;
+  color: var(--dessert-muted);
+  font-size: 13px;
+  line-height: 1.9;
+  word-break: keep-all;
+}
+
+.tasteGrid,
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px 52px;
+}
+
+.tasteGrid :where(h3),
+.detailBlock :where(h2, h3) {
+  margin-bottom: 16px;
+  color: var(--dessert-ink);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.tasteGrid :where(p),
+.detailBlock :where(p) {
+  color: var(--dessert-muted);
+  font-size: 13px;
+  line-height: 2;
+  word-break: keep-all;
+}
+
+.tasteFacts {
+  display: grid;
+  gap: 22px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fact {
+  min-width: 0;
+}
+
+.fact + .fact {
+  padding-top: 18px;
+  border-top: 1px solid var(--dessert-line);
+}
+
+.factLabel {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--dessert-green);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.momentsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 40px 32px;
+}
+
+.momentCard {
+  min-width: 0;
+  margin: 0;
+  padding-bottom: 26px;
+  border-bottom: 1px solid var(--dessert-line);
+}
+
+.momentArt {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.momentArt :where(img) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.momentCopy {
+  padding: 20px 0 0;
+}
+
+.momentSetting {
+  display: block;
+  color: var(--dessert-green);
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+.momentTitle {
+  margin-top: 10px;
+  font-family: var(--font-playfair), var(--font-noto-kr), serif;
+  font-size: clamp(20px, 2.1vw, 26px);
+  font-weight: 700;
+  line-height: 1.6;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+}
+
+.momentDescription {
+  margin-top: 12px;
+  color: var(--dessert-muted);
+  font-size: 13px;
+  line-height: 2;
+  word-break: keep-all;
+}
+
+.detailGrid {
+  margin-top: 52px;
+  padding-top: 32px;
+  border-top: 1px solid var(--dessert-line);
+}
+
+.detailBlock {
+  min-width: 0;
+}
+
+.evidence :where(p + p) {
+  margin-top: 18px;
+}
+
+.evidence :where(strong) {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--dessert-green);
+  font-size: 12px;
+}
+
+.evidence :where(small) {
+  display: block;
+  margin-top: 4px;
+  color: var(--dessert-muted);
+  font-size: 11px;
+  line-height: 1.9;
+}
+
+.realMenu {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(24px, 5vw, 68px);
+  margin-top: 56px;
+  padding-top: 36px;
+  border-top: 1px solid var(--dessert-line);
+}
+
+.realPhoto {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  margin: 0;
+  object-fit: contain;
+}
+
+.realPhoto :where(img) {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.realMenuCopy {
+  min-width: 0;
+}
+
+.realMenuCopy :where(h2) {
+  margin-top: 12px;
+  font-family: var(--font-playfair), var(--font-noto-kr), serif;
+  font-size: clamp(25px, 3vw, 38px);
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.03em;
+  word-break: keep-all;
+}
+
+.realMenuCopy :where(h3) {
+  margin-top: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.realMenuCopy :where(p) {
+  margin-top: 14px;
+  color: var(--dessert-muted);
+  font-size: 13px;
+  line-height: 1.9;
+  word-break: keep-all;
+}
+
+.realMenuCopy .secondaryButton,
+.realMenuCopy .textButton {
+  margin-top: 22px;
+}
+
+.featureList {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--dessert-muted);
+  font-size: 13px;
+  line-height: 2;
+}
+
+.featureList :where(li + li) {
+  margin-top: 3px;
+}
+
+.pairCard {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  align-items: center;
+  gap: 36px;
+  margin-top: 52px;
+  padding: 28px 0;
+  border-top: 1px solid var(--dessert-line);
+  border-bottom: 1px solid var(--dessert-line);
+  color: var(--dessert-ink);
+  text-decoration: none;
+}
+
+.pairArt {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.pairArt :where(img) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.pairCopy {
+  min-width: 0;
+}
+
+.pairCopy :where(h2, h3) {
+  margin-top: 9px;
+  font-family: var(--font-playfair), var(--font-noto-kr), serif;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -0.02em;
+}
+
+.pairCopy :where(p) {
+  margin-top: 12px;
+  color: var(--dessert-muted);
+  font-size: 13px;
+  line-height: 1.9;
+  word-break: keep-all;
+}
+
+.pairCopy :where(small) {
+  display: block;
+  margin-top: 10px;
+  color: var(--dessert-muted);
+  font-size: 11px;
+  line-height: 1.8;
+}
+
+.pairCopy .textButton {
+  margin-top: 12px;
+}
+
+.bottomActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 14px 24px;
+  max-width: 1280px;
+  margin: 40px auto 0;
+}
+
+.disclaimer {
+  max-width: 740px;
+  margin: 24px auto 0;
+  color: var(--dessert-muted);
+  font-size: 11px;
+  line-height: 1.9;
+  text-align: center;
+  word-break: keep-all;
+}
+
+.dialog {
+  position: fixed;
+  inset: 0;
+  width: min(460px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 24px;
+  border: 1px solid var(--dessert-line);
+  border-radius: 3px;
+  color: var(--dessert-ink);
+  background: var(--dessert-paper);
+  font-family: var(--font-lato), var(--font-noto-kr), sans-serif;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.dialog::backdrop {
+  background: rgba(13, 13, 13, 0.58);
+}
+
+.dialogHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.dialogHeader :where(h2) {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.dialog :where(button, input, a) {
+  font-family: inherit;
+}
+
+.dialogClose {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: var(--dessert-ink);
+  background: transparent;
+  font-size: 27px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.dialogClose:hover {
+  background: #ebe7e0;
+}
+
+.dialog .primaryButton,
+.dialog .secondaryButton {
+  width: 100%;
+  margin-top: 14px;
+}
+
+.dialog :where(p) {
+  margin: 12px 0 0;
+  color: var(--dessert-muted);
+  font-size: 12px;
+  line-height: 1.9;
+}
+
+.cardPreview {
+  display: block;
+  width: 100%;
+  max-height: 58dvh;
+  height: auto;
+  object-fit: contain;
+}
+
+.cardPreview :where(img) {
+  display: block;
+  width: 100%;
+  max-height: 58dvh;
+  height: auto;
+  object-fit: contain;
+}
+
+.shareInput {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  margin-top: 18px;
+  padding: 11px 13px;
+  border: 1px solid #a9a49a;
+  border-radius: 0;
+  color: var(--dessert-ink);
+  background: #fff;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: fixed;
+  z-index: 120;
+  left: 50%;
+  bottom: 24px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  padding: 13px 24px;
+  border-radius: 999px;
+  color: #fff;
+  background: var(--dessert-green);
+  font-size: 13px;
+  line-height: 1.7;
+  text-align: center;
+  transform: translateX(-50%);
+  box-shadow: 0 4px 20px rgba(13, 13, 13, 0.12);
+}
+
+.toast :where(button) {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 45vh;
+  color: var(--dessert-muted);
+  font-size: 14px;
+}
+
+@media (max-width: 1023px) {
+  .root {
+    padding-top: 106px;
+    padding-bottom: 64px;
+  }
+
+  .pageHeader {
+    margin-bottom: 36px;
+  }
+
+  .hero {
+    gap: 26px;
+    padding-bottom: 42px;
+  }
+
+  .heroCopy .title {
+    font-size: clamp(34px, 4.8vw, 50px);
+  }
+
+  .heroActions {
+    gap: 10px;
+  }
+
+  .heroActions .primaryButton,
+  .heroActions .secondaryButton {
+    padding-right: 23px;
+    padding-left: 23px;
+  }
+
+  .collectionGrid {
+    gap: 30px 20px;
+  }
+
+  .resultLead {
+    gap: 28px;
+  }
+
+  .resultCopy .title {
+    font-size: clamp(30px, 3.7vw, 44px);
+  }
+
+  .tasteGrid,
+  .detailGrid {
+    gap: 30px;
+  }
+}
+
+@media (max-width: 767px) {
+  .root {
+    padding: 100px 20px 56px;
+    font-size: 14px;
+  }
+
+  .pageHeader {
+    margin-bottom: 30px;
+  }
+
+  .title {
+    font-size: clamp(34px, 8.5vw, 48px);
+    line-height: 1.25;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+  }
+
+  .lead {
+    margin-top: 16px;
+    font-size: 14px;
+    line-height: 1.95;
+  }
+
+  .toolbar {
+    margin-bottom: 26px;
+    gap: 12px;
+  }
+
+  .textButton {
+    font-size: 12px;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    min-height: 50px;
+    padding: 12px 24px;
+    font-size: 12px;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    max-width: 560px;
+    padding-bottom: 36px;
+  }
+
+  .heroCopy {
+    padding: 0;
+    text-align: center;
+  }
+
+  .heroCopy .title {
+    font-size: clamp(35px, 9vw, 52px);
+    line-height: 1.35;
+  }
+
+  .heroCopy .lead {
+    max-width: 430px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .heroArt {
+    width: min(100%, 450px);
+    margin: 0 auto;
+  }
+
+  .heroCaption {
+    margin-top: 8px;
+    font-size: 10px;
+  }
+
+  .heroActions {
+    justify-content: center;
+    margin-top: 24px;
+  }
+
+  .resume {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .intro {
+    padding: 24px 0;
+    margin-bottom: 24px;
+  }
+
+  .intro :where(p) {
+    font-size: 13px;
+  }
+
+  .collectionGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 18px;
+    max-width: 560px;
+  }
+
+  .characterCard {
+    padding-bottom: 18px;
+  }
+
+  .cardArt {
+    margin-bottom: 12px;
+  }
+
+  .cardNumber {
+    font-size: 14px;
+  }
+
+  .category {
+    font-size: 9px;
+    letter-spacing: 0.06em;
+  }
+
+  .characterName {
+    font-size: 18px;
+  }
+
+  .caption {
+    margin-top: 6px;
+    font-size: 11px;
+    line-height: 1.8;
+  }
+
+  .quizTop {
+    font-size: 12px;
+  }
+
+  .progress {
+    margin-top: 20px;
+  }
+
+  .questionHeader {
+    margin: 34px 0 24px;
+  }
+
+  .questionTitle {
+    margin-top: 13px;
+    font-size: clamp(25px, 6.5vw, 34px);
+    line-height: 1.6;
+  }
+
+  .questionHint {
+    font-size: 12px;
+  }
+
+  .choice {
+    gap: 14px;
+    min-height: 76px;
+    padding: 17px 18px;
+  }
+
+  .choiceText {
+    font-size: 13px;
+    line-height: 1.9;
+  }
+
+  .choiceCheck {
+    width: 21px;
+    height: 21px;
+    font-size: 12px;
+  }
+
+  .questionFooter {
+    margin-top: 24px;
+  }
+
+  .questionFooter :where(p) {
+    font-size: 10px;
+  }
+
+  .result {
+    max-width: 560px;
+  }
+
+  .resultLead {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+  }
+
+  .resultArt {
+    width: min(100%, 390px);
+    margin: 0 auto;
+  }
+
+  .resultCopy {
+    text-align: center;
+  }
+
+  .resultCopy .title {
+    font-size: clamp(32px, 8.1vw, 42px);
+  }
+
+  .menuName {
+    font-size: 12px;
+  }
+
+  .quote {
+    margin-top: 20px;
+    font-size: 20px;
+  }
+
+  .story {
+    font-size: 13px;
+    line-height: 2;
+  }
+
+  .tags,
+  .resultActions {
+    justify-content: center;
+  }
+
+  .resultActions {
+    margin-top: 24px;
+  }
+
+  .tags :where(span) {
+    font-size: 10px;
+  }
+
+  .contentSection {
+    margin-top: 40px;
+    padding-top: 28px;
+  }
+
+  .sectionHeading {
+    margin-bottom: 24px;
+  }
+
+  .sectionHeading :where(h2) {
+    font-size: 26px;
+  }
+
+  .sectionHeading :where(p) {
+    font-size: 12px;
+  }
+
+  .tasteGrid,
+  .detailGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .tasteGrid > :where(:not(:first-child)),
+  .detailGrid > :where(:not(:first-child)) {
+    padding-top: 24px;
+    border-top: 1px solid var(--dessert-line);
+  }
+
+  .momentsGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+  }
+
+  .momentArt {
+    max-width: 450px;
+    margin: 0 auto;
+  }
+
+  .momentCopy {
+    padding-top: 18px;
+  }
+
+  .momentTitle {
+    font-size: 23px;
+  }
+
+  .momentDescription {
+    font-size: 13px;
+  }
+
+  .detailGrid {
+    margin-top: 38px;
+    padding-top: 28px;
+  }
+
+  .realMenu {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+    margin-top: 40px;
+    padding-top: 28px;
+  }
+
+  .realPhoto {
+    max-width: 400px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .realMenuCopy :where(h2) {
+    font-size: 29px;
+  }
+
+  .pairCard {
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 20px;
+    margin-top: 38px;
+    padding: 24px 0;
+  }
+
+  .pairCopy :where(h2, h3) {
+    font-size: 21px;
+  }
+
+  .pairCopy :where(p) {
+    font-size: 12px;
+  }
+
+  .bottomActions {
+    margin-top: 30px;
+    gap: 12px 20px;
+  }
+
+  .disclaimer {
+    margin-top: 20px;
+    font-size: 10px;
+  }
+
+  .dialog {
+    padding: 18px;
+  }
+
+  .dialogHeader {
+    margin-bottom: 14px;
+  }
+}
+
+@media (max-width: 359px) {
+  .root {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .heroCopy .title {
+    font-size: 33px;
+  }
+
+  .collectionGrid {
+    gap: 26px 14px;
+  }
+
+  .characterName {
+    font-size: 16px;
+  }
+
+  .choice {
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .pairCard {
+    grid-template-columns: 90px minmax(0, 1fr);
+    gap: 15px;
+  }
+
+  .pairCopy :where(h2, h3) {
+    font-size: 19px;
+  }
+
+  .resultActions :where(button, a) {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root :where(*),
+  .root :where(*)::before,
+  .root :where(*)::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
