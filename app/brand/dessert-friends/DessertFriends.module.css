@@ -1511,3 +1511,123 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+@media (max-width: 767px) {
+  .root[data-game-screen="quiz"] {
+    --quiz-row-gap: clamp(6px, 1.2svh, 10px);
+    --quiz-row-padding: clamp(7px, 1.2svh, 12px);
+    --quiz-row-height: clamp(44px, 6.6svh, 56px);
+    --quiz-choice-size: clamp(13px, 1.7svh, 14px);
+    --quiz-title-size: clamp(19px, 2.9svh, 25px);
+    --quiz-section-gap: clamp(10px, 1.6svh, 20px);
+    min-height: 100svh;
+    padding: 68px 16px 16px;
+  }
+
+  .root[data-game-screen="quiz"] .pageHeader,
+  .root[data-game-screen="quiz"] .questionFooter {
+    display: none;
+  }
+
+  .root[data-game-screen="quiz"] .quiz {
+    padding: 0;
+  }
+
+  .root[data-game-screen="quiz"] .quizTop {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) 44px;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  .root[data-game-screen="quiz"] .quizTop .textButton {
+    min-height: 44px;
+    padding: 4px 0;
+    justify-content: flex-start;
+    font-size: 11px;
+  }
+
+  .root[data-game-screen="quiz"] .quizTop > :where(span) {
+    text-align: center;
+  }
+
+  .root[data-game-screen="quiz"] .quizTop > :where(span:last-child) {
+    white-space: nowrap;
+    text-align: right;
+  }
+
+  .root[data-game-screen="quiz"] .progress {
+    margin-top: 8px;
+  }
+
+  .root[data-game-screen="quiz"] .questionHeader {
+    margin: var(--quiz-section-gap) 0;
+  }
+
+  .root[data-game-screen="quiz"] .questionHeader .eyebrow {
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: 0.12em;
+  }
+
+  .root[data-game-screen="quiz"] .questionTitle {
+    margin-top: 6px;
+    font-size: var(--quiz-title-size);
+    line-height: 1.35;
+  }
+
+  .root[data-game-screen="quiz"] .questionHint {
+    margin-top: 6px;
+    font-size: clamp(11px, 1.45svh, 12px);
+    line-height: 1.45;
+  }
+
+  .root[data-game-screen="quiz"] .choices {
+    gap: var(--quiz-row-gap);
+  }
+
+  .root[data-game-screen="quiz"] .choice {
+    min-height: var(--quiz-row-height);
+    gap: 10px;
+    padding: var(--quiz-row-padding) 12px;
+  }
+
+  .root[data-game-screen="quiz"] .choiceText {
+    font-size: var(--quiz-choice-size);
+    line-height: 1.4;
+  }
+
+  .root[data-game-screen="quiz"] .choiceCheck {
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+  }
+
+  .root[data-game-screen="quiz"] .quiz[data-question-id="tie"] .choices:has(.choice:nth-of-type(5)) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) and (max-height: 640px) {
+  .root[data-game-screen="quiz"] {
+    --quiz-row-gap: 6px;
+    --quiz-row-padding: 7px;
+    --quiz-row-height: 44px;
+    --quiz-choice-size: 13px;
+    --quiz-title-size: 19px;
+    --quiz-section-gap: 10px;
+    padding-bottom: 12px;
+  }
+
+  .root[data-game-screen="quiz"] .progress {
+    margin-top: 4px;
+  }
+
+  .root[data-game-screen="quiz"] .questionHint {
+    margin-top: 4px;
+    font-size: 11px;
+    line-height: 1.35;
+  }
+}

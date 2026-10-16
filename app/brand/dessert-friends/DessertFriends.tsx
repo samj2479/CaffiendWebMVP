@@ -6,7 +6,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
   IDS, chooseAnswer, createGameSession, getCandidates, getCharacter,
   getEvidence, getMenuProfile, getMoments, getQuestions, getTasteFacts, resultHash,
-  type CharacterData, type DessertId, type PreferenceDimension,
+  type CharacterData, type DessertId, type GameSession, type PreferenceDimension,
 } from "@/lib/dessert-friends/model";
 import { useLanguage } from "../../context/LanguageContext";
 import FooterSection from "../../components/FooterSection";
@@ -19,6 +19,15 @@ import styles from "./DessertFriends.module.css";
 
 type Modal = { kind: "card" | "share"; id: DessertId; url: string } | null;
 
+const mobileQuizQuery = "(max-width: 767px)";
+function subscribeMobileQuiz(listener: () => void) {
+  const media = window.matchMedia(mobileQuizQuery);
+  media.addEventListener("change", listener);
+  return () => media.removeEventListener("change", listener);
+}
+const getMobileQuiz = () => window.matchMedia(mobileQuizQuery).matches;
+const getServerMobileQuiz = () => false;
+
 function Art({ character, eager = false, className }: {
   character: CharacterData; eager?: boolean; className?: string;
 }) {
@@ -30,6 +39,7 @@ export default function DessertFriends() {
   const { lang } = useLanguage();
   const t = (ko: string, en: string) => lang === "ko" ? ko : en;
   const { ready, route, session } = useSyncExternalStore(subscribeGame, getGameSnapshot, getServerGameSnapshot);
+  const isMobileQuiz = useSyncExternalStore(subscribeMobileQuiz, getMobileQuiz, getServerMobileQuiz);
   const [selectedTie, setSelectedTie] = useState<DessertId | null>(null);
   const [modal, setModal] = useState<Modal>(null);
   const [busy, setBusy] = useState(false);
@@ -38,6 +48,7 @@ export default function DessertFriends() {
   const dialog = useRef<HTMLDialogElement>(null);
   const shareInput = useRef<HTMLInputElement>(null);
   const modalTrigger = useRef<HTMLButtonElement | null>(null);
+  const mobileAnswerUnlockAt = useRef(0);
   const questions = getQuestions(lang);
   const complete = session?.answers.every((answer) => answer !== null) ?? false;
   const tie = route.page === "quiz" && session?.stage === "tie" && complete;
@@ -63,36 +74,49 @@ export default function DessertFriends() {
   }, [modal]);
 
   function begin() {
+    mobileAnswerUnlockAt.current = 0;
     setSelectedTie(null);
     saveGameSession(createGameSession());
     navigateGame({ page: "quiz" });
   }
 
-  function finish(id: DessertId) {
-    if (!session || session.answers.some((answer) => answer === null) || !getCandidates(session.answers).ids.includes(id)) {
+  function finish(id: DessertId, current: GameSession | null = session) {
+    if (!current || current.answers.some((answer) => answer === null) || !getCandidates(current.answers).ids.includes(id)) {
       setSelectedTie(null);
       return;
     }
-    saveGameSession({ ...session, result: id, stage: null });
+    saveGameSession({ ...current, result: id, stage: null });
     setSelectedTie(null);
     navigateGame({ page: "result", id });
   }
 
-  function next() {
-    if (!session || session.answers[session.index] === null) return;
-    if (session.index < questions.length - 1) {
-      saveGameSession({ ...session, index: session.index + 1, stage: null });
+  function next(current: GameSession | null = session) {
+    if (!current || current.answers[current.index] === null) return;
+    if (current.index < questions.length - 1) {
+      saveGameSession({ ...current, index: current.index + 1, stage: null });
     } else {
-      const candidates = getCandidates(session.answers).ids;
-      if (candidates.length === 1) finish(candidates[0]);
+      const candidates = getCandidates(current.answers).ids;
+      if (candidates.length === 1) finish(candidates[0], current);
       else {
         setSelectedTie(null);
-        saveGameSession({ ...session, stage: "tie" });
+        saveGameSession({ ...current, stage: "tie" });
       }
     }
   }
 
+  function chooseMobileAnswer(answer: string) {
+    const latest = getGameSnapshot();
+    const current = latest.session;
+    if (!current || !session || latest.route.page !== "quiz"
+      || current.index !== session.index || (current.stage ?? null) !== (session.stage ?? null)
+      || performance.now() < mobileAnswerUnlockAt.current) return;
+    mobileAnswerUnlockAt.current = performance.now() + 250;
+    if (tie) finish(answer as DessertId, current);
+    else next({ ...chooseAnswer(current, answer), stage: null });
+  }
+
   function previous() {
+    mobileAnswerUnlockAt.current = 0;
     if (!session) return;
     if (tie) {
       setSelectedTie(null);
@@ -231,7 +255,7 @@ export default function DessertFriends() {
   }
 
   return <main>
-    <div className={styles.root} data-dessert-game data-language={lang}>
+    <div className={styles.root} data-dessert-game data-language={lang} data-game-screen={route.page}>
       <div className={styles.pageHeader}><p className={styles.eyebrow}>CAFFIEND / DESSERT FRIENDS</p><div className={styles.toolbar}>
         {route.page !== "home" && <button className={styles.textButton} onClick={() => navigateGame({ page: "home" })}>{t("테스트 처음으로", "Back to the beginning")}</button>}
         {route.page !== "collection" && <a className={styles.textButton} href="#collection">{t("디저트 친구들", "Dessert friends")}</a>}
@@ -250,17 +274,20 @@ export default function DessertFriends() {
 
         {route.page === "collection" && <><div className={styles.sectionHeading}><p className={styles.eyebrow}>THE SWEETEST LITTLE FRIENDS</p><h1 ref={heading} tabIndex={-1} className={styles.title}>{t("같은 테이블, 여덟 가지 매력.", "One table. Eight little personalities.")}</h1><p className={styles.lead}>{t("카피엔드 디저트에 사는 여덟 친구들이에요. 캐릭터를 누르면 그 친구의 이야기와 실제 메뉴를 볼 수 있어요.", "Meet the eight friends who live in Caffiend's desserts. Choose a character to discover their story and the real dessert behind it.")}</p></div>{characterGrid(IDS)}<div className={styles.bottomActions}><button className={styles.primaryButton} onClick={begin}>{t("나와 닮은 친구 찾기 →", "Find a friend like me →")}</button></div></>}
 
-        {route.page === "quiz" && session && <section className={styles.quiz} data-question-id={tie ? "tie" : question.id}>
+        {route.page === "quiz" && session && <section className={styles.quiz} data-question-id={tie ? "tie" : question.id} data-quiz-mode={isMobileQuiz ? "auto" : "manual"}>
           <div className={styles.quizTop}><button className={styles.textButton} onClick={previous}>← {t("이전", "Back")}</button><span>{tie ? t("마지막 한 조각", "One last little piece") : session.index >= 9 ? t("오늘 끌리는 한 입", "A bite you fancy today") : session.index < 4 ? t("설레는 오후의 시작", "A lovely afternoon begins") : session.index < 8 ? t("같이 있으면 더 좋은 순간", "Better moments together") : t("메뉴판 앞의 작은 선택", "A little choice at the menu")}</span><span>{tie ? "+ 1" : `${String(session.index + 1).padStart(2, "0")} / 12`}</span></div>
           <div className={styles.progress} role="progressbar" aria-label={t("테스트 진행", "Quiz progress")} aria-valuemin={0} aria-valuemax={12} aria-valuenow={session.index + 1}><div className={styles.progressFill} style={{ width: `${((session.index + 1) / questions.length) * 100}%` }} /></div>
-          <div className={styles.questionHeader}><p className={styles.eyebrow}>{tie ? "THE LAST LITTLE PIECE" : `${question.kind === "preference" ? "A LITTLE TASTE" : "A LITTLE MOMENT"} ${String(session.index + 1).padStart(2, "0")}`}</p><h1 ref={heading} tabIndex={-1} className={styles.questionTitle}>{tie ? t("오늘의 나에게 더 가까운 한마디는?", "Which feels a little more like you today?") : question.title}</h1><p className={styles.questionHint}>{tie ? t("닮은 모습이 나란히 나왔어요. 지금의 마음으로 마지막 한 조각을 골라주세요.", "A few friends feel equally like you. Follow your heart for one last little choice.") : question.kind === "preference" ? t("지금 먹고 싶은 한 입에 더 가까운 쪽을 골라주세요.", "Choose the bite you feel like enjoying right now.") : t("평소의 나와 조금 더 가까운 쪽을 골라주세요.", "Choose the answer that's a little closer to your everyday self.")}</p></div>
-          <fieldset className={styles.choices}><legend className={styles.srOnly}>{tie ? t("마지막 한 조각", "One last little piece") : question.title}</legend>
+          <div className={styles.questionHeader}><p className={styles.eyebrow}>{tie ? "THE LAST LITTLE PIECE" : `${question.kind === "preference" ? "A LITTLE TASTE" : "A LITTLE MOMENT"} ${String(session.index + 1).padStart(2, "0")}`}</p><h1 ref={heading} tabIndex={-1} className={styles.questionTitle}>{tie ? t("오늘의 나에게 더 가까운 한마디는?", "Which feels a little more like you today?") : question.title}</h1><p id="dessert-question-hint" className={styles.questionHint}>{isMobileQuiz ? t("선택하면 바로 진행돼요.", "Choose an answer to continue.") : tie ? t("닮은 모습이 나란히 나왔어요. 지금의 마음으로 마지막 한 조각을 골라주세요.", "A few friends feel equally like you. Follow your heart for one last little choice.") : question.kind === "preference" ? t("지금 먹고 싶은 한 입에 더 가까운 쪽을 골라주세요.", "Choose the bite you feel like enjoying right now.") : t("평소의 나와 조금 더 가까운 쪽을 골라주세요.", "Choose the answer that's a little closer to your everyday self.")}</p></div>
+          <fieldset key={tie ? "tie" : question.id} className={styles.choices}><legend className={styles.srOnly}>{tie ? t("마지막 한 조각", "One last little piece") : question.title}</legend>
             {(tie ? tieCandidates.map((id) => ({ id, text: getCharacter(id, lang).tie })) : session.orders[session.index].map((id) => question.options.find((option) => option.id === id)!)).map((option) => {
               const selected = tie ? selectedTie === option.id : session.answers[session.index] === option.id;
-              return <label className={`${styles.choice} ${selected ? styles.selectedChoice : ""}`} key={option.id} data-option-id={option.id}><input type="radio" name={`dessert-${tie ? "tie" : question.id}`} value={option.id} checked={selected} onChange={() => tie ? setSelectedTie(option.id as DessertId) : saveGameSession({ ...chooseAnswer(session, option.id), stage: null })} /><span className={styles.choiceText}>{option.text}</span><span className={styles.choiceCheck} aria-hidden="true">{selected ? "✓" : "○"}</span></label>;
+              const content = <><span className={styles.choiceText}>{option.text}</span><span className={styles.choiceCheck} aria-hidden="true">{selected ? "✓" : "○"}</span></>;
+              return isMobileQuiz
+                ? <button type="button" className={`${styles.choice} ${selected ? styles.selectedChoice : ""}`} key={option.id} data-option-id={option.id} aria-pressed={selected} aria-describedby="dessert-question-hint" onClick={() => chooseMobileAnswer(option.id)}>{content}</button>
+                : <label className={`${styles.choice} ${selected ? styles.selectedChoice : ""}`} key={option.id} data-option-id={option.id}><input type="radio" name={`dessert-${tie ? "tie" : question.id}`} value={option.id} checked={selected} onChange={() => tie ? setSelectedTie(option.id as DessertId) : saveGameSession({ ...chooseAnswer(session, option.id), stage: null })} />{content}</label>;
             })}
           </fieldset>
-          <div className={styles.questionFooter}><button className={styles.primaryButton} disabled={tie ? !selectedTie || !tieCandidates.includes(selectedTie) : session.answers[session.index] === null} onClick={() => tie ? selectedTie && finish(selectedTie) : next()}>{tie || session.index === questions.length - 1 ? t("나의 디저트 만나기", "Meet my dessert") : t("다음 질문", "Next question")} <span aria-hidden="true">→</span></button><p className={styles.caption}>{t("정답은 없어요. 오늘의 나답게 골라주세요.", "There are no right answers. Just choose what feels like you today.")}</p></div>
+          {!isMobileQuiz && <div className={styles.questionFooter}><button className={styles.primaryButton} disabled={tie ? !selectedTie || !tieCandidates.includes(selectedTie) : session.answers[session.index] === null} onClick={() => tie ? selectedTie && finish(selectedTie) : next()}>{tie || session.index === questions.length - 1 ? t("나의 디저트 만나기", "Meet my dessert") : t("다음 질문", "Next question")} <span aria-hidden="true">→</span></button><p className={styles.caption}>{t("정답은 없어요. 오늘의 나답게 골라주세요.", "There are no right answers. Just choose what feels like you today.")}</p></div>}
         </section>}
 
         {route.page === "result" && renderResult(route.id)}
