@@ -1,7 +1,184 @@
 {
   "schemaVersion": 1,
-  "status": "draft",
-  "review": null,
-  "business": null,
-  "policies": null
+  "status": "approved",
+  "review": {
+    "approvedAt": "2026-11-14",
+    "approvedBy": "User directing the Caffiend site release",
+    "reference": "2026-11-14 KST user authorization to finalize and publish the website and QR policy, pricing and business information"
+  },
+  "business": {
+    "name": {
+      "ko": "카피엔드(Caffiend)",
+      "en": "Caffiend"
+    },
+    "representative": {
+      "ko": "김미진",
+      "en": "Kim Mi-jin"
+    },
+    "registrationNumber": "464-05-02376",
+    "address": {
+      "ko": "경북 포항시 북구 천마로 103",
+      "en": "103 Cheonma-ro, Buk-gu, Pohang-si, Republic of Korea"
+    },
+    "phone": "0507-1366-4878",
+    "email": "caffiendowner1@gmail.com",
+    "inquiryContact": {
+      "ko": "개인정보 문의·권리행사: 매장 운영책임자",
+      "en": "Privacy enquiries and requests: café operations manager"
+    }
+  },
+  "processingDisclosure": {
+    "ko": "카피엔드는 이용자가 요청한 웹사이트 서비스와 QR 주문 계약의 체결·이행에 필요한 호스팅 및 주문정보 저장을 아래 사업자에게 위탁한다. 국외이전의 근거는 개인정보 보호법 제28조의8 제1항 제3호에 따른 계약 체결·이행에 필요한 처리위탁·보관이다.\n\n**웹사이트 호스팅 · Vercel Inc.**\n\n웹사이트에 접속하면 IP 주소, 요청 경로, 브라우저 정보 등 접속에 필요한 기술정보를 HTTPS로 전송한다. 미국의 주 처리 시설과 Vercel의 글로벌 서비스 네트워크를 통해 웹페이지 제공과 보안에 필요한 정보를 처리한다. Vercel의 개인정보 문의처는 privacy@vercel.com이다. 호스팅 계약 중 서비스 제공에 필요한 범위에서 정보를 처리한다. 계약이 종료되면 Vercel은 법령상 보존이 필요한 정보를 제외한 고객 데이터를 계약에 따라 합리적인 기간 내에 삭제한다. Vercel 대시보드의 실행 로그 보유기간은 Pro의 기본 설정에서 1일이며 Observability Plus를 사용하면 30일이다. 이 기준은 해당 유형의 실행 로그에 적용된다.\n\n**QR 주문정보 저장 · Supabase Pte. Ltd.**\n\n고객이 매장 QR 주문을 제출할 때 테이블 번호, 품목·수량·가격·온도·옵션과 요청사항을 HTTPS로 전송한다. Supabase는 호주 시드니의 주 데이터베이스에 주문 식별번호·접수 시각·상태를 포함한 주문 내역을 저장하여 주문 접수·확인·처리·제공을 지원한다. Supabase의 개인정보 문의처는 privacy@supabase.io이다. 주문 내역의 보유 기준은 제3조에 따른다. Supabase Pte. Ltd.는 싱가포르 법인이며, 기술 지원이나 운영에 필요한 경우 미국의 Supabase, Inc.가 지원한다. 서비스 운영·보안용 플랫폼 로그는 Supabase의 처리 기준에 따라 유럽연합 데이터센터에서 처리된다. 주문 원본과 플랫폼 로그에는 각각의 보유 기준을 적용한다.\n\n국외 처리와 관련한 문의 또는 거부 의사는 위 매장 전화나 전자우편으로 전달할 수 있다. 호스팅 처리에 필요한 전송을 피하려면 웹사이트 대신 매장에서 문의할 수 있다. QR 주문 정보의 전송을 원하지 않으면 QR 주문을 제출하지 않고 매장 직원에게 주문할 수 있다.",
+    "en": "Caffiend entrusts hosting and order data storage to the providers below to supply the requested website service and enter into and fulfill QR orders. Overseas transfers are based on the entrustment or storage necessary to enter into and perform a contract under Article 28-8(1)(3) of the Korean Personal Information Protection Act.\n\n**Website hosting · Vercel Inc.**\n\nWhen a customer visits the website, technical access information such as the IP address, request path and browser information is sent over HTTPS. Vercel processes this information through its primary facilities in the United States and its global service network to deliver and secure the website. Vercel Privacy can be contacted at privacy@vercel.com. Vercel processes data as necessary to deliver the service during the hosting agreement. After it ends, Vercel deletes customer data within a reasonable period under the agreement, subject to legal retention requirements. Runtime logs in the Vercel dashboard are retained for one day under standard Pro settings, or 30 days with Observability Plus. These periods apply to that type of runtime log.\n\n**QR order data storage · Supabase Pte. Ltd.**\n\nWhen a customer submits an in-café QR order, the table number, items, quantities, prices, temperature, options and notes are sent over HTTPS. Supabase stores the order record, including the order ID, receipt time and status, in its primary database in Sydney, Australia, to support order receipt, confirmation, handling and fulfillment. Supabase Privacy can be contacted at privacy@supabase.io. Section 3 sets out the retention criteria for order records. Supabase Pte. Ltd. is a Singapore company. Where necessary, its U.S. affiliate Supabase, Inc. assists with technical support and operations. Platform logs for operation and security are processed at European Union data centers under Supabase’s processing terms. Original order records and platform logs are subject to their respective retention criteria.\n\nTo ask about or decline overseas processing, contact the café by the phone number or email address above. Customers can enquire in person to avoid the transfer necessary for website hosting. Customers who prefer not to transmit QR order information can order with café staff without submitting a QR order."
+  },
+  "policies": {
+    "terms": {
+      "ko": [
+        "### 제1조(목적 및 사업자 정보)",
+        "이 약관은 카피엔드(Caffiend)가 운영하는 웹사이트의 메뉴·가격 정보 제공, 매장 내 QR 주문 및 관련 서비스의 이용조건을 정한다.",
+        "- **상호** 카피엔드(Caffiend)\n- **대표자** 김미진\n- **사업자등록번호** 464-05-02376\n- **사업장 주소** 경북 포항시 북구 천마로 103\n- **고객 문의 전화** 0507-1366-4878\n- **전자우편** caffiendowner1@gmail.com",
+        "카피엔드는 현재 간이과세자로서 관계 고시에 따른 통신판매업 신고 면제 대상이며, 관계 법령상 소비자 보호 의무를 준수한다.",
+        "### 제2조(서비스와 주문)",
+        "이용자는 회원가입 없이 공개 메뉴·가격을 확인하고 매장 테이블에서 QR 주문을 이용할 수 있다. QR 주문은 직원이 해당 테이블로 상품을 제공하기 위한 서비스이다.",
+        "단체주문은 전화, Google Forms 또는 대표의 개인 카카오톡으로 별도 접수한다. 단체주문은 상품, 수량, 총금액, 제공·배달 장소, 일정, 추가 비용이 있는 경우 그 내용을 주문 확정 전에 고객과 확인한다.",
+        "주문 전에 상품·옵션·수량·금액·테이블 정보를 확인할 수 있다. 품절 등으로 제공이 어려우면 사유와 처리 방법을 안내하며, 고객의 동의 없이 상품을 임의 대체하지 않는다. 주문 접수나 결제 완료만으로 조리·제조가 시작되었다고 보지 않는다.",
+        "### 제3조(결제 및 제공)",
+        "현재 웹사이트에서는 온라인 결제를 제공하지 않는다. 매장 주문의 결제는 매장에서 안내하는 현장 결제수단(POS 등)을 이용한다. 단체주문 결제조건은 주문 확정 전에 별도로 합의한다.",
+        "QR 주문 상품은 매장 직원이 테이블로 직접 제공하며, 단체주문 상품은 주문 시 합의한 조건에 따라 매장 대표가 배달한다.",
+        "### 제4조(주문 취소·환불)",
+        "실제 조리·제조 시작 전에는 주문을 취소할 수 있으며 이미 결제한 금액이 있으면 환불한다. 조리 시작 후 단순 변심, 주문과 다른 상품·하자, 매장 사정으로 인한 미제공은 구분하여 처리한다. 상세 기준은 같은 사이트의 「취소·환불 및 상품 제공 안내」에 따른다. 이 약관은 법령상 청약철회·환급·손해배상 등 권리를 제한하지 않는다.",
+        "### 제5조(개인정보 및 책임)",
+        "웹사이트 및 매장 QR 주문에서의 개인정보 처리는 「개인정보처리방침」에 따른다. 단체주문 중 각 접수 채널에서 이루어지는 개인정보 처리는 해당 채널을 대상으로 별도로 안내한다. 이용자는 다른 사람의 개인정보를 도용하거나 허위 주문으로 서비스를 방해해서는 안 된다. 매장의 귀책사유로 손해가 발생한 경우에는 관계 법령에 따라 처리한다.",
+        "### 제6조(문의·약관 변경·분쟁)",
+        "이용 관련 문의나 불만은 매장 직원 또는 위 전화번호를 통해 접수할 수 있다. 약관을 변경할 때는 내용과 적용일을 사이트에 안내하며 이미 성립한 거래의 권리를 법령에 반하여 침해하지 않는다. 대한민국 법령을 적용하고 재판관할은 관계 법령에 따른다."
+      ],
+      "en": [
+        "### 1. Purpose and Business Information",
+        "These Terms govern Caffiend's website, menu and price information, in-café QR ordering, and related services.",
+        "- **Business** Caffiend\n- **Representative** Kim Mi-jin\n- **Business Registration No.** 464-05-02376\n- **Address** 103 Cheonma-ro, Buk-gu, Pohang-si, Republic of Korea\n- **Customer contact** 0507-1366-4878\n- **Email** caffiendowner1@gmail.com",
+        "Caffiend currently qualifies for an exemption from distance-selling business registration as a simplified VAT taxpayer under applicable Korean rules. Applicable consumer protection obligations still apply.",
+        "### 2. Services and Orders",
+        "Customers may browse menu and price information and use table-based QR ordering without registering an account. QR orders are fulfilled through table service by café staff.",
+        "Separate group orders are accepted by telephone, Google Forms, or the representative's personal KakaoTalk. Before confirming a group order, the café confirms items, quantities, total price, fulfillment or delivery location, timing, and any additional charges.",
+        "Customers can review the ordered items, options, quantities, amounts, and table information before submitting an order. If items become unavailable, the café will explain the issue and available remedies and will not substitute items without consent. Receipt of an order or completion of payment does not by itself establish that preparation has begun.",
+        "### 3. Payment and Fulfillment",
+        "Online payment is not currently available through this website. In-café orders are paid through available payment methods at the café, including its point-of-sale system. Payment arrangements for group orders are agreed upon separately before confirmation.",
+        "Café staff serve QR orders directly to the table. Group orders are delivered by the café representative under the arrangements agreed at ordering.",
+        "### 4. Cancellation and Refunds",
+        "Orders may be cancelled before preparation actually begins, with a refund of any amount already paid. Change-of-mind requests after preparation begins, incorrect or defective items, and items not provided due to the café are handled separately under the Cancellation, Refunds and Fulfillment Policy. These Terms do not limit statutory withdrawal, refund, or compensation rights.",
+        "### 5. Privacy and Responsibility",
+        "Processing of personal information for the website and in-café QR orders is described in the Privacy Policy. Personal information used for group orders is handled through the relevant intake channel and covered separately. Customers must not misuse another person's personal information or disrupt the service through fraudulent orders. Loss or damage attributable to the café is addressed under applicable law.",
+        "### 6. Enquiries, Changes and Disputes",
+        "Enquiries and complaints may be addressed to café staff or through the contact information above. Any change to these Terms, together with its effective date, will be announced on the website. Changes do not unlawfully diminish rights under existing transactions. Korean law applies, and jurisdiction is determined under applicable law."
+      ],
+      "effectiveDate": "2026-11-14",
+      "review": {
+        "approvedAt": "2026-11-14",
+        "approvedBy": "User directing the Caffiend site release",
+        "reference": "2026-11-14 KST user authorization to finalize and publish the website and QR policy, pricing and business information"
+      }
+    },
+    "privacy": {
+      "ko": [
+        "### 제1조(개인정보처리자)",
+        "이 방침은 카피엔드(Caffiend) 웹사이트, 매장 QR 주문과 이에 관한 문의·권리행사에 적용한다. 외부 Google Forms, 대표의 개인 카카오톡 또는 전화로 별도 접수하는 단체주문의 개인정보 처리는 해당 접수 경로에 관한 별도 안내 범위에 속한다. 웹사이트에서 외부 링크를 선택하면 선택한 서비스로 이동한다.",
+        "- **개인정보처리자** 카피엔드(Caffiend), 대표 김미진\n- **주소** 경북 포항시 북구 천마로 103\n- **개인정보 문의·권리행사 담당** 매장 운영책임자\n- **전화** 0507-1366-4878\n- **전자우편** caffiendowner1@gmail.com",
+        "### 제2조(개인정보 처리 항목·목적·근거)",
+        "**① 매장 QR 주문**",
+        "- **항목** 테이블 번호, 메뉴·온도·옵션, 수량·금액, 요청사항, 주문 식별번호·접수시각·처리상태\n- **목적** 주문 접수·확인, 조리·제공, 문의 대응\n- **처리 근거** 이용자가 요청한 계약의 체결·이행에 필요한 처리(개인정보 보호법 제15조 제1항 제4호)\n- 현재 온라인 결제를 위한 구매자 이름·이메일·카드번호 입력 기능은 제공하지 않는다.",
+        "**② 문의·불만·권리 행사**",
+        "- **항목** 문의자가 제공한 연락수단, 대상 주문, 문의·요청 내용 및 처리 결과\n- **목적** 고객 문의 대응, 법령상 소비자 보호 및 개인정보 권리 보장\n- **처리 근거** 계약 이행 또는 법적 의무 이행에 필요한 처리",
+        "**③ 브라우저 저장·접속정보**",
+        "- **항목** 기기에 저장되는 주문내역·언어설정·디저트 친구들 게임 진행·결과, 서비스 제공과 보안을 위해 생성되는 접속정보(적용되는 경우 IP·브라우저 정보 등)\n- **목적** 주문내역 조회·기능 복원·서비스 운영 및 보안\n- 저장내역은 브라우저의 사이트 데이터 삭제로 지워질 수 있으나, 기기 데이터 삭제가 매장 서버 기록의 삭제를 의미하지는 않는다.",
+        "주문 요청사항에 불필요한 주민등록번호, 카드번호, 건강정보 또는 제3자의 개인정보를 기재하지 않도록 한다.",
+        "### 제3조(보유기간 및 파기)",
+        "① 일반 QR 주문 개인정보의 보유 상한은 접수 시각부터 한국시간 달력 기준 3개월이다. 주문 접수·제공·정산 및 관련 문의 처리 목적이 더 일찍 달성되어 정보가 불필요해지면 그 전에 파기한다. 매장 QR 주문 내역은 Supabase 주문 시스템에 저장된다. 매장은 관리자 화면의 개별 주문 삭제 기능을 이용해 파기 대상 기록을 주문 데이터베이스에서 삭제할 수 있다.",
+        "② 법령상 보존이 필요한 거래증빙이나 진행 중인 분쟁 등 적법한 보유 근거가 있는 기록은 필요한 최소 항목을 필요한 기간 동안 별도로 관리한다. 「전자상거래 등에서의 소비자보호에 관한 법률」 및 시행령이 적용되는 거래기록의 법정 보존기간은 계약·청약철회 5년, 대금결제·상품 공급 5년, 소비자 불만·분쟁 3년, 표시·광고 6개월이다. 이 기간은 모든 주문 원본과 요청사항에 일괄 적용하지 않는다.",
+        "③ 개인을 다시 식별할 수 없도록 처리한 매출·판매량 통계는 유지할 수 있다.",
+        "### 제4조(쿠키·기기 저장)",
+        "카피엔드는 한국시간 당일의 QR 주문 확인, 언어설정 및 게임 진행 복원 등을 위해 브라우저 저장 기능을 이용한다. QR 주문 화면을 열거나 다시 표시할 때 시스템이 당일 확인에 필요 없는 이전 날짜의 QR 주문 내역을 해당 브라우저 저장소에서 삭제한다. 이용자는 브라우저 설정에서 사이트 데이터를 직접 삭제할 수 있으며 일부 복원 기능이 제한될 수 있다.",
+        "이 방침의 시행 기간에는 Google Analytics를 사용하지 않는다. 선택 분석을 운영하기로 변경하면 실제 분석 도구의 로드 시점, 수집 항목과 동의·거부·철회 방법을 방침에 반영하고 필요한 선택권을 제공한다.",
+        "### 제5조(정보주체의 권리·안전조치)",
+        "이용자와 법정대리인은 법령상 인정되는 범위에서 개인정보 열람, 정정·삭제, 처리정지, 동의철회를 위 전화번호 또는 전자우편으로 요청할 수 있다. 카피엔드는 요청자와 대상 기록을 확인하고 법령상 기한에 따라 처리 결과 또는 제한 사유를 안내한다. 다른 법률상 보존이 필요한 기록은 그 범위에서 삭제가 제한될 수 있다.",
+        "웹사이트와 QR 주문 통신에는 HTTPS를 사용한다. 개인정보침해 신고는 개인정보침해신고센터(118, privacy.kisa.or.kr), 분쟁조정은 개인정보분쟁조정위원회(1833-6972, kopico.go.kr)에 문의할 수 있다.",
+        "### 제6조(방침 변경)",
+        "개인정보처리방침 변경 시 변경 내용과 시행일을 웹사이트에 공개한다."
+      ],
+      "en": [
+        "### 1. Controller",
+        "This policy covers the Caffiend website, in-café QR orders, and related enquiries and privacy requests. Personal information used for separate group orders placed through Google Forms, the representative’s personal KakaoTalk, or by phone is covered separately for those channels. Selecting an external link opens the corresponding service.",
+        "- **Controller** Caffiend, represented by Kim Mi-jin\n- **Address** 103 Cheonma-ro, Buk-gu, Pohang-si, Republic of Korea\n- **Privacy contact** Café operations manager\n- **Phone** 0507-1366-4878\n- **Email** caffiendowner1@gmail.com",
+        "### 2. Information, Purposes and Grounds",
+        "**(A) In-café QR orders**",
+        "- **Information** table number, items, temperature and options, quantities, prices, order notes, order identifier, time and status\n- **Purpose** receiving and confirming orders, preparation and table service, enquiries\n- **Ground** processing necessary to enter into or perform a contract requested by the customer under Article 15(1)(4) of the Korean Personal Information Protection Act\n- Online-payment purchaser name, email and card-number input are not currently provided.",
+        "**(B) Enquiries, complaints and privacy requests**",
+        "- **Information** contact details voluntarily provided, relevant order, enquiry or request, and processing outcome\n- **Purpose** customer support and compliance with applicable consumer and privacy obligations\n- **Ground** contract performance or applicable legal obligations",
+        "**(C) Browser storage and access information**",
+        "- **Information** locally stored order history, language preferences, Dessert Friends game progress and results, along with technical access information generated where applicable for service operation and security, such as IP and browser details\n- **Purpose** order-history access, feature restoration, service operation and security\n- Customers can remove browser-stored site data. Doing so does not erase records held on café servers.",
+        "Please do not submit unnecessary identification numbers, full payment-card numbers, health information, or other people's personal information in order notes.",
+        "### 3. Retention and Deletion",
+        "(A) The retention limit for ordinary QR order personal information is three calendar months from receipt, calculated in Korea Standard Time. Information that is no longer needed for order receipt, fulfillment, settlement or related enquiries is deleted sooner. QR orders are stored in the Supabase ordering system. The café can remove eligible records from the order database using the individual order deletion function on its administration screen.",
+        "(B) Where law requires transaction evidence to be retained, or another lawful basis applies, such as an ongoing dispute, the café manages the minimum necessary information separately for the required period. Where the Korean Act on Consumer Protection in Electronic Commerce and its Enforcement Decree apply, statutory retention periods are five years for contracts and withdrawals, five years for payment and fulfillment, three years for consumer complaints and disputes, and six months for display and advertising records. These periods do not apply indiscriminately to all original orders and notes.",
+        "(C) The café may retain sales and sales-volume statistics after processing them so that individuals can no longer be identified.",
+        "### 4. Cookies and Browser Storage",
+        "The website uses browser storage to display QR order history for the current date in Korea, restore language preferences and resume game progress. When the QR ordering screen opens or is shown again, the website removes earlier QR order history that is no longer needed for that day's lookup from that browser's storage. Customers can clear site data in their browser settings, which may disable some restoration features.",
+        "Google Analytics is disabled while this policy is in effect. If optional analytics is enabled later, the café will update this policy to reflect when the analytics tool loads, the information it collects, and the options for consent, refusal and withdrawal.",
+        "### 5. Privacy Rights and Safeguards",
+        "Customers and their legal representatives may request access, correction, deletion, suspension of processing, or withdrawal of consent where applicable by calling or emailing the café using the details above. The café verifies the requester and relevant records and responds within the applicable legal period, including explanations of lawful restrictions. Deletion may be limited where another law requires retention.",
+        "The website and QR ordering use HTTPS connections. Independent help is available from the Korean Personal Information Infringement Report Center (118, privacy.kisa.or.kr) and Personal Information Dispute Mediation Committee (1833-6972, kopico.go.kr).",
+        "### 6. Changes",
+        "Changes to this policy and their effective dates will be published on the website."
+      ],
+      "effectiveDate": "2026-11-14",
+      "review": {
+        "approvedAt": "2026-11-14",
+        "approvedBy": "User directing the Caffiend site release",
+        "reference": "2026-11-14 KST user authorization to finalize and publish the website and QR policy, pricing and business information"
+      }
+    },
+    "refund": {
+      "ko": [
+        "- **매장 문의** 0507-1366-4878\n- **전자우편** caffiendowner1@gmail.com",
+        "### 제1조(상품 제공)",
+        "매장 QR 주문은 직원이 고객 테이블에 직접 제공한다. 별도 단체주문은 전화·Google Forms·대표 개인 카카오톡을 통해 접수하며, 상품·금액·배달 장소·일정과 추가 비용이 있다면 주문 전에 고객과 확인하고 합의한 조건으로 제공한다.",
+        "### 제2조(조리·제조 시작 전 취소)",
+        "실제 조리·제조 시작 전에는 주문 취소가 가능하며 이미 결제한 금액은 전액 환불한다. 주문 접수나 결제 완료 사실만으로 조리·제조가 시작된 것으로 보지 않는다. 아직 결제하지 않은 주문은 취소만 처리한다.",
+        "### 제3조(조리·제조 시작 후 취소)",
+        "실제 조리·제조가 시작된 후 단순 변심에 따른 취소는 조리식품의 특성 및 관계 법령에서 허용되는 범위에서 제한될 수 있다. 조리가 시작되었다는 이유만으로 법령상 모든 청약철회 권리를 배제하지 않으며 필요한 사전 고지·동의 요건이 있는 경우 이를 따른다.",
+        "### 제4조(오제공·상품 하자·미제공)",
+        "주문과 다른 상품, 변질·이물 등 상품 하자 또는 표시·광고·계약내용과 다른 상품이 제공되면 고객은 재제공, 해당 상품 금액의 환불 등 관계 법령에 따른 조치를 요청할 수 있다. 일부 상품에만 문제가 있으면 해당 범위를 우선 확인하되 전체 주문에 영향을 주는 경우 그 영향을 함께 검토한다.",
+        "품절이나 매장 사정으로 상품을 제공할 수 없다면 지체 없이 안내하고 미제공 상품의 결제금액을 환불한다. 전체 주문을 제공하지 못하는 경우에는 전액을 환불한다. 고객 동의 없이 대체 상품을 제공하지 않는다.",
+        "### 제5조(신청·처리 방법)",
+        "고객은 매장 직원 또는 전화(0507-1366-4878)를 통해 취소·환불을 요청할 수 있다. 주문 화면에 취소 기능이 제공되는 경우 해당 기능으로도 주문 취소를 요청할 수 있다.",
+        "환불은 관계 법령에 따른다. 이미 결제한 경우 주문 화면에서 취소 상태를 확인한 뒤 매장에 실제 환급 여부를 문의할 수 있다.",
+        "적용되는 거래의 법정 환급기한을 준수한다. 특히 전자상거래법상 통신판매의 청약철회·선지급 거래에 관하여 3영업일 환급의무가 적용되는 경우 법이 정한 기산점부터 해당 기한을 준수한다. 카드사·금융기관 명세서에 반영되는 시점은 실제 취소 요청 처리시점과 다를 수 있다.",
+        "### 제6조(법정 권리)",
+        "이 안내는 관계 법령상 청약철회, 환급, 손해배상 등 고객의 권리를 제한하지 않는다."
+      ],
+      "en": [
+        "- **Café enquiries** 0507-1366-4878\n- **Email** caffiendowner1@gmail.com",
+        "### 1. Fulfillment",
+        "In-café QR orders are served directly to customers' tables. Separate group orders are accepted by telephone, Google Forms or the representative's personal KakaoTalk and fulfilled under arrangements confirmed before the order, including the items, price, delivery location and timing, and any additional charges.",
+        "### 2. Cancellation Before Preparation",
+        "Orders may be cancelled before preparation actually begins, with a full refund of any amount already paid. Receiving an order or completing payment does not by itself mean preparation has begun. Unpaid orders are simply cancelled.",
+        "### 3. Cancellation After Preparation Begins",
+        "Once preparation has actually begun, change-of-mind cancellation may be restricted to the extent permitted by applicable law and the nature of prepared food. Preparation alone does not eliminate every statutory withdrawal right. Any required advance notice or consent conditions will be observed.",
+        "### 4. Incorrect, Defective or Unavailable Items",
+        "Where an item is incorrect, defective (including deterioration or foreign matter), or does not match the description, advertising or agreed order, customers may request appropriate remedies under applicable law, including replacement or refund of the affected item's price. When part of an order is affected, the affected scope is reviewed first, together with any impact on the entire order.",
+        "If the café cannot provide an item due to unavailability or other café circumstances, it will promptly notify the customer and refund the amount paid for the unavailable item. If the entire order cannot be provided, the entire payment will be refunded. Substitutions are not made without customer consent.",
+        "### 5. Requests and Processing",
+        "Cancellation or refund requests can be made to café staff or by phone (0507-1366-4878). Customers can also use the order screen to request cancellation when that option is available.",
+        "Refunds are handled in accordance with applicable law. Customers who have already paid can check the order status on the order screen and ask the café about the refund.",
+        "The café follows applicable statutory refund deadlines. In particular, where Korean distance-sale withdrawal or prepaid-sale rules impose a three-business-day refund deadline, the café observes that period from the legally specified starting event. Posting times on card or bank statements may differ from the time the refund is initiated.",
+        "### 6. Statutory Rights",
+        "This policy does not limit consumers' statutory withdrawal, refund, or compensation rights."
+      ],
+      "effectiveDate": "2026-11-14",
+      "review": {
+        "approvedAt": "2026-11-14",
+        "approvedBy": "User directing the Caffiend site release",
+        "reference": "2026-11-14 KST user authorization to finalize and publish the website and QR policy, pricing and business information"
+      }
+    }
+  }
 }

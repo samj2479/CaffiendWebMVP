@@ -7,6 +7,7 @@ import { orderCategories, type MenuItem } from "@/app/data/orderMenuData";
 import { supabase } from "@/lib/supabase";
 import AllergySheet from "../AllergySheet";
 import { getAllergens, ALLERGEN_LABELS, type AllergenKey } from "../allergyLookup";
+import { pruneBrowserOrderHistory, saveBrowserOrderHistory, type OrderStatus, type SubmittedOrder } from "../browserOrderHistory";
 import { QrOrderInformation } from "@/app/components/PublicInformationContext";
 
 // ─── Category groupings ─────────────────────────────────────
@@ -97,15 +98,6 @@ interface SelectedItem {
   extraType: ExtraType;
   flavorOptions: string[] | null;
   qrCustomOptions?: QrCustomOption[];
-}
-
-type OrderStatus = "pending" | "cooking" | "completed" | "cancelled";
-interface SubmittedOrder {
-  id: string;
-  items: { name: string; quantity: number; price: number; temp: string | null; note: string }[];
-  total: number;
-  time: string;
-  status: OrderStatus;
 }
 
 // ─── Helpers ────────────────────────────────────────────────
@@ -468,10 +460,13 @@ function ItemModal({
 
 // ─── Main component ──────────────────────────────────────────
 export default function OrderPage() {
-  const params      = useParams<{ table: string }>();
-  const router      = useRouter();
+  const params = useParams<{ table: string }>();
   const tableNumber = params?.table ?? "?";
+  return <TableOrder key={tableNumber} tableNumber={tableNumber} />;
+}
 
+function TableOrder({ tableNumber }: { tableNumber: string }) {
+  const router = useRouter();
   const [lang, setLangState]          = useState<"ko" | "en">("ko");
   const [mainCat, setMainCat]         = useState<MainCat>("all");
   const [subCat, setSubCat]           = useState<string | null>(null);
@@ -484,7 +479,6 @@ export default function OrderPage() {
   const [showAllergy, setShowAllergy] = useState(false);
   const [history, setHistory]         = useState<SubmittedOrder[]>([]);
   const historyRef = useRef<SubmittedOrder[]>([]);
-  const historyKey = `caffiend-order-history-${tableNumber}`;
   const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled]       = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -503,44 +497,36 @@ export default function OrderPage() {
 
   // 주문 내역 localStorage 로드 + Supabase 상태 동기화
   useEffect(() => {
+    let current = true;
     async function loadHistory() {
-      try {
-        const raw = localStorage.getItem(historyKey);
-        if (!raw) return;
-        const today = new Date().toDateString();
-        let loaded: SubmittedOrder[] = JSON.parse(raw);
-        // 오늘 주문만 유지
-        loaded = loaded.filter((o) => {
-          try { return new Date(o.time).toDateString() === today; } catch { return true; }
-        });
-        if (loaded.length === 0) return;
-
-        // Supabase에서 최신 상태 가져오기
-        const ids = loaded.map((o) => o.id).filter(Boolean);
-        if (ids.length > 0 && supabase) {
+      const loaded = pruneBrowserOrderHistory(tableNumber);
+      setHistory(loaded);
+      const ids = loaded.map((o) => o.id).filter(Boolean);
+      if (ids.length > 0 && supabase) {
+        try {
           const { data } = await supabase.from("orders").select("id, status").in("id", ids);
-          if (data) {
+          if (current && data) {
             const map = new Map(data.map((o: { id: string; status: OrderStatus }) => [o.id, o.status]));
-            loaded = loaded.map((o) => ({ ...o, status: map.get(o.id) ?? o.status }));
+            setHistory((history) => history.map((o) => ({ ...o, status: map.get(o.id) ?? o.status })));
           }
-        }
-        setHistory(loaded);
-      } catch { /* ignore */ }
+        } catch { /* ignore */ }
+      }
     }
     loadHistory();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [historyKey]);
+    const restoreHistory = (event: PageTransitionEvent) => {
+      if (event.persisted) void loadHistory();
+    };
+    window.addEventListener("pageshow", restoreHistory);
+    return () => {
+      current = false;
+      window.removeEventListener("pageshow", restoreHistory);
+    };
+  }, [tableNumber]);
 
   // 주문 내역 변경 시 localStorage 저장
   useEffect(() => {
-    if (history.length === 0) return;
-    // time 필드에 날짜 정보 포함 (필터용)
-    const toSave = history.map((o) => ({
-      ...o,
-      time: o.time.includes("T") ? o.time : new Date().toISOString().split("T")[0] + "T" + o.time,
-    }));
-    localStorage.setItem(historyKey, JSON.stringify(toSave));
-  }, [history, historyKey]);
+    if (history.length > 0) saveBrowserOrderHistory(tableNumber, history);
+  }, [history, tableNumber]);
 
   // Fetch menu from Supabase — applies QR hide/show from admin
   useEffect(() => {

@@ -351,6 +351,7 @@ export default function AdminPage() {
   const [historyLoading, setHistoryLoading] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deleteError, setDeleteError] = useState(false);
   const [revenuePeriod, setRevenuePeriod] = useState<"day" | "week" | "month" | "custom">("month");
   const [dateRange, setDateRange] = useState<{ start: string; end: string }>({ start: "", end: "" });
   const [showCalendar, setShowCalendar] = useState(false);
@@ -398,16 +399,27 @@ export default function AdminPage() {
   const handleDone   = (id: string) => updateStatus(id, "completed");
 
   async function handleDeleteOrder(id: string) {
+    if (deletingId) return;
     setDeletingId(id);
-    // Animation delay
-    await new Promise(r => setTimeout(r, 300));
-    setHistoryOrders((prev) => prev.filter((o) => o.id !== id));
-    setOrders((prev) => prev.filter((o) => o.id !== id));
-    if (supabase) {
-      await supabase.from("orders").delete().eq("id", id);
+    setDeleteError(false);
+    try {
+      if (!supabase) {
+        setDeleteError(true);
+        return;
+      }
+      const { data, error } = await supabase.from("orders").delete().eq("id", id).select("id");
+      if (error || data?.length !== 1 || data[0].id !== id) {
+        setDeleteError(true);
+        return;
+      }
+      setHistoryOrders((prev) => prev.filter((order) => order.id !== id));
+      setOrders((prev) => prev.filter((order) => order.id !== id));
+      setDeleteConfirm(null);
+    } catch {
+      setDeleteError(true);
+    } finally {
+      setDeletingId(null);
     }
-    setDeletingId(null);
-    setDeleteConfirm(null);
   }
 
   const fetchHistory = useCallback(async () => {
@@ -648,7 +660,7 @@ export default function AdminPage() {
         {/* Delete confirmation modal */}
         {deleteConfirm && (
           <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="absolute inset-0 bg-black/50" onClick={() => setDeleteConfirm(null)} />
+            <div className="absolute inset-0 bg-black/50" onClick={() => { if (!deletingId) setDeleteConfirm(null); }} />
             <div className="relative w-[90%] max-w-sm bg-white p-6 shadow-xl animate-scale-in">
               <div className="text-center">
                 <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
@@ -657,19 +669,22 @@ export default function AdminPage() {
                   </svg>
                 </div>
                 <h3 className="font-sans text-lg font-bold text-[#0D0D0D] mb-2">주문 기록 삭제</h3>
-                <p className="font-sans text-sm text-[#666] mb-6">이 주문 기록을 삭제하시겠습니까?<br/>삭제된 기록은 복구할 수 없습니다.</p>
+                <p className="font-sans text-sm text-[#666] mb-6">이 주문 기록을 삭제하시겠습니까?</p>
+                {deleteError && <p role="alert" className="mb-4 text-sm text-red-700">서버에서 주문 기록 삭제가 확인되지 않았습니다.</p>}
                 <div className="flex gap-3">
                   <button
                     onClick={() => setDeleteConfirm(null)}
+                    disabled={Boolean(deletingId)}
                     className="flex-1 py-3 font-sans text-sm font-semibold border border-black/15 text-[#555] hover:bg-black/5 transition-all active:scale-95"
                   >
                     취소
                   </button>
                   <button
                     onClick={() => handleDeleteOrder(deleteConfirm)}
+                    disabled={Boolean(deletingId)}
                     className="flex-1 py-3 font-sans text-sm font-semibold bg-red-500 text-white hover:bg-red-600 transition-all active:scale-95"
                   >
-                    삭제
+                    {deletingId ? "삭제 확인 중" : "삭제"}
                   </button>
                 </div>
               </div>
@@ -741,15 +756,13 @@ export default function AdminPage() {
                     {dayOrders.map((o) => {
                       const total = o.items.reduce((s, i) => s + (i.price > 0 ? i.price * i.quantity : 0), 0);
                       const cfg = STATUS_CONFIG[o.status] ?? STATUS_CONFIG.completed;
-                      const isDeleting = deletingId === o.id;
                       return (
                         <div
                           key={o.id}
                           className="border overflow-hidden transition-all duration-300"
                           style={{
                             borderColor: cfg.dim ? "rgba(0,0,0,0.08)" : cfg.bg,
-                            opacity: isDeleting ? 0 : (cfg.dim ? 0.6 : 1),
-                            transform: isDeleting ? "scale(0.95) translateX(-20px)" : "scale(1) translateX(0)",
+                            opacity: cfg.dim ? 0.6 : 1,
                           }}
                         >
                           <div className="px-4 py-3 flex items-center justify-between" style={{ backgroundColor: cfg.bg }}>
@@ -763,7 +776,10 @@ export default function AdminPage() {
                               </div>
                             </div>
                             <button
-                              onClick={() => setDeleteConfirm(o.id)}
+                              onClick={() => {
+                                setDeleteError(false);
+                                setDeleteConfirm(o.id);
+                              }}
                               className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition-all active:scale-90"
                               title="삭제"
                             >

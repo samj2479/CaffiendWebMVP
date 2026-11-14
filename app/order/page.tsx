@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { QrOrderInformation } from "@/app/components/PublicInformationContext";
+import { pruneBrowserOrderHistory } from "./browserOrderHistory";
 
 const TABLES = [1, 2, 3, 4, 5, 6, 7, 8];
 type OrderLanguage = "ko" | "en";
@@ -23,6 +24,13 @@ export default function TableSelectPage() {
   const storedLanguage = useSyncExternalStore(subscribeToHydration, readStoredLanguage, initialLanguage);
   const lang = chosenLanguage ?? storedLanguage;
   const [selected, setSelected] = useState<number | null>(null);
+
+  useEffect(() => {
+    const prune = () => { pruneBrowserOrderHistory(); };
+    prune();
+    window.addEventListener("pageshow", prune);
+    return () => window.removeEventListener("pageshow", prune);
+  }, []);
 
   function setLang(l: OrderLanguage) {
     setChosenLanguage(l);
