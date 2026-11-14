@@ -337,6 +337,14 @@ export default function Page() {
           >
             MENU
           </h1>
+          <p className="mt-5 text-center text-sm text-[#174C35]">
+            <a href={lang === "en" ? "/en/menu/prices" : "/menu/prices"} className="underline underline-offset-4">
+              {lang === "en" ? "Menu prices" : "상품·가격 안내"}
+            </a>
+            <a href={lang === "en" ? "/en/menu/details" : "/menu/details"} className="ml-5 underline underline-offset-4">
+              {lang === "en" ? "Product details" : "상품정보"}
+            </a>
+          </p>
 
           {/* Category + Search + Sort */}
           <div className="flex flex-col gap-3 mt-8 md:flex-row md:items-center md:justify-between" ref={sortRef}>
@@ -462,7 +470,7 @@ export default function Page() {
                   }).filter(Boolean).join(", ");
               const imgSrc = (item as DbItem).image ?? (item as { image?: string }).image;
               return (
-                <div key={i} className="relative flex flex-col">
+                <div key={i} className="relative flex min-w-0 flex-col wrap-anywhere">
                   {(item as { season?: boolean }).season && (
                     <span className="absolute -top-1 -left-1 z-10 bg-[#174C35] text-white font-sans text-xs font-semibold px-3 py-1 leading-tight">
                       {lang === "ko" ? "시즌" : "Seasonal"}

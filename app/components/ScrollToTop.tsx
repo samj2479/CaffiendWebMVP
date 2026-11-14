@@ -55,7 +55,7 @@ export default function ScrollToTop() {
       aria-label="Scroll to top"
       style={{
         position: "fixed",
-        bottom: "2rem",
+        bottom: "calc(2rem + var(--caffiend-cookie-banner-height, 0px))",
         right: "2rem",
         width: "56px",
         height: "56px",

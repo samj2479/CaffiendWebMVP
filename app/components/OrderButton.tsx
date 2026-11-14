@@ -101,7 +101,7 @@ export default function OrderButton() {
       onMouseLeave={() => { if (!isMobile) setExpanded(false); }}
       style={{
         position: "fixed",
-        bottom: "calc(3rem + 56px)",
+        bottom: "calc(3rem + 56px + var(--caffiend-cookie-banner-height, 0px))",
         right: isMobile ? "1rem" : "2rem",
         height: `${size}px`,
         width: expanded ? expandedWidth : `${size}px`,

@@ -7,6 +7,7 @@ import { orderCategories, type MenuItem } from "@/app/data/orderMenuData";
 import { supabase } from "@/lib/supabase";
 import AllergySheet from "../AllergySheet";
 import { getAllergens, ALLERGEN_LABELS, type AllergenKey } from "../allergyLookup";
+import { QrOrderInformation } from "@/app/components/PublicInformationContext";
 
 // ─── Category groupings ─────────────────────────────────────
 const DESSERT_CATS = ["수플레", "빙수", "간편 디저트"];
@@ -115,7 +116,7 @@ function fmt(price: number, lang: "ko" | "en" = "ko") {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#FAF7F2] flex justify-center">
+    <div className="min-h-screen bg-[#FAF7F2] flex justify-center" style={{ paddingBottom: "var(--caffiend-cookie-banner-height, 0px)" }}>
       <div className="w-full max-w-md min-h-screen bg-white flex flex-col shadow-xl">
         {children}
       </div>
@@ -188,8 +189,8 @@ function ItemModal({
       <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
 
       {/* Sheet */}
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-50">
-        <div className="bg-white rounded-t-3xl overflow-hidden sheet-slide-up">
+      <div className="fixed left-1/2 -translate-x-1/2 w-full max-w-md z-50" style={{ bottom: "var(--caffiend-cookie-banner-height, 0px)" }}>
+        <div className="bg-white rounded-t-3xl overflow-y-auto sheet-slide-up" style={{ maxHeight: "calc(100dvh - var(--caffiend-cookie-banner-height, 0px) - 16px)" }}>
 
           {/* Handle */}
           <div className="flex justify-center pt-3 pb-1">
@@ -850,6 +851,7 @@ export default function OrderPage() {
             </button>
           </div>
         </div>
+        <QrOrderInformation lang={lang} />
       </Shell>
     );
   }
@@ -938,6 +940,7 @@ export default function OrderPage() {
               </div>
             );
           })}
+          <QrOrderInformation lang={lang} className="mt-2" />
         </div>
         <div className="flex-shrink-0 px-5 pb-6 pt-3">
           <button onClick={() => setScreen("menu")} className="w-full py-3.5 rounded-2xl bg-[#174C35] text-white font-sans font-semibold">
@@ -952,7 +955,7 @@ export default function OrderPage() {
   if (screen === "cart") {
     return (
       <div className="min-h-[100dvh] bg-[#FAF7F2] flex justify-center">
-        <div className="w-full max-w-md h-[100dvh] bg-white flex flex-col shadow-xl">
+        <div className="w-full max-w-md bg-white flex flex-col shadow-xl" style={{ height: "calc(100dvh - var(--caffiend-cookie-banner-height, 0px))" }}>
           <div className="flex-shrink-0 px-5 pt-6 pb-4 border-b border-black/8 flex items-center gap-3">
             <button onClick={() => setScreen("menu")} className="w-8 h-8 flex items-center justify-center">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1003,6 +1006,7 @@ export default function OrderPage() {
                 </div>
               </div>
             ))}
+            <QrOrderInformation lang={lang} className="mt-2" />
           </div>
           <div className="flex-shrink-0 px-5 py-5 border-t border-black/8 flex flex-col gap-3 bg-white">
             <div className="flex justify-between items-center">
@@ -1032,7 +1036,7 @@ export default function OrderPage() {
       <div
         style={{
           position: "fixed",
-          bottom: cartCount > 0 ? "7rem" : "2rem",
+          bottom: `calc(${cartCount > 0 ? "7rem" : "2rem"} + var(--caffiend-cookie-banner-height, 0px))`,
           right: "max(0.75rem, calc((100vw - 28rem) / 2 + 0.75rem))",
           display: "flex",
           flexDirection: "column",
@@ -1304,8 +1308,8 @@ export default function OrderPage() {
           </span>
           <span className="font-sans text-xs text-[#666]">
             {lang === "ko"
-              ? "간편 디저트를 제외한 모든 메뉴는 주문과 동시에 성심껏 만듭니다."
-              : "All items except simple desserts are freshly prepared upon order."}
+              ? "주문 접수와 실제 조리·제조 시작은 다릅니다. 도움이 필요하면 직원에게 문의해 주세요."
+              : "Order acceptance does not mean preparation has started. Please ask staff if you need help."}
           </span>
         </div>
 
@@ -1409,6 +1413,8 @@ export default function OrderPage() {
             </div>
           ))}
         </div>
+
+        <QrOrderInformation lang={lang} className="pb-36" />
 
         {/* ── Cart bar ── */}
         {cartCount > 0 && (

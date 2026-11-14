@@ -134,13 +134,13 @@ export default function FooterSection() {
         </div>
       </div>
 
-      <div className="border-t border-cream/8 px-6 py-8">
+      <div className="border-t border-cream/8 py-8 pl-6 pr-28 md:pr-64">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex flex-col gap-1">
-            <p className="font-sans text-cream/20 text-xs" style={krFont}>
+          <div className="min-w-0 flex flex-col gap-1 wrap-anywhere">
+            <p className="font-sans text-cream/70 text-xs" style={krFont}>
               {t(
-                "대표: 김미진 | 사업자등록번호: 464-05-02376",
-                "CEO: Kim Mi-jin | Business Reg. No.: 464-05-02376"
+                "상호 카피엔드 · 대표 김미진 · 사업자등록번호 464-05-02376",
+                "Caffiend · Representative Kim Mi-jin · Business Reg. No. 464-05-02376"
               )}
             </p>
             <p className="font-sans text-cream/20 text-xs">
@@ -150,7 +150,7 @@ export default function FooterSection() {
               )}
             </p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex min-w-0 flex-wrap items-center gap-4 wrap-anywhere">
             <p className="font-serif italic text-cream/20 text-xs">
               {t(
                 "배워서 남주자 — 배우고 익혀서, 아낌없이 나눕니다.",

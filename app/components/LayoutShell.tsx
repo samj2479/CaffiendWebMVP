@@ -8,10 +8,12 @@ import ScrollProgressBar from "./ScrollProgressBar";
 import OrderButtonClient from "./OrderButtonClient";
 import ScrollToTop from "./ScrollToTop";
 import ScrollSnapController from "./ScrollSnapController";
+import { PublicInformationProvider } from "./PublicInformationContext";
 
-export default function LayoutShell({ children }: { children: React.ReactNode }) {
+export default function LayoutShell({ children, publicInformation, qrInformation }: { children: React.ReactNode; publicInformation?: React.ReactNode; qrInformation?: React.ReactNode }) {
   const pathname = usePathname();
   const isAppRoute = pathname.startsWith("/order") || pathname.startsWith("/admin");
+  const isPublicInformation = /^\/(?:en\/)?(?:menu\/(?:prices|details)|policies)(?:\/|$)/.test(pathname);
 
   useEffect(() => {
     if (isAppRoute) {
@@ -22,7 +24,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
   }, [isAppRoute]);
 
   if (isAppRoute) {
-    return <>{children}</>;
+    return <PublicInformationProvider content={qrInformation ?? publicInformation}>{children}</PublicInformationProvider>;
   }
 
   return (
@@ -30,7 +32,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
       <Nav />
       <ScrollAnimationObserver />
       <ScrollProgressBar />
-      <OrderButtonClient />
+      {!isPublicInformation && <OrderButtonClient />}
       <ScrollToTop />
       <ScrollSnapController />
       <div
@@ -38,6 +40,7 @@ export default function LayoutShell({ children }: { children: React.ReactNode })
         style={{ height: "100vh", overflowY: "scroll" }}
       >
         {children}
+        {publicInformation}
       </div>
     </>
   );

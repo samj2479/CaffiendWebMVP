@@ -27,6 +27,7 @@ section, footer#contact {
 
 /* ─── Hide default scrollbar on scroll container ── */
 #scroll-container {
+  padding-bottom: var(--caffiend-cookie-banner-height, 0px);
   scrollbar-width: none;
   -ms-overflow-style: none;
 }

@@ -1,27 +1,36 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
+import { QrOrderInformation } from "@/app/components/PublicInformationContext";
 
 const TABLES = [1, 2, 3, 4, 5, 6, 7, 8];
+type OrderLanguage = "ko" | "en";
+
+const subscribeToHydration = () => () => {};
+const initialLanguage = (): OrderLanguage => "ko";
+function readStoredLanguage(): OrderLanguage {
+  try {
+    return localStorage.getItem("caffiend-order-lang") === "en" ? "en" : "ko";
+  } catch {
+    return "ko";
+  }
+}
 
 export default function TableSelectPage() {
   const router = useRouter();
-  const [lang, setLangState] = useState<"ko" | "en">("ko");
+  const [chosenLanguage, setChosenLanguage] = useState<OrderLanguage | null>(null);
+  const storedLanguage = useSyncExternalStore(subscribeToHydration, readStoredLanguage, initialLanguage);
+  const lang = chosenLanguage ?? storedLanguage;
   const [selected, setSelected] = useState<number | null>(null);
 
-  useEffect(() => {
-    const saved = localStorage.getItem("caffiend-order-lang");
-    if (saved === "en") setLangState("en");
-  }, []);
-
-  function setLang(l: "ko" | "en") {
-    setLangState(l);
+  function setLang(l: OrderLanguage) {
+    setChosenLanguage(l);
     localStorage.setItem("caffiend-order-lang", l);
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-[#FAF7F2] flex items-center justify-center px-4 py-12" style={{ paddingBottom: "calc(3rem + var(--caffiend-cookie-banner-height, 0px))" }}>
       <div className="w-full max-w-md bg-white shadow-lg overflow-hidden">
 
         {/* Brand header */}
@@ -92,6 +101,7 @@ export default function TableSelectPage() {
             {lang === "ko" ? "도움이 필요하시면 직원에게 문의해주세요 ☕" : "Ask staff if you need any help ☕"}
           </p>
         </div>
+        <QrOrderInformation lang={lang} />
       </div>
     </div>
   );
