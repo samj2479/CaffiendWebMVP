@@ -1,4 +1,5 @@
-import { leaderboard, scoreFromRun } from "@/lib/games/digul-leaderboard.mjs";
+import { scoreFromRun } from "@/lib/games/digul-leaderboard.mjs";
+import { loadLeaderboard } from "@/lib/games/digul-score-store.mjs";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -9,9 +10,9 @@ function json(body: unknown, status = 200) {
   return Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 }
 
-export function GET() {
+export async function GET() {
   try {
-    return json(leaderboard());
+    return json(await loadLeaderboard());
   } catch {
     return json({ error: "leaderboard_unavailable" }, 503);
   }
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
   const result = scoreFromRun(run);
   if (!result) return json({ error: "invalid_run" }, 400);
   try {
-    return json(leaderboard(result));
+    return json(await loadLeaderboard(result));
   } catch {
     return json({ error: "leaderboard_unavailable" }, 503);
   }
