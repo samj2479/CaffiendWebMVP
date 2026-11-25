@@ -36,7 +36,7 @@ export function QrOrderInformation({ lang, className = "" }: { lang: Information
         </p>
         <div className="my-3 min-w-0">{information}</div>
         <div className="min-w-0 border-t border-[#174C35]/15 pt-3 [overflow-wrap:anywhere]">
-          <p>{lang === "ko" ? "카피엔드 · 대표 김미진" : "Caffiend · Representative Kim Mi-jin"}</p>
+          <p>{lang === "ko" ? "카피엔드 · 대표 김미경" : "Caffiend · Representative Kim Mi-kyung"}</p>
           <p>{lang === "ko" ? "사업자등록번호: 464-05-02376" : "Business registration: 464-05-02376"}</p>
           <p>{lang === "ko" ? "경북 포항시 북구 천마로 103" : "103, Cheonma-ro, Buk-gu, Pohang-si, Republic of Korea"}</p>
           <a href="tel:0507-1366-4878" className="underline underline-offset-4">0507-1366-4878</a>

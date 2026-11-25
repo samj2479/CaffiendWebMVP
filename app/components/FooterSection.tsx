@@ -139,8 +139,8 @@ export default function FooterSection() {
           <div className="min-w-0 flex flex-col gap-1 wrap-anywhere">
             <p className="font-sans text-cream/70 text-xs" style={krFont}>
               {t(
-                "상호 카피엔드 · 대표 김미진 · 사업자등록번호 464-05-02376",
-                "Caffiend · Representative Kim Mi-jin · Business Reg. No. 464-05-02376"
+                "상호 카피엔드 · 대표 김미경 · 사업자등록번호 464-05-02376",
+                "Caffiend · Representative Kim Mi-kyung · Business Reg. No. 464-05-02376"
               )}
             </p>
             <p className="font-sans text-cream/20 text-xs">
