@@ -43,6 +43,21 @@
   word-break: keep-all;
 }
 
+.actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 32px;
+}
+
 .figure {
   width: 100%;
   max-width: 550px;
@@ -100,9 +115,16 @@
     line-height: 1.6;
   }
 
-  .copy > a {
-    padding: 14px 32px;
-    line-height: 20px;
+  .actions {
+    justify-content: center;
+    gap: 8px;
+    font-size: clamp(12px, 3.6vw, 14px);
+    letter-spacing: 0.06em;
+  }
+
+  .actions a {
+    min-height: 44px;
+    padding: 0 clamp(10px, 3.5vw, 24px);
   }
 
   .figure {
@@ -153,7 +175,7 @@
     line-height: 1.45;
   }
 
-  .copy > a {
-    padding: 12px 24px;
+  .actions a {
+    padding: 0 12px;
   }
 }

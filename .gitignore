@@ -20,6 +20,9 @@
 # production
 /build
 
+# Local Digul Digul leaderboard database and SQLite journals
+/.caffiend-data/
+
 # misc
 .DS_Store
 *.pem

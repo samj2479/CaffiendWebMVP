@@ -27,13 +27,20 @@ export default function DessertFriendsSection() {
               ? "A few little choices, a sweet discovery. Find the Caffiend dessert friend who shares your personality and taste."
               : "작은 선택을 따라 만나는 달콤한 발견. 나의 성격과 취향을 닮은 카피엔드 디저트 친구를 찾아보세요."}
           </p>
-          <a
-            href={isEnglish ? "/en/brand/dessert-friends" : "/brand/dessert-friends"}
-            className="sr-replay inline-block font-sans text-sm tracking-widest uppercase bg-white text-black px-10 py-3.5 rounded-full hover:bg-white/90 transition-colors duration-300"
-            data-delay="850ms"
-          >
-            {isEnglish ? "Dessert Friends" : "디저트 친구들"}
-          </a>
+          <div className={`sr-replay ${styles.actions} font-sans text-sm tracking-widest uppercase`} data-delay="850ms">
+            <a
+              href={isEnglish ? "/en/brand/dessert-friends" : "/brand/dessert-friends"}
+              className="rounded-full bg-white text-black hover:bg-white/90 transition-colors duration-300"
+            >
+              {isEnglish ? "Dessert Friends" : "디저트 친구들"}
+            </a>
+            <a
+              href={isEnglish ? "/en/games" : "/games"}
+              className="rounded-full border border-white/70 text-white hover:bg-white hover:text-black transition-colors duration-300"
+            >
+              {isEnglish ? "Digul Digul" : "디굴디굴"}
+            </a>
+          </div>
         </div>
         <figure className={`sr-replay ${styles.figure}`} data-delay="0ms">
           <div className={styles.art}>

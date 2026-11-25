@@ -13,7 +13,7 @@ import { PublicInformationProvider } from "./PublicInformationContext";
 export default function LayoutShell({ children, publicInformation, qrInformation }: { children: React.ReactNode; publicInformation?: React.ReactNode; qrInformation?: React.ReactNode }) {
   const pathname = usePathname();
   const isAppRoute = pathname.startsWith("/order") || pathname.startsWith("/admin");
-  const isPublicInformation = /^\/(?:en\/)?(?:menu\/(?:prices|details)|policies)(?:\/|$)/.test(pathname);
+  const hideOrderButton = /^\/(?:en\/)?(?:menu\/(?:prices|details)|policies|games)(?:\/|$)/.test(pathname);
 
   useEffect(() => {
     if (isAppRoute) {
@@ -32,7 +32,7 @@ export default function LayoutShell({ children, publicInformation, qrInformation
       <Nav />
       <ScrollAnimationObserver />
       <ScrollProgressBar />
-      {!isPublicInformation && <OrderButtonClient />}
+      {!hideOrderButton && <OrderButtonClient />}
       <ScrollToTop />
       <ScrollSnapController />
       <div

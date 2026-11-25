@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <base href="/cafe-games/">
+  <meta name="theme-color" content="#174c35">
+  <meta name="description" content="카피엔드 디저트를 떨어뜨려 합치는 디굴디굴 게임">
+  <title>디굴디굴 | 카피엔드</title>
+  <link rel="stylesheet" href="./site-fonts.css">
+  <link rel="stylesheet" href="./style.css?v=2.4.0">
+  <link rel="stylesheet" href="./game-entry.css">
+</head>
+<body>
+  <main class="app" lang="ko">
+    <div class="cafe-bg" aria-hidden="true">
+      <div class="sun-glow"></div>
+      <div class="window"><span></span></div>
+      <div class="curtain curtain-left"></div>
+      <div class="curtain curtain-right"></div>
+      <div class="shelf shelf-a"></div>
+      <div class="shelf shelf-b"></div>
+      <div class="plant plant-left"></div>
+      <div class="plant plant-right"></div>
+      <div class="table"></div>
+    </div>
+
+    <section id="entryScreen" class="screen entry-screen active" aria-labelledby="launchTitle">
+      <div class="launch-card">
+        <a class="launch-back" href="/games" data-game-return data-en="← Back to Digul Digul">← 디굴디굴 소개로</a>
+        <h1 id="launchTitle" data-en="Digul Digul">디굴디굴</h1>
+        <form id="launchForm">
+          <label for="nicknameInput" data-en="Player nickname">플레이어 닉네임</label>
+          <input id="nicknameInput" maxlength="10" autocomplete="nickname" aria-describedby="nicknameHint nicknameError">
+          <p id="nicknameHint" data-en="Use 2–10 Korean or English letters or numbers.">한글·영문·숫자로 2~10자를 입력해 주세요.</p>
+          <p id="mergeRankNotice" data-en="The top five records show the date, nickname, play time and score.">상위 5위에 들면 날짜, 닉네임, 게임 시간과 점수가 순위표에 표시됩니다.</p>
+          <p id="nicknameError" role="alert"></p>
+          <button id="startButton" type="submit" data-en="Start game" disabled>게임 시작</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen game-screen">
+      <header class="game-header">
+        <a id="digulHomeButton" class="back-button" href="/games" data-game-return aria-label="디굴디굴 소개로" data-en-label="Back to Digul Digul">‹</a>
+        <div class="game-logo" aria-label="디굴디굴"><strong>디굴디굴</strong><small>CAFFIEND</small></div>
+        <div class="header-actions">
+          <button id="nicknameButton" class="player-chip" type="button" aria-label="닉네임 변경"><i class="leaf-mark" aria-hidden="true"></i><span id="nicknameDisplay">PLAYER</span></button>
+          <button id="pauseButton" class="pause-button" type="button" aria-label="일시정지">Ⅱ</button>
+        </div>
+      </header>
+      <section class="hud">
+        <div class="score-card"><div class="hud-label"><i class="leaf-mark" aria-hidden="true"></i><span data-en="Score">스코어</span></div><strong id="scoreValue">0</strong><div class="best-line"><span class="crown-mark">♛</span><span data-en="Device best">내 기기 최고</span><b id="personalBestValue">0</b></div></div>
+        <div class="next-card"><div class="hud-label heart-label"><span>♥</span><span>다음</span></div><div id="nextPreview" class="next-preview"></div></div>
+      </section>
+      <section class="play-area">
+        <div class="board-wrap">
+          <div class="bowl-rim" aria-hidden="true"></div>
+          <canvas id="gameCanvas" aria-label="디저트 합체 게임"></canvas>
+          <div id="spriteLayer" class="sprite-layer" aria-hidden="true"><div id="dropSprite" class="drop-sprite" aria-hidden="true"></div></div>
+        </div>
+        <div class="digul-top-five" aria-labelledby="topFiveTitle">
+          <div class="digul-top-heading"><strong id="topFiveTitle" data-en="Digul Digul leaderboard">디굴디굴 순위표</strong><span id="topFiveStatus"></span></div>
+          <ol id="topFiveRows"></ol>
+        </div>
+      </section>
+      <footer class="bottom-actions">
+        <button id="recipeButton" class="footer-button" type="button"><span id="recipeButtonPreview" class="action-preview" aria-hidden="true"></span><strong>합체 순서</strong><i>›</i></button>
+        <button id="rankingButton" class="footer-button footer-button-rank" type="button"><span class="trophy-mark">★</span><strong data-en="Leaderboard">순위표</strong><i>›</i></button>
+      </footer>
+    </section>
+
+    <section id="resultOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="resultTitle" aria-hidden="true">
+      <div class="result-card">
+        <p class="eyebrow" id="resultTitle">GAME OVER</p>
+        <h2 id="resultScore">0</h2>
+        <div class="result-stats">
+          <div><span data-en="All-time high">역대 최고점</span><strong id="resultTopScore">—</strong><span id="resultTopName"></span></div>
+          <div><span data-en="My Top 5 rank">내 TOP 5 순위</span><strong id="resultRank">—</strong></div>
+        </div>
+        <p id="resultRankStatus" role="status"></p>
+        <div class="highest-menu">
+          <span>최고 메뉴</span>
+          <div id="resultMenuThumb" class="mini-dessert"></div>
+          <strong id="resultMenuName">로투스 수플레</strong>
+        </div>
+        <div class="result-actions">
+          <button id="restartButton" class="primary-flat-button" type="button" data-en="Play again">다시하기</button>
+          <a id="resultExitLink" class="secondary-button" href="/games" data-game-return data-en="Exit">나가기</a>
+        </div>
+      </div>
+    </section>
+    <section id="pauseOverlay" class="overlay" aria-hidden="true"><div class="pause-card"><p class="eyebrow">PAUSE</p><h2>잠깐 멈춤</h2><button id="resumeButton" class="primary-button" type="button">계속</button><button id="soundToggle" class="sound-toggle" type="button" aria-pressed="true"><span class="sound-icon" aria-hidden="true"></span><span id="soundToggleText">효과음 켜짐</span></button></div></section>
+    <section id="nicknameOverlay" class="overlay" aria-hidden="true"><div class="panel-card compact"><button class="close-button" data-close="nicknameOverlay" type="button">×</button><p class="eyebrow">PLAYER</p><h2>닉네임</h2><label class="nickname-field"><input id="nicknameEditInput" maxlength="10" inputmode="text" autocomplete="nickname"></label><p id="nicknameEditError" class="field-error"></p><p id="nicknameRankHint" hidden data-en="The new nickname will be used for your next run.">변경한 닉네임은 다음 판부터 순위에 적용됩니다.</p><button id="saveNicknameButton" class="primary-button" type="button">저장</button></div></section>
+    <section id="recipeOverlay" class="sheet" aria-hidden="true"><div class="sheet-backdrop" data-close="recipeOverlay"></div><div class="sheet-panel"><div class="sheet-handle"></div><div class="sheet-title"><div><p class="eyebrow">MERGE</p><h2>합체 순서</h2></div><button class="close-button" data-close="recipeOverlay" type="button">×</button></div><div id="recipeList" class="recipe-list"></div></div></section>
+    <section id="rankingOverlay" class="sheet" role="dialog" aria-modal="true" aria-labelledby="rankingTitle" aria-hidden="true">
+      <div class="sheet-backdrop" data-close="rankingOverlay"></div>
+      <div class="sheet-panel ranking-sheet">
+        <div class="sheet-handle"></div>
+        <div class="ranking-hero">
+          <div class="ranking-cup" aria-hidden="true">★</div>
+          <div><p class="eyebrow">TOP 5</p><h2 id="rankingTitle" data-en="Digul Digul leaderboard">디굴디굴 순위표</h2><small data-en="Highest score per nickname">닉네임별 최고 기록</small></div>
+          <button class="close-button" data-close="rankingOverlay" type="button" data-en-label="Close" aria-label="닫기">×</button>
+        </div>
+        <div id="rankingStatus" class="ranking-status" role="status" data-en="Loading…">불러오는 중…</div>
+        <table class="ranking-table" aria-labelledby="rankingTitle">
+          <thead><tr><th scope="col" data-en="Date">날짜</th><th scope="col" data-en="Nickname">닉네임</th><th scope="col" data-en="Play time">게임 시간</th><th scope="col" data-en="Score">점수</th></tr></thead>
+          <tbody id="rankingList"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="./vendor/matter.min.js"></script>
+  <script src="./config.js?v=2.4.0"></script>
+  <script src="./experience.js?v=2.4.0"></script>
+  <script src="./game-entry.js"></script>
+  <script src="./leaderboard.js?v=2.4.0"></script>
+  <script src="./analytics.js?v=2.4.0"></script>
+  <script src="./dessert-art.js?v=2.4.0"></script>
+  <script src="./sprite-renderer.js?v=2.4.0"></script>
+  <script src="./game.js?v=2.4.0"></script>
+</body>
+</html>

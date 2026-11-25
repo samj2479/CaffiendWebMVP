@@ -1,0 +1,91 @@
+.app:has(#entryScreen.active) {
+  width: 100%;
+  background: #faf7f2;
+}
+
+.app:has(#entryScreen.active) > :is(.cafe-bg, .sheet, .overlay) {
+  display: none;
+}
+
+#entryScreen {
+  overflow-y: auto;
+  padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
+  color: #174c35;
+  font-family: Lato, "Noto Sans KR", sans-serif;
+}
+
+.launch-card {
+  width: min(100%, 380px);
+  margin: auto;
+}
+
+.launch-back {
+  display: inline-block;
+  padding: 10px 0;
+  color: #395441;
+  font-size: 14px;
+  text-underline-offset: 4px;
+}
+
+.launch-card h1 {
+  margin: 18px 0 28px;
+  font: 700 clamp(34px, 6vw, 48px)/1.2 "Playfair Display", "Noto Sans KR", serif;
+  letter-spacing: -.04em;
+}
+
+.launch-card label { display: block; margin-bottom: 8px; font-weight: 700; }
+.launch-card input {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid #a3b2a9;
+  border-radius: 8px;
+  background: white;
+  color: #172b21;
+  font: inherit;
+}
+
+.launch-card p { margin: 8px 0; font-size: 14px; line-height: 1.5; }
+#nicknameError { color: #a02f25; }
+#nicknameError:empty { display: none; }
+.launch-card button {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 16px;
+  border: 0;
+  border-radius: 999px;
+  background: #174c35;
+  color: white;
+  font: inherit;
+  font-weight: 700;
+}
+
+.launch-card button:disabled { opacity: .5; cursor: wait; }
+
+#entryScreen :is(a, button, input):focus-visible,
+#resultOverlay :is(a, button):focus-visible { outline: 3px solid #427659; outline-offset: 3px; }
+a.back-button, .result-actions a { display: grid; place-items: center; text-decoration: none; }
+#resultOverlay { overflow-y: auto; }
+#resultOverlay .result-card { margin-block: auto; }
+
+.digul-top-five {
+  flex: none;
+  min-height: 50px;
+  padding: 5px 9px;
+  border: 1px solid #c88b55;
+  border-radius: 14px;
+  background: #fff9ee;
+  color: #542b1a;
+  font: 600 11px/1.25 "Noto Sans KR", sans-serif;
+}
+.digul-top-heading { display: flex; align-items: baseline; gap: 8px; }
+.digul-top-heading strong { font-size: 11px; color: #7a381d; }
+#topFiveStatus { font-size: 10px; font-weight: 400; }
+#topFiveRows { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 3px 0 0; padding: 0; list-style: none; }
+#topFiveRows li { min-width: 0; padding-inline: 5px; border-left: 1px solid #e8d2b7; }
+#topFiveRows li:first-child { border: 0; padding-left: 0; color: #174c35; }
+#topFiveRows li span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; }
+#topFiveRows li strong { display: block; font-size: clamp(10px, 2.7vw, 13px); font-variant-numeric: tabular-nums; }
+#resultRankStatus:empty, #rankingStatus:empty { display: none; }
+#resultRankStatus, #nicknameRankHint { font: 500 13px/1.5 "Noto Sans KR", sans-serif; margin: 0 0 10px; }
+#resultTopName { font-size: 12px; overflow-wrap: anywhere; }

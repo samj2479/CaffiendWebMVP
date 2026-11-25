@@ -18,6 +18,8 @@ const links = [
     href: "/#menu",    ko: "메뉴",          en: "Menu",
     sub: [
       { href: "/menu",           ko: "메뉴",            en: "Menu"             },
+      { href: "/brand/dessert-friends", ko: "디저트 친구들", en: "Dessert Friends" },
+      { href: "/games", ko: "디굴디굴", en: "Digul Digul" },
       { href: "/menu/souffle-guide", ko: "수플레 맛있게 즐기는 법", en: "How to Enjoy Soufflé" },
     ],
   },
