@@ -9,7 +9,7 @@
   <title>디굴디굴 | 카피엔드</title>
   <link rel="stylesheet" href="./site-fonts.css">
   <link rel="stylesheet" href="./style.css?v=2.4.0">
-  <link rel="stylesheet" href="./game-entry.css">
+  <link rel="stylesheet" href="./game-entry.css?v=2.4.2">
 </head>
 <body>
   <main class="app" lang="ko">
@@ -56,7 +56,7 @@
       <section class="play-area">
         <div class="board-wrap">
           <div class="bowl-rim" aria-hidden="true"></div>
-          <canvas id="gameCanvas" aria-label="디저트 합체 게임"></canvas>
+          <canvas id="gameCanvas" aria-label="디저트 합체 게임. 쌓인 디저트가 빨간 점선을 넘으면 게임이 끝납니다." data-en-label="Dessert merge game. The game ends when the pile crosses the red dashed line."></canvas>
           <div id="spriteLayer" class="sprite-layer" aria-hidden="true"><div id="dropSprite" class="drop-sprite" aria-hidden="true"></div></div>
         </div>
         <div class="digul-top-five" aria-labelledby="topFiveTitle">
@@ -67,6 +67,7 @@
       <footer class="bottom-actions">
         <button id="recipeButton" class="footer-button" type="button"><span id="recipeButtonPreview" class="action-preview" aria-hidden="true"></span><strong>합체 순서</strong><i>›</i></button>
         <button id="rankingButton" class="footer-button footer-button-rank" type="button"><span class="trophy-mark">★</span><strong data-en="Leaderboard">순위표</strong><i>›</i></button>
+        <button id="backToResultButton" class="secondary-button" type="button" data-en="Back to results">결과로 돌아가기</button>
       </footer>
     </section>
 
@@ -85,6 +86,7 @@
           <strong id="resultMenuName">로투스 수플레</strong>
         </div>
         <div class="result-actions">
+          <button id="viewBoardButton" class="secondary-button" type="button" data-en="View final board">게임 화면 보기</button>
           <button id="restartButton" class="primary-flat-button" type="button" data-en="Play again">다시하기</button>
           <a id="resultExitLink" class="secondary-button" href="/games" data-game-return data-en="Exit">나가기</a>
         </div>
@@ -112,13 +114,13 @@
   </main>
 
   <script src="./vendor/matter.min.js"></script>
-  <script src="./config.js?v=2.4.0"></script>
+  <script src="./config.js?v=2.4.2"></script>
   <script src="./experience.js?v=2.4.0"></script>
   <script src="./game-entry.js"></script>
   <script src="./leaderboard.js?v=2.4.0"></script>
   <script src="./analytics.js?v=2.4.0"></script>
   <script src="./dessert-art.js?v=2.4.0"></script>
   <script src="./sprite-renderer.js?v=2.4.0"></script>
-  <script src="./game.js?v=2.4.0"></script>
+  <script src="./game.js?v=2.4.2"></script>
 </body>
 </html>

@@ -13,8 +13,6 @@ window.DIGUL_CONFIG = {
     height: 560,
     dropY: 48,
     dangerY: 96,
-    dangerHoldMs: 2000,
-    freshBodyGraceMs: 1200,
     dropCooldownMs: 500,
     gravity: 1.08,
     baseRadius: 15,

@@ -38,7 +38,6 @@
     gameStarted:false,
     elapsedPlayMs:0,
     activeSince:null,
-    dangerMs:0,
     maxLevel:0,
     gameId:"",
     pressing:false,
@@ -59,6 +58,7 @@
     resultOverlay:$("resultOverlay"), resultScore:$("resultScore"), resultTopScore:$("resultTopScore"),
     resultRank:$("resultRank"), resultMenuThumb:$("resultMenuThumb"), resultMenuName:$("resultMenuName"),
     restartButton:$("restartButton"), pauseOverlay:$("pauseOverlay"), resumeButton:$("resumeButton"),
+    viewBoardButton:$("viewBoardButton"), backToResultButton:$("backToResultButton"),
     nicknameOverlay:$("nicknameOverlay"), nicknameEditInput:$("nicknameEditInput"), nicknameEditError:$("nicknameEditError"),
     saveNicknameButton:$("saveNicknameButton"), recipeOverlay:$("recipeOverlay"), recipeList:$("recipeList"),
     rankingOverlay:$("rankingOverlay"), rankingStatus:$("rankingStatus"), rankingList:$("rankingList"),
@@ -301,7 +301,7 @@
     return el;
   }
 
-  function createBody(level, x, y) {
+  function createBody(level, x, y, countsForOverflow = false) {
     const menu = menus[level];
     const body = Bodies.circle(x, y, menu.radius, {
       restitution:CONFIG.physics.restitution,
@@ -315,7 +315,7 @@
     els.spriteLayer.appendChild(spriteEl);
     body.plugin = {
       level,
-      bornAt:performance.now(),
+      countsForOverflow,
       merging:false,
       bodyId:crypto?.randomUUID?.() || `${Date.now()}-${Math.random()}`,
       spriteEl,
@@ -485,7 +485,11 @@
     state.canDrop = true;
     state.gameOver = false;
     state.gameStarted = true;
-    state.dangerMs = 0;
+    state.pressing = false;
+    accumulator = 0;
+    els.game.inert = false;
+    els.game.classList.remove("is-finished");
+    els.nicknameButton.disabled = false;
     state.maxLevel = 0;
     state.firstDrop = true;
     state.elapsedPlayMs = 0;
@@ -494,6 +498,7 @@
     if (document.hidden) addPause("hidden");
     if (!document.hasFocus()) addPause("blur");
     updateScore(0);
+    if (els.resultOverlay.contains(document.activeElement)) els.pauseButton.focus({ preventScroll: true });
     closeLayer(els.resultOverlay);
     closeLayer(els.pauseOverlay, "manual");
     updateNextPreview();
@@ -520,7 +525,9 @@
     if (state.firstDrop) {
       state.firstDrop = false;
     }
+    const droppedInGame = state.gameId;
     setTimeout(() => {
+      if (state.gameOver || state.gameId !== droppedInGame) return;
       state.canDrop = true;
       mountDropSprite();
     }, CONFIG.physics.dropCooldownMs);
@@ -531,6 +538,11 @@
       const a = pair.bodyA;
       const b = pair.bodyB;
       if (!isItem(a) || !isItem(b)) continue;
+      // A falling dessert joins the pile even if it lands before clearing the line.
+      if (a.plugin.countsForOverflow || b.plugin.countsForOverflow) {
+        a.plugin.countsForOverflow = true;
+        b.plugin.countsForOverflow = true;
+      }
       if (a.plugin.level !== b.plugin.level) continue;
       if (a.plugin.merging || b.plugin.merging) continue;
       a.plugin.merging = true;
@@ -567,7 +579,8 @@
       let toLevel = null;
       if (level < menus.length - 1) {
         toLevel = level + 1;
-        const created = createBody(toLevel, x, Math.max(y, menus[toLevel].radius + 2));
+        const countsForOverflow = a.plugin.countsForOverflow || b.plugin.countsForOverflow;
+        const created = createBody(toLevel, x, Math.max(y, menus[toLevel].radius + 2), countsForOverflow);
         Body.setVelocity(created, velocity);
         points = menus[toLevel].points;
         if (toLevel > state.maxLevel) {
@@ -587,16 +600,23 @@
     }
   }
 
-  function checkDanger(dt) {
-    if (!state.gameStarted || state.gameOver || isPaused()) return;
-    const now = performance.now();
-    const above = Composite.allBodies(world).some(body =>
-      isItem(body) &&
-      now - body.plugin.bornAt > CONFIG.physics.freshBodyGraceMs &&
-      body.position.y - body.circleRadius < CONFIG.physics.dangerY
-    );
-    state.dangerMs = above ? state.dangerMs + dt : 0;
-    if (state.dangerMs >= CONFIG.physics.dangerHoldMs) endGame();
+  function pileCrossesLine() {
+    for (const body of Composite.allBodies(world)) {
+      if (!isItem(body)) continue;
+      const top = body.position.y - body.circleRadius;
+      if (top >= CONFIG.physics.dangerY) {
+        body.plugin.countsForOverflow = true;
+      } else if (body.plugin.countsForOverflow) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function showResult() {
+    openLayer(els.resultOverlay);
+    els.viewBoardButton.focus({ preventScroll: true });
+    els.game.inert = true;
   }
 
   function endGame() {
@@ -604,13 +624,15 @@
     state.gameOver = true;
     updatePlayClock();
     state.canDrop = false;
+    state.pressing = false;
+    els.game.classList.add("is-finished");
+    els.nicknameButton.disabled = true;
     els.resultScore.textContent = number(state.score);
     renderRanking();
     BOARD.sync();
     els.resultMenuName.textContent = menus[state.maxLevel].name;
     menuThumb(els.resultMenuThumb, state.maxLevel, 54);
-    openLayer(els.resultOverlay);
-    els.restartButton.focus({ preventScroll: true });
+    showResult();
     track("game_finish", { maxLevel:state.maxLevel + 1 });
   }
 
@@ -650,15 +672,17 @@
     ctx.ellipse(W / 2, H - 9, W * .45, 22, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // 넘침 경고: 평소에는 선이 없고, 넘치기 시작했을 때만 위쪽이 붉게 깜빡입니다.
-    if (state.dangerMs > 0 && !state.gameOver) {
-      const pulse = .10 + .14 * (0.5 + 0.5 * Math.sin(now / 110));
-      const warn = ctx.createLinearGradient(0, 0, 0, CONFIG.physics.dangerY);
-      warn.addColorStop(0, `rgba(215,90,74,${pulse})`);
-      warn.addColorStop(1, "rgba(215,90,74,0)");
-      ctx.fillStyle = warn;
-      ctx.fillRect(0, 0, W, CONFIG.physics.dangerY);
-    }
+    ctx.save();
+    ctx.strokeStyle = ctx.fillStyle = "#a74132";
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 5]);
+    ctx.beginPath();
+    ctx.moveTo(0, CONFIG.physics.dangerY);
+    ctx.lineTo(W, CONFIG.physics.dangerY);
+    ctx.stroke();
+    ctx.font = 'bold 11px "Noto Sans KR", sans-serif';
+    ctx.fillText(t("종료선", "Game over line"), 16, CONFIG.physics.dangerY - 5);
+    ctx.restore();
     // Dessert sprites are rendered in the DOM layer above this canvas.
 
     syncSprites();
@@ -719,8 +743,11 @@
         Engine.update(engine, STEP);
         processMerges();
         accumulator -= STEP;
+        if (pileCrossesLine()) {
+          endGame();
+          break;
+        }
       }
-      checkDanger(dt);
     }
     drawBoard(now);
     requestAnimationFrame(frame);
@@ -789,6 +816,15 @@
     if (SFX.enabled) SFX.merge(3);
   });
   els.restartButton.addEventListener("click", beginGame);
+  els.viewBoardButton.addEventListener("click", () => {
+    els.game.inert = false;
+    els.backToResultButton.focus({ preventScroll: true });
+    closeLayer(els.resultOverlay);
+  });
+  els.backToResultButton.addEventListener("click", showResult);
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && state.gameOver && !els.game.inert) showResult();
+  });
   $("digulHomeButton").addEventListener("click", () => track("return_home"));
 
   els.nicknameButton.addEventListener("click", () => {

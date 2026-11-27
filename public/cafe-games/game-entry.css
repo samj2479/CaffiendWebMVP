@@ -67,6 +67,20 @@
 a.back-button, .result-actions a { display: grid; place-items: center; text-decoration: none; }
 #resultOverlay { overflow-y: auto; }
 #resultOverlay .result-card { margin-block: auto; }
+#viewBoardButton { grid-column: 1 / -1; }
+
+.bottom-actions { position: relative; }
+#backToResultButton { display: none; }
+.is-finished :is(#digulHomeButton, #pauseButton, .footer-button) { visibility: hidden; }
+.is-finished #backToResultButton {
+  display: block;
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: fit-content;
+  min-height: 0;
+  padding-inline: 20px;
+}
 
 .digul-top-five {
   flex: none;
